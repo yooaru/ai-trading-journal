@@ -12,7 +12,7 @@
 <!-- AUTH GATE -->
 <div id="auth-gate">
   <div class="auth-box">
-    <div class="auth-logo">⚡</div>
+    <div class="auth-logo"><span class="icon-bolt"></span></div>
     <h2>ClawTrader</h2>
     <p>Enter access key to continue</p>
     <input type="password" id="access-key" placeholder="Access key..." autocomplete="off">
@@ -21,37 +21,41 @@
   </div>
 </div>
 
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
 <!-- SIDEBAR -->
 <nav id="sidebar" style="display:none">
+  <button class="sidebar-close" onclick="toggleSidebar()">&#10005;</button>
   <div class="sidebar-header">
-    <span class="logo-icon">⚡</span>
+    <span class="logo-icon icon-bolt"></span>
     <span class="logo-text">ClawTrader</span>
   </div>
   <div class="sidebar-nav">
     <a class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
-      <span class="nav-icon">📊</span> Dashboard
+      <span class="nav-icon icon-chart"></span> Dashboard
     </a>
     <a class="nav-item" data-tab="positions" onclick="switchTab('positions')">
-      <span class="nav-icon">📈</span> Positions
+      <span class="nav-icon icon-trend"></span> Positions
     </a>
     <a class="nav-item" data-tab="trades" onclick="switchTab('trades')">
-      <span class="nav-icon">💹</span> Trades
+      <span class="nav-icon icon-trade"></span> Trades
     </a>
     <a class="nav-item" data-tab="bets" onclick="switchTab('bets')">
-      <span class="nav-icon">🎯</span> Bets
+      <span class="nav-icon icon-target"></span> Bets
     </a>
     <a class="nav-item" data-tab="signals" onclick="switchTab('signals')">
-      <span class="nav-icon">📡</span> Signals
+      <span class="nav-icon icon-signal"></span> Signals
     </a>
     <a class="nav-item" data-tab="log" onclick="switchTab('log')">
-      <span class="nav-icon">📋</span> Log
+      <span class="nav-icon icon-log"></span> Log
     </a>
   </div>
   <div class="sidebar-footer">
     <div class="sidebar-status" id="sidebar-status">
       <span class="status-dot active"></span> Connected
     </div>
-    <button class="btn-logout" onclick="logout()">⊘ Logout</button>
+    <button class="btn-logout" onclick="logout()">Logout</button>
   </div>
 </nav>
 
@@ -61,12 +65,12 @@
   <!-- TOP BAR -->
   <header class="topbar">
     <div class="topbar-left">
-      <button class="btn-icon sidebar-toggle" onclick="toggleSidebar()">☰</button>
+      <button class="btn-icon sidebar-toggle" onclick="toggleSidebar()">&#9776;</button>
       <h1 id="page-title">Dashboard</h1>
     </div>
     <div class="topbar-right">
       <span id="last-updated" class="topbar-meta"></span>
-      <button onclick="refreshData()" class="btn-ghost">↻ Refresh</button>
+      <button onclick="refreshData()" class="btn-ghost">&#8635; Refresh</button>
       <div class="topbar-avatar" title="Hermes2">H2</div>
     </div>
   </header>
@@ -86,16 +90,14 @@
       </div>
       <div class="stat-card">
         <div class="stat-header">
-          <span class="stat-label">Unrealized P&L</span>
-          <span class="stat-icon">📈</span>
+          <span class="stat-label">Unrealized P&amp;L</span>
         </div>
         <div class="stat-value positive" id="stat-unrealized">+$0.00</div>
         <div class="stat-sub"><span id="stat-open-positions">0</span> open positions</div>
       </div>
       <div class="stat-card">
         <div class="stat-header">
-          <span class="stat-label">Realized P&L</span>
-          <span class="stat-icon">💰</span>
+          <span class="stat-label">Realized P&amp;L</span>
         </div>
         <div class="stat-value" id="stat-realized">$0.00</div>
         <div class="stat-sub">Win rate: <span id="stat-winrate">0%</span></div>
@@ -103,7 +105,6 @@
       <div class="stat-card">
         <div class="stat-header">
           <span class="stat-label">Today's Trades</span>
-          <span class="stat-icon">⚡</span>
         </div>
         <div class="stat-value" id="stat-today-trades">0</div>
         <div class="stat-sub">Daily limit: <span id="stat-daily-limit">10</span></div>
@@ -127,7 +128,7 @@
       <!-- LEFT: OPEN POSITIONS -->
       <div class="card">
         <div class="card-header">
-          <h3>📈 Open Positions</h3>
+          <h3>Open Positions</h3>
           <span class="card-badge" id="pos-count">0</span>
         </div>
         <div id="positions-list" class="positions-list">
@@ -138,8 +139,8 @@
       <!-- RIGHT: SIGNALS -->
       <div class="card">
         <div class="card-header">
-          <h3>📡 Market Signals</h3>
-          <button class="btn-ghost btn-sm" onclick="refreshSignals()">↻ Scan</button>
+          <h3>Market Signals</h3>
+          <button class="btn-ghost btn-sm" onclick="refreshSignals()">&#8635; Scan</button>
         </div>
         <div id="signals-list" class="signals-list">
           <div class="empty-state">Click scan to check signals</div>
@@ -150,7 +151,7 @@
     <!-- TRADES TABLE -->
     <div class="card">
       <div class="card-header">
-        <h3>💹 Recent Trades</h3>
+        <h3>Recent Trades</h3>
         <div class="card-filters">
           <select id="filter-agent" onchange="renderTrades()">
             <option value="all">All Agents</option>
@@ -175,7 +176,7 @@
               <th>Entry</th>
               <th>Exit</th>
               <th>Size</th>
-              <th>P&L</th>
+              <th>P&amp;L</th>
               <th>Status</th>
               <th>Notes</th>
             </tr>
@@ -189,7 +190,7 @@
   <!-- POSITIONS TAB -->
   <div id="tab-positions" class="tab-content">
     <div class="card">
-      <div class="card-header"><h3>📈 Position Details</h3></div>
+      <div class="card-header"><h3>Position Details</h3></div>
       <div id="positions-detail" class="positions-detail"></div>
     </div>
   </div>
@@ -197,10 +198,10 @@
   <!-- TRADES TAB -->
   <div id="tab-trades" class="tab-content">
     <div class="card">
-      <div class="card-header"><h3>💹 All Trades</h3></div>
+      <div class="card-header"><h3>All Trades</h3></div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Time</th><th>Agent</th><th>Asset</th><th>Side</th><th>Entry</th><th>Exit</th><th>Size</th><th>P&L</th><th>Status</th><th>Notes</th></tr></thead>
+          <thead><tr><th>Time</th><th>Agent</th><th>Asset</th><th>Side</th><th>Entry</th><th>Exit</th><th>Size</th><th>P&amp;L</th><th>Status</th><th>Notes</th></tr></thead>
           <tbody id="all-trades-body"></tbody>
         </table>
       </div>
@@ -210,10 +211,10 @@
   <!-- BETS TAB -->
   <div id="tab-bets" class="tab-content">
     <div class="card">
-      <div class="card-header"><h3>🎯 Bets</h3></div>
+      <div class="card-header"><h3>Bets</h3></div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Time</th><th>Agent</th><th>Market</th><th>Outcome</th><th>Entry</th><th>Size</th><th>P&L</th><th>Status</th><th>Notes</th></tr></thead>
+          <thead><tr><th>Time</th><th>Agent</th><th>Market</th><th>Outcome</th><th>Entry</th><th>Size</th><th>P&amp;L</th><th>Status</th><th>Notes</th></tr></thead>
           <tbody id="bets-body"></tbody>
         </table>
       </div>
@@ -224,7 +225,7 @@
   <div id="tab-signals" class="tab-content">
     <div class="card">
       <div class="card-header">
-        <h3>📡 Signal Scanner</h3>
+        <h3>Signal Scanner</h3>
         <button class="btn-primary" onclick="refreshSignals()">Run Full Scan</button>
       </div>
       <div id="signals-detail" class="signals-detail"></div>
@@ -234,7 +235,7 @@
   <!-- LOG TAB -->
   <div id="tab-log" class="tab-content">
     <div class="card">
-      <div class="card-header"><h3>📋 Activity Log</h3></div>
+      <div class="card-header"><h3>Activity Log</h3></div>
       <div id="log-entries" class="log-container"></div>
     </div>
   </div>

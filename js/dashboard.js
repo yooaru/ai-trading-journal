@@ -53,15 +53,28 @@ function logout() {
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   const main = document.getElementById('main-content');
+  const overlay = document.getElementById('sidebar-overlay');
   const isMobile = window.innerWidth <= 768;
 
   if (isMobile) {
     sidebar.classList.toggle('mobile-open');
+    overlay.classList.toggle('active');
   } else {
     sidebar.classList.toggle('collapsed');
     main.classList.toggle('expanded');
   }
 }
+
+// Close mobile sidebar when nav item clicked
+document.addEventListener('click', (e) => {
+  const navItem = e.target.closest('.nav-item');
+  if (navItem && window.innerWidth <= 768) {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    sidebar.classList.remove('mobile-open');
+    overlay.classList.remove('active');
+  }
+});
 
 // Auto-login
 window.addEventListener('DOMContentLoaded', () => {
@@ -185,6 +198,17 @@ function renderPositions() {
     return;
   }
 
+  // Badge labels (no emoji)
+  const sideLabels = { long: 'LONG', short: 'SHORT' };
+  const closeLabels = {
+    tp_hit: 'TP Hit',
+    sl_hit: 'SL Hit',
+    trailing_hit: 'Trail SL',
+    early_exit: 'Early Exit',
+    open: 'Open',
+    closed: 'Closed',
+  };
+
   listEl.innerHTML = entries.map(([sym, pos]) => {
     const current = pos.current_price || pos.entry_price;
     const pnlPct = ((current - pos.entry_price) / pos.entry_price * 100);
@@ -232,7 +256,7 @@ function renderPositions() {
             <div class="pos-detail-value">${entryTime}</div>
           </div>
         </div>
-        ${trailing ? '<div class="pos-trailing">📈 Trailing stop active</div>' : ''}
+        ${trailing ? '<div class="pos-trailing">&#9650; Trailing stop active</div>' : ''}
       </div>
     `;
   }).join('');
@@ -446,8 +470,10 @@ function renderLog() {
     entries.push({ time: t.opened_at, type: 'trade-open',
       text: `<span class="log-agent" style="color:${c}">${t.agent}</span> OPENED ${t.side.toUpperCase()} ${t.asset} @ $${fmtNum(t.entry_price)} ($${fmtNum(t.size_usd)})` });
     if (t.status === 'closed') {
-      const r = t.close_reason === 'tp_hit' ? '🎯 TP HIT' : t.close_reason === 'sl_hit' ? '🛑 SL HIT' : t.close_reason === 'trailing_hit' ? '📈 TRAILING SL' : '✅ CLOSED';
-      entries.push({ time: t.closed_at, type: t.close_reason === 'tp_hit' ? 'trade-tp' : t.close_reason === 'sl_hit' ? 'trade-sl' : t.close_reason === 'trailing_hit' ? 'trailing_hit' : 'trade-close',
+      const labels = { tp_hit: 'TP HIT', sl_hit: 'SL HIT', trailing_hit: 'TRAILING SL', early_exit: 'EARLY EXIT' };
+      const types = { tp_hit: 'trade-tp', sl_hit: 'trade-sl', trailing_hit: 'trailing_hit', early_exit: 'trade-close' };
+      const r = labels[t.close_reason] || 'CLOSED';
+      entries.push({ time: t.closed_at, type: types[t.close_reason] || 'trade-close',
         text: `<span class="log-agent" style="color:${c}">${t.agent}</span> ${r} ${t.asset} — P&L: ${(t.pnl_usd >= 0 ? '+' : '')}$${t.pnl_usd.toFixed(2)} (${t.pnl_pct}%)` });
     }
   });
