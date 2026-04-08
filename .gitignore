@@ -1,0 +1,6 @@
+.access_key
+__pycache__/
+*.pyc
+.env
+data/trades.json
+data/bets.json

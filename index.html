@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Trading Journal — Hermes1 & Hermes2</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- AUTH GATE -->
+<div id="auth-gate">
+  <div class="auth-box">
+    <h2>🔒 AI Trading Journal</h2>
+    <p>Enter access key to continue</p>
+    <input type="password" id="access-key" placeholder="Access key..." autocomplete="off">
+    <button onclick="authenticate()">Unlock</button>
+    <p id="auth-error" class="error" style="display:none">Wrong key. Try again.</p>
+  </div>
+</div>
+
+<!-- DASHBOARD (hidden until auth) -->
+<div id="dashboard" style="display:none">
+
+  <header>
+    <div class="header-left">
+      <h1>📊 AI Trading Journal</h1>
+      <span class="subtitle">Hermes1 & Hermes2</span>
+    </div>
+    <div class="header-right">
+      <span id="last-updated" class="updated"></span>
+      <button onclick="refreshData()" class="btn-refresh">↻ Refresh</button>
+      <button onclick="logout()" class="btn-refresh" style="color:#ef4444">⊘ Logout</button>
+    </div>
+  </header>
+
+  <!-- STATS OVERVIEW -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total P&L</div>
+      <div class="stat-value" id="stat-total-pnl">$0.00</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Win Rate</div>
+      <div class="stat-value" id="stat-winrate">0%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Open Positions</div>
+      <div class="stat-value" id="stat-open">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Trades</div>
+      <div class="stat-value" id="stat-total">0</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('trades')">💹 Trades</button>
+    <button class="tab" onclick="switchTab('bets')">🎯 Bets</button>
+    <button class="tab" onclick="switchTab('log')">📋 Log</button>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters">
+    <select id="filter-agent" onchange="renderCurrentTab()">
+      <option value="all">All Agents</option>
+      <option value="hermes1">Hermes1</option>
+      <option value="hermes2">Hermes2</option>
+    </select>
+    <select id="filter-status" onchange="renderCurrentTab()">
+      <option value="all">All Status</option>
+      <option value="open">Open</option>
+      <option value="closed">Closed</option>
+    </select>
+    <select id="filter-asset" onchange="renderCurrentTab()">
+      <option value="all">All Assets</option>
+    </select>
+  </div>
+
+  <!-- TRADES TABLE -->
+  <div id="tab-trades" class="tab-content active">
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Agent</th>
+          <th>Asset</th>
+          <th>Side</th>
+          <th>Entry</th>
+          <th>Exit</th>
+          <th>Size</th>
+          <th>P&L</th>
+          <th>Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody id="trades-body"></tbody>
+    </table>
+  </div>
+
+  <!-- BETS TABLE -->
+  <div id="tab-bets" class="tab-content">
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Agent</th>
+          <th>Market</th>
+          <th>Outcome</th>
+          <th>Entry</th>
+          <th>Size</th>
+          <th>P&L</th>
+          <th>Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody id="bets-body"></tbody>
+    </table>
+  </div>
+
+  <!-- LOG TAB -->
+  <div id="tab-log" class="tab-content">
+    <div id="log-entries" class="log-container"></div>
+  </div>
+
+</div>
+
+<script src="js/dashboard.js"></script>
+</body>
+</html>
