@@ -19,6 +19,8 @@ STATE_FILE = os.path.join(BASE_DIR, "data", "auto_trader_state.json")
 LOG_FILE = os.path.join(BASE_DIR, "data", "auto_trader.log")
 DAILY_LOG_FILE = os.path.join(BASE_DIR, "data", "daily_pnl.json")
 
+TRADING_JOURNAL = os.path.join(BASE_DIR, "data", "trades.json")
+
 RISK_PCT = 0.02
 MAX_POSITIONS = 5
 TP_LEVELS = [0.02, 0.035, 0.05]
@@ -79,15 +81,49 @@ def save_state(s):
         json.dump(s, f, indent=2, default=str)
 
 def get_price(symbol):
+    """Get price with fallback chain: ai4trade → Binance → CoinGecko."""
+    MAP = {"BTC":"BTCUSDT","ETH":"ETHUSDT","SOL":"SOLUSDT","PAXG":"PAXGUSDT",
+           "XRP":"XRPUSDT","DOGE":"DOGEUSDT","WLD":"WLDUSDT","SUI":"SUIUSDT",
+           "LINK":"LINKUSDT","AVAX":"AVAXUSDT"}
+    
+    # Try ai4trade first
     try:
-        time.sleep(1.1)  # Respect 1 req/sec rate limit
-        r = requests.get(f"{BASE}/price?symbol={symbol}&market=crypto", headers=get_headers(), timeout=15)
-        if r.status_code == 429:
-            time.sleep(2)
-            r = requests.get(f"{BASE}/price?symbol={symbol}&market=crypto", headers=get_headers(), timeout=15)
-        return r.json().get("price", 0)
+        r = requests.get(f"{BASE}/price?symbol={symbol}&market=crypto", headers=get_headers(), timeout=10)
+        price = r.json().get("price", 0)
+        if price > 0:
+            return price
     except:
-        return 0
+        pass
+    
+    # Fallback 1: Binance public API (no auth needed)
+    try:
+        pair = MAP.get(symbol.upper())
+        if pair:
+            r = requests.get(f"https://api.binance.com/api/v3/ticker/price?symbol={pair}", timeout=10)
+            price = float(r.json().get("price", 0))
+            if price > 0:
+                log(f"  📡 {symbol} price from Binance: ${price:,.2f}")
+                return price
+    except:
+        pass
+    
+    # Fallback 2: CoinGecko
+    try:
+        CG_MAP = {"BTC":"bitcoin","ETH":"ethereum","SOL":"solana","PAXG":"pax-gold",
+                  "XRP":"ripple","DOGE":"dogecoin","WLD":"worldcoin-wld","SUI":"sui",
+                  "LINK":"chainlink","AVAX":"avalanche-2"}
+        cg_id = CG_MAP.get(symbol.upper())
+        if cg_id:
+            r = requests.get(f"https://api.coingecko.com/api/v3/simple/price?ids={cg_id}&vs_currencies=usd", timeout=10)
+            price = r.json().get(cg_id, {}).get("usd", 0)
+            if price > 0:
+                log(f"  📡 {symbol} price from CoinGecko: ${price:,.2f}")
+                return price
+    except:
+        pass
+    
+    log(f"  ⚠️ {symbol}: all price sources failed")
+    return 0
 
 def publish_signal(action, symbol, price, qty, notes=""):
     try:
@@ -245,6 +281,55 @@ def check_daily_loss_limit():
         return False, f"Max daily trades ({DAILY_LOSS_CONFIG['max_daily_trades']}) reached"
     
     return True, "OK"
+
+# ============================================================
+# TRADING JOURNAL SYNC
+# ============================================================
+def load_journal():
+    """Load trading journal."""
+    if os.path.exists(TRADING_JOURNAL):
+        with open(TRADING_JOURNAL) as f:
+            return json.load(f)
+    return {"trades": [], "metadata": {"total_trades": 0, "version": "1.0"}}
+
+def save_journal(data):
+    """Save trading journal."""
+    os.makedirs(os.path.dirname(TRADING_JOURNAL), exist_ok=True)
+    data["metadata"]["last_updated"] = datetime.now(timezone.utc).isoformat()
+    data["metadata"]["total_trades"] = len(data["trades"])
+    with open(TRADING_JOURNAL, "w") as f:
+        json.dump(data, f, indent=2, default=str)
+
+def journal_open_trade(symbol, price, qty, notes=""):
+    """Add open trade to journal."""
+    journal = load_journal()
+    trade_id = f"auto_{len(journal['trades']) + 1:03d}"
+    journal["trades"].append({
+        "id": trade_id, "agent": "hermes2", "asset": symbol, "side": "long",
+        "entry_price": price, "exit_price": None, "size_usd": round(qty * price, 2),
+        "leverage": 1, "tp_price": round(price * 1.035, 2), "sl_price": round(price * 0.98, 2),
+        "status": "open", "pnl_usd": None, "pnl_pct": None,
+        "opened_at": datetime.now(timezone.utc).isoformat(), "closed_at": None,
+        "close_reason": None, "notes": notes, "tags": ["spot", "auto-trader"]
+    })
+    save_journal(journal)
+    log(f"  📓 Journal: OPEN {symbol} @ ${price:,.2f} ({trade_id})")
+
+def journal_close_trade(symbol, exit_price, pnl_pct, close_reason=""):
+    """Close trade in journal."""
+    journal = load_journal()
+    for t in reversed(journal["trades"]):
+        if t["asset"] == symbol and t["status"] == "open" and t["agent"] == "hermes2":
+            t["status"] = "closed"
+            t["exit_price"] = exit_price
+            t["pnl_pct"] = round(pnl_pct, 2)
+            t["pnl_usd"] = round(t["size_usd"] * pnl_pct / 100, 2)
+            t["closed_at"] = datetime.now(timezone.utc).isoformat()
+            t["close_reason"] = close_reason
+            save_journal(journal)
+            log(f"  📓 Journal: CLOSE {symbol} @ ${exit_price:,.2f} ({t['id']}) {pnl_pct:+.1f}%")
+            return
+    log(f"  ⚠️ Journal: no open trade found for {symbol}")
 
 def log_daily_trade(symbol, pnl_pct, trade_type="closed"):
     """Log a trade to daily tracker."""
@@ -408,6 +493,7 @@ def run_scan():
                 state["closed_trades"].append({"symbol":sym,"entry":pos["entry_price"],"exit":price,
                     "pnl_pct":round(pnl*100,2),"closed_at":datetime.now(timezone.utc).isoformat()})
                 log_daily_trade(sym, pnl*100, "tp_hit")
+                journal_close_trade(sym, price, pnl*100, "tp_hit")
                 del positions[sym]; save_state(state)
                 log(f"🎯 TP: {sym} +{pnl*100:.1f}%")
 
@@ -417,6 +503,7 @@ def run_scan():
                 state["closed_trades"].append({"symbol":sym,"entry":pos["entry_price"],"exit":price,
                     "pnl_pct":round(pnl*100,2),"closed_at":datetime.now(timezone.utc).isoformat()})
                 log_daily_trade(sym, pnl*100, "sl_hit")
+                journal_close_trade(sym, price, pnl*100, "sl_hit")
                 del positions[sym]; save_state(state)
                 log(f"🛑 SL: {sym} {pnl*100:.1f}%")
 
@@ -426,6 +513,7 @@ def run_scan():
                 state["closed_trades"].append({"symbol":sym,"entry":pos["entry_price"],"exit":price,
                     "pnl_pct":round(pnl*100,2),"closed_at":datetime.now(timezone.utc).isoformat()})
                 log_daily_trade(sym, pnl*100, "trailing_hit")
+                journal_close_trade(sym, price, pnl*100, "trailing_hit")
                 del positions[sym]; save_state(state)
                 log(f"📈🎯 Trailing SL: {sym} +{pnl*100:.1f}%")
 
@@ -441,6 +529,7 @@ def run_scan():
                 state["closed_trades"].append({"symbol":sym,"entry":pos["entry_price"],"exit":price,
                     "pnl_pct":round(pnl*100,2),"closed_at":datetime.now(timezone.utc).isoformat()})
                 log_daily_trade(sym, pnl*100, "early_exit")
+                journal_close_trade(sym, price, pnl*100, "early_exit")
                 del positions[sym]; save_state(state)
                 log(f"⚡ Early exit: {sym} +{pnl*100:.1f}%")
 
@@ -470,6 +559,7 @@ def run_scan():
                         "trailing_active": False,
                     }
                     save_state(state)
+                    journal_open_trade(sym, price, qty, notes)
                     log(f"📈 NEW: LONG {sym} {qty} @ ${price:,.2f}")
                     break
 

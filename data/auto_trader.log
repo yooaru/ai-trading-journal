@@ -53,3 +53,34 @@
 [2026-04-08 14:27:33]   ✅ Daily status: OK
 [2026-04-08 14:27:37]   🔴 BTC: -100.00% ($71,591→$0)
 [2026-04-08 14:27:37]   📊 Avg: -100.00%
+[2026-04-08 15:00:13] 🤖 Auto Trader started
+[2026-04-08 15:00:15] 🔍 Scan | Cash: $99,928.34 | Pos: 1
+[2026-04-08 15:00:15]   ✅ Daily status: OK
+[2026-04-08 15:00:36]   🔴 BTC: -100.00% ($71,591→$0)
+[2026-04-08 15:00:36]   📊 Avg: -100.00%
+[2026-04-08 15:10:58] 🤖 Auto Trader started
+[2026-04-08 15:11:09] 🔍 Scan | Cash: $99,928.34 | Pos: 1
+[2026-04-08 15:11:09]   ✅ Daily status: OK
+[2026-04-08 15:11:15]   📡 BTC price from Binance: $70,927.92
+[2026-04-08 15:11:22]   📡 ETH price from Binance: $2,199.99
+[2026-04-08 15:11:25]   📐 ETH volatility: HIGH (BB width: 6.6%) → risk: 1.0%
+[2026-04-08 15:11:25]   ❌ Failed: {'detail': 'Unable to fetch historical price for ETH at 2026-04-08T15:11:25Z'}
+[2026-04-08 15:11:27]   📡 SOL price from Binance: $82.93
+[2026-04-08 15:12:05] 🤖 Auto Trader started
+[2026-04-08 15:12:25] 🔍 Scan | Cash: $99,000.00 | Pos: 1
+[2026-04-08 15:12:25]   ✅ Daily status: OK
+[2026-04-08 15:34:36] 🤖 Auto Trader started
+[2026-04-08 15:34:37] 🔍 Scan | Cash: $99,928.34 | Pos: 1
+[2026-04-08 15:34:37]   ✅ Daily status: OK
+[2026-04-08 15:34:39]   📡 BTC price from Binance: $71,187.63
+[2026-04-08 15:34:40]   📡 ETH price from Binance: $2,207.57
+[2026-04-08 15:34:42]   📡 SOL price from Binance: $83.12
+[2026-04-08 15:35:08]   🟢 SUI: BUY (4 conds) — 1H BUY (61%) | 4H trend OK | Below BB middle (27%)
+[2026-04-08 15:35:09]   📐 SUI volatility: HIGH (BB width: 8.0%) → risk: 1.0%
+[2026-04-08 15:35:44]   ❌ Error: HTTPSConnectionPool(host='ai4trade.ai', port=443): Read timed out. (read timeout=30)
+[2026-04-08 15:35:54]   📡 DOGE price from Binance: $0.09
+[2026-04-08 15:36:06]   📡 XRP price from Binance: $1.35
+[2026-04-08 15:36:10]   📡 LINK price from Binance: $9.02
+[2026-04-08 15:36:13]   📡 AVAX price from Binance: $9.20
+[2026-04-08 15:36:14]   🔴 BTC: -0.56% ($71,591→$71,188)
+[2026-04-08 15:36:14]   📊 Avg: -0.56%

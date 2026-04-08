@@ -7,6 +7,23 @@ let tradesData = null, betsData = null, autoTraderState = null, dailyPnl = null;
 let refreshTimer = null;
 let surfingMode = false;
 
+// ============ THEME ============
+function setTheme(name) {
+  document.body.setAttribute('data-theme', name);
+  localStorage.setItem('ct-theme', name);
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('theme-' + name);
+  if (btn) btn.classList.add('active');
+  // Update CT logo colors for each theme
+  document.querySelectorAll('.ct-c').forEach(el => el.style.color = name === 'warm' ? '#d4a853' : '#a1a1aa');
+  document.querySelectorAll('.ct-t').forEach(el => el.style.color = name === 'warm' ? '#8a7a50' : '#52525b');
+}
+
+function loadTheme() {
+  const saved = localStorage.getItem('ct-theme') || 'mono';
+  setTheme(saved);
+}
+
 // ============ DEMO DATA (surfing mode) ============
 const DEMO = {
   trades: {
@@ -130,6 +147,7 @@ function enterSurfing() {
 }
 function logout() { localStorage.removeItem('journal_session'); surfingMode = false; location.reload(); }
 window.addEventListener('DOMContentLoaded', () => {
+  loadTheme();
   if (localStorage.getItem('journal_session')) showApp();
   document.getElementById('access-key')?.addEventListener('keypress', e => { if (e.key === 'Enter') authenticate(); });
 });

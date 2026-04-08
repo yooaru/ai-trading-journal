@@ -22,11 +22,85 @@ tailwind.config = {
 }
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- THEMES -->
+<style id="theme-vars">
+/* === Monochrome Pro (default) === */
+:root, [data-theme="mono"] {
+  --bg: #09090b;
+  --bg-card: #18181b;
+  --bg-card-end: #1c1c1f;
+  --bg-sidebar: rgba(12,12,14,0.95);
+  --bg-header: rgba(9,9,11,0.8);
+  --bg-input: #09090b;
+  --bg-hover: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.05);
+  --border-hover: rgba(161,161,170,0.2);
+  --text: #d4d4d8;
+  --text-dim: #71717a;
+  --text-muted: #52525b;
+  --accent: #a1a1aa;
+  --accent-hover: #d4d4d8;
+  --accent-bg: rgba(161,161,170,0.04);
+  --glow: rgba(161,161,170,0.04);
+  --nav-active: #a1a1aa;
+  --log-border: #52525b;
+  --btn-bg: #27272a;
+  --btn-hover: #3f3f46;
+  --badge-bg: rgba(255,255,255,0.05);
+  --badge-text: #a1a1aa;
+  --scroll-thumb: #27272a;
+  --green: #4ade80;
+  --green-bg: rgba(74,222,128,0.15);
+  --red: #f87171;
+  --red-bg: rgba(248,113,113,0.15);
+  --amber: #fbbf24;
+  --amber-bg: rgba(251,191,36,0.10);
+  --blue: #60a5fa;
+  --blue-bg: rgba(96,165,250,0.15);
+}
+
+/* === Warm Slate === */
+[data-theme="warm"] {
+  --bg: #0e0c11;
+  --bg-card: #17151c;
+  --bg-card-end: #1b1920;
+  --bg-sidebar: rgba(14,12,17,0.95);
+  --bg-header: rgba(14,12,17,0.82);
+  --bg-input: #0e0c11;
+  --bg-hover: rgba(212,168,83,0.03);
+  --border: rgba(255,255,255,0.05);
+  --border-hover: rgba(212,168,83,0.2);
+  --text: #e8e4dd;
+  --text-dim: #8a8478;
+  --text-muted: #6b655c;
+  --accent: #d4a853;
+  --accent-hover: #e8c06a;
+  --accent-bg: rgba(212,168,83,0.06);
+  --glow: rgba(212,168,83,0.04);
+  --nav-active: #d4a853;
+  --log-border: #8a7a5c;
+  --btn-bg: #2a2530;
+  --btn-hover: #3a3440;
+  --badge-bg: rgba(212,168,83,0.08);
+  --badge-text: #d4a853;
+  --scroll-thumb: #2a2530;
+  --green: #4ade80;
+  --green-bg: rgba(74,222,128,0.15);
+  --red: #f87171;
+  --red-bg: rgba(248,113,113,0.15);
+  --amber: #fbbf24;
+  --amber-bg: rgba(251,191,36,0.10);
+  --blue: #60a5fa;
+  --blue-bg: rgba(96,165,250,0.15);
+}
+</style>
+
 <style>
-body { background: #09090b; }
+body { background: var(--bg); }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #09090b; }
-::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 3px; }
 
 /* Tab transitions */
 .tab-content { display: none; opacity: 0; transform: translateY(6px); }
@@ -35,13 +109,13 @@ body { background: #09090b; }
 
 /* Card glow on hover */
 .card-glow {
-  background: linear-gradient(135deg, #18181b 0%, #1c1c1f 100%);
-  border: 1px solid rgba(255,255,255,0.05);
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-end) 100%);
+  border: 1px solid var(--border);
   transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
 }
 .card-glow:hover {
-  border-color: rgba(161,161,170,0.2);
-  box-shadow: 0 0 20px rgba(161,161,170,0.04), 0 4px 16px rgba(0,0,0,0.3);
+  border-color: var(--border-hover);
+  box-shadow: 0 0 20px var(--glow), 0 4px 16px rgba(0,0,0,0.3);
   transform: translateY(-1px);
 }
 
@@ -61,15 +135,15 @@ body { background: #09090b; }
 
 /* Glassmorphism header */
 .glass-header {
-  background: rgba(9,9,11,0.8);
+  background: var(--bg-header);
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid var(--border);
 }
 
 /* Glass sidebar */
 .glass-sidebar {
-  background: rgba(12,12,14,0.95);
+  background: var(--bg-sidebar);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -82,34 +156,21 @@ body { background: #09090b; }
 .pulse-dot { animation: pulse 2s ease-in-out infinite; }
 
 /* Table row transitions */
-.trade-row {
-  transition: background 0.15s, border-color 0.15s;
-}
-.trade-row:hover {
-  background: rgba(255,255,255,0.03);
-}
+.trade-row { transition: background 0.15s, border-color 0.15s; }
+.trade-row:hover { background: var(--bg-hover); }
 
 /* Button press */
-.btn-press {
-  transition: all 0.15s ease;
-  cursor: pointer;
-}
-.btn-press:active {
-  transform: scale(0.96);
-  filter: brightness(0.9);
-}
+.btn-press { transition: all 0.15s ease; cursor: pointer; }
+.btn-press:active { transform: scale(0.96); filter: brightness(0.9); }
 
 /* Nav item transitions */
-.nav-item {
-  transition: all 0.2s ease;
-  position: relative;
-}
+.nav-item { transition: all 0.2s ease; position: relative; }
 .nav-item.active-nav::before {
   content: '';
   position: absolute;
   left: 0; top: 50%; transform: translateY(-50%);
   width: 3px; height: 60%;
-  background: #a1a1aa;
+  background: var(--nav-active);
   border-radius: 0 2px 2px 0;
 }
 
@@ -120,26 +181,15 @@ body { background: #09090b; }
 }
 
 /* Position card hover */
-.pos-card {
-  transition: border-color 0.2s, background 0.2s;
-}
+.pos-card { transition: border-color 0.2s, background 0.2s; }
 .pos-card:hover {
-  border-color: rgba(161,161,170,0.25);
-  background: rgba(161,161,170,0.03);
+  border-color: var(--border-hover);
+  background: var(--accent-bg);
 }
 
 /* Signal strength bar */
-.signal-bar {
-  height: 3px;
-  border-radius: 2px;
-  background: rgba(255,255,255,0.06);
-  overflow: hidden;
-}
-.signal-fill {
-  height: 100%;
-  border-radius: 2px;
-  transition: width 0.5s ease;
-}
+.signal-bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
+.signal-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
 
 /* Auth card entrance */
 @keyframes authIn {
@@ -148,39 +198,49 @@ body { background: #09090b; }
 }
 .auth-card { animation: authIn 0.4s ease; }
 
-/* Smooth number transitions */
-.num-transition { transition: color 0.3s; }
-
 /* Log entry slide */
 @keyframes logSlide {
   from { opacity: 0; transform: translateX(-8px); }
   to { opacity: 1; transform: translateX(0); }
 }
 .log-entry { animation: logSlide 0.3s ease; }
-.log-accent { border-color: #52525b; }
+.log-accent { border-color: var(--log-border); }
 
 /* Scrollbar fade */
-.scroll-area { scrollbar-color: #333 transparent; }
-.scroll-area:hover { scrollbar-color: #555 transparent; }
+.scroll-area { scrollbar-color: var(--scroll-thumb) transparent; }
+
+/* Theme switcher */
+.theme-btn {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+.theme-btn:hover { border-color: var(--border-hover); }
+.theme-btn.active { border-color: var(--accent); background: var(--accent-bg); }
 </style>
 </head>
-<body class="bg-[#09090b] text-zinc-300 min-h-screen font-sans antialiased">
+<body data-theme="mono" class="min-h-screen font-sans antialiased" style="background:var(--bg);color:var(--text)">
 
 <!-- AUTH -->
 <div id="auth-gate" class="flex items-center justify-center min-h-screen">
-  <div class="auth-card bg-[#18181b] border border-white/5 rounded-xl p-10 text-center max-w-sm w-full mx-4">
-    <div class="text-4xl mb-4 font-bold tracking-tight"><span class="text-zinc-400">C</span><span class="text-zinc-600">T</span></div>
-    <h2 class="text-xl font-semibold mb-2">ClawTrader</h2>
-    <p class="text-zinc-500 text-sm mb-6">Enter access key</p>
+  <div class="auth-card rounded-xl p-10 text-center max-w-sm w-full mx-4" style="background:var(--bg-card);border:1px solid var(--border)">
+    <div class="text-4xl mb-4 font-bold tracking-tight"><span class="ct-c" style="color:var(--accent)">C</span><span class="ct-t" style="color:var(--text-muted)">T</span></div>
+    <h2 class="text-xl font-semibold mb-2" style="color:var(--text)">ClawTrader</h2>
+    <p class="text-sm mb-6" style="color:var(--text-dim)">Enter access key</p>
     <input id="access-key" type="password" placeholder="Access key..."
-      class="w-full px-4 py-3 bg-[#09090b] border border-white/10 rounded-lg text-white mb-3 outline-none focus:border-zinc-500 transition">
-    <button onclick="authenticate()" class="btn-press w-full py-3 bg-zinc-700 hover:bg-zinc-600 rounded-lg text-white font-medium transition mb-3">Unlock</button>
+      class="w-full px-4 py-3 border rounded-lg mb-3 outline-none transition" style="background:var(--bg-input);border-color:var(--border);color:var(--text)">
+    <button onclick="authenticate()" class="btn-press w-full py-3 rounded-lg font-medium transition mb-3" style="background:var(--btn-bg);color:var(--text)">Unlock</button>
     <div class="flex items-center gap-3 mb-4">
-      <div class="flex-1 h-px bg-white/5"></div>
-      <span class="text-[10px] text-zinc-600 uppercase tracking-wider">or</span>
-      <div class="flex-1 h-px bg-white/5"></div>
+      <div class="flex-1 h-px" style="background:var(--border)"></div>
+      <span class="text-[10px] uppercase tracking-wider" style="color:var(--text-muted)">or</span>
+      <div class="flex-1 h-px" style="background:var(--border)"></div>
     </div>
-    <button onclick="enterSurfing()" class="btn-press w-full py-2.5 bg-transparent border border-white/10 rounded-lg text-zinc-500 text-sm hover:border-zinc-600 hover:text-zinc-400 transition">Browse in preview mode</button>
+    <button onclick="enterSurfing()" class="btn-press w-full py-2.5 bg-transparent border rounded-lg text-sm transition" style="border-color:var(--border);color:var(--text-dim)">Browse in preview mode</button>
     <p id="auth-error" class="text-red-400 text-sm mt-3 hidden">Wrong key</p>
   </div>
 </div>
@@ -191,16 +251,16 @@ body { background: #09090b; }
 
   <nav id="sidebar" class="glass-sidebar fixed left-0 top-0 h-screen w-56 border-r border-white/5 z-50 flex flex-col
     -translate-x-full md:translate-x-0 transition-transform duration-200">
-    <div class="p-5 border-b border-white/5 flex items-center gap-3">
-      <div class="text-lg font-bold tracking-tight"><span class="text-zinc-400">C</span><span class="text-zinc-600">T</span></div>
-      <span class="font-semibold text-sm">ClawTrader</span>
+    <div class="p-5 border-b flex items-center gap-3" style="border-color:var(--border)">
+      <div class="text-lg font-bold tracking-tight"><span class="ct-c" style="color:var(--accent)">C</span><span class="ct-t" style="color:var(--text-muted)">T</span></div>
+      <span class="font-semibold text-sm" style="color:var(--text)">ClawTrader</span>
     </div>
     <div class="flex-1 p-3 space-y-1" id="nav-links"></div>
-    <div class="p-4 border-t border-white/5">
-      <div class="flex items-center gap-2 text-xs text-gray-500 mb-3">
+    <div class="p-4 border-t" style="border-color:var(--border)">
+      <div class="flex items-center gap-2 text-xs mb-3" style="color:var(--text-dim)">
         <span class="pulse-dot w-2 h-2 rounded-full bg-green-500"></span> Connected
       </div>
-      <button onclick="logout()" class="w-full py-2 text-xs text-gray-500 border border-white/10 rounded-lg hover:border-red-500/50 hover:text-red-400 transition">Logout</button>
+      <button onclick="logout()" class="btn-press w-full py-2 text-xs border rounded-lg transition" style="border-color:var(--border);color:var(--text-dim)">Logout</button>
     </div>
   </nav>
 
@@ -212,9 +272,13 @@ body { background: #09090b; }
         <span id="preview-badge" class="hidden text-[9px] font-medium px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-500 border border-zinc-700/50 uppercase tracking-wider">Preview</span>
       </div>
       <div class="flex items-center gap-3">
-        <span id="last-updated" class="text-xs text-gray-600 font-mono hidden sm:block"></span>
-        <button onclick="refreshData()" class="btn-press text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10">↻ Refresh</button>
-        <div class="w-8 h-8 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center text-xs font-semibold">CT</div>
+        <span id="last-updated" class="text-xs font-mono hidden sm:block" style="color:var(--text-muted)"></span>
+        <button onclick="refreshData()" class="btn-press text-xs px-3 py-1.5 rounded-lg" style="background:var(--btn-bg);border:1px solid var(--border);color:var(--text)">↻ Refresh</button>
+        <div class="flex items-center gap-1">
+          <button onclick="setTheme('mono')" class="theme-btn" id="theme-mono" title="Monochrome">◆</button>
+          <button onclick="setTheme('warm')" class="theme-btn" id="theme-warm" title="Warm Slate">◈</button>
+        </div>
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold" style="background:var(--badge-bg);color:var(--badge-text)">CT</div>
       </div>
     </header>
 

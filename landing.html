@@ -22,8 +22,27 @@ tailwind.config = {
 }
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- THEMES -->
+<style id="theme-vars">
+:root, [data-theme="mono"] {
+  --bg: #09090b; --bg-card: #18181b; --bg-card-end: #1c1c1f;
+  --border: rgba(255,255,255,0.05); --border-hover: rgba(161,161,170,0.2);
+  --text: #d4d4d8; --text-dim: #71717a; --text-muted: #52525b;
+  --accent: #a1a1aa; --accent-hover: #d4d4d8;
+  --glow: rgba(161,161,170,0.04); --btn-bg: #27272a; --btn-hover: #3f3f46;
+}
+[data-theme="warm"] {
+  --bg: #0e0c11; --bg-card: #17151c; --bg-card-end: #1b1920;
+  --border: rgba(255,255,255,0.05); --border-hover: rgba(212,168,83,0.2);
+  --text: #e8e4dd; --text-dim: #8a8478; --text-muted: #6b655c;
+  --accent: #d4a853; --accent-hover: #e8c06a;
+  --glow: rgba(212,168,83,0.04); --btn-bg: #2a2530; --btn-hover: #3a3440;
+}
+</style>
+
 <style>
-body { background: #09090b; }
+body { background: var(--bg); }
 
 /* Subtle grid bg */
 .grid-bg {
@@ -38,8 +57,9 @@ body { background: #09090b; }
   position: absolute;
   border-radius: 50%;
   filter: blur(100px);
-  opacity: 0.08;
+  opacity: 0.06;
   pointer-events: none;
+  background: var(--accent);
 }
 
 /* Fade in animations */
@@ -62,13 +82,13 @@ body { background: #09090b; }
 
 /* Hover card */
 .feature-card {
-  background: linear-gradient(135deg, #18181b 0%, #1c1c1f 100%);
-  border: 1px solid rgba(255,255,255,0.05);
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-end) 100%);
+  border: 1px solid var(--border);
   transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
 }
 .feature-card:hover {
-  border-color: rgba(161,161,170,0.2);
-  box-shadow: 0 0 30px rgba(161,161,170,0.04);
+  border-color: var(--border-hover);
+  box-shadow: 0 0 30px var(--glow);
   transform: translateY(-2px);
 }
 
@@ -76,7 +96,7 @@ body { background: #09090b; }
 .ct-logo {
   font-weight: 900;
   letter-spacing: -0.05em;
-  background: linear-gradient(135deg, #a1a1aa 0%, #52525b 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--text-muted) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -84,13 +104,14 @@ body { background: #09090b; }
 
 /* Launch button */
 .btn-launch {
-  background: linear-gradient(135deg, #27272a 0%, #18181b 100%);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, var(--btn-hover) 0%, var(--btn-bg) 100%);
+  border: 1px solid var(--border);
+  color: var(--text);
   transition: all 0.3s ease;
 }
 .btn-launch:hover {
-  border-color: rgba(161,161,170,0.3);
-  box-shadow: 0 0 30px rgba(161,161,170,0.08);
+  border-color: var(--border-hover);
+  box-shadow: 0 0 30px var(--glow);
   transform: translateY(-1px);
 }
 
@@ -111,23 +132,25 @@ body { background: #09090b; }
 ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
 </style>
 </head>
-<body class="bg-[#09090b] text-zinc-300 min-h-screen font-sans antialiased grid-bg overflow-x-hidden">
+<body data-theme="mono" class="min-h-screen font-sans antialiased grid-bg overflow-x-hidden" style="background:var(--bg);color:var(--text)">
 
 <!-- Glow orbs -->
-<div class="orb w-96 h-96 bg-zinc-500 top-0 left-1/4 fixed"></div>
-<div class="orb w-80 h-80 bg-zinc-400 bottom-1/4 right-0 fixed"></div>
+<div class="orb w-96 h-96 top-0 left-1/4 fixed"></div>
+<div class="orb w-80 h-80 bottom-1/4 right-0 fixed"></div>
 
 <!-- NAV -->
-<nav class="fixed top-0 left-0 right-0 z-50 border-b border-white/5" style="background:rgba(9,9,11,0.85);backdrop-filter:blur(16px)">
+<nav class="fixed top-0 left-0 right-0 z-50 border-b" style="background:var(--bg);border-color:var(--border);backdrop-filter:blur(16px);opacity:0.95">
   <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
     <div class="flex items-center gap-2">
       <span class="ct-logo text-xl">CT</span>
-      <span class="text-sm font-medium text-zinc-400">ClawTrader</span>
+      <span class="text-sm font-medium" style="color:var(--text-dim)">ClawTrader</span>
     </div>
     <div class="flex items-center gap-4">
-      <a href="#features" class="text-xs text-zinc-500 hover:text-zinc-300 transition hidden sm:block">Features</a>
-      <a href="#stats" class="text-xs text-zinc-500 hover:text-zinc-300 transition hidden sm:block">Stats</a>
-      <a href="index.html" class="btn-launch text-xs px-4 py-2 rounded-lg text-zinc-300 font-medium">Launch App</a>
+      <a href="#features" class="text-xs transition hidden sm:block" style="color:var(--text-muted)">Features</a>
+      <a href="#stats" class="text-xs transition hidden sm:block" style="color:var(--text-muted)">Stats</a>
+      <button onclick="setTheme('mono')" class="theme-btn text-xs w-7 h-7 rounded-md flex items-center justify-center transition" id="theme-mono-lp" style="border:1px solid var(--border);background:var(--bg-card)" title="Monochrome">◆</button>
+      <button onclick="setTheme('warm')" class="theme-btn text-xs w-7 h-7 rounded-md flex items-center justify-center transition" id="theme-warm-lp" style="border:1px solid var(--border);background:var(--bg-card)" title="Warm Slate">◈</button>
+      <a href="index.html" class="btn-launch text-xs px-4 py-2 rounded-lg font-medium">Launch App</a>
     </div>
   </div>
 </nav>
@@ -294,17 +317,34 @@ body { background: #09090b; }
 </section>
 
 <!-- FOOTER -->
-<footer class="border-t border-white/5 py-6 px-6">
+<footer class="border-t py-6 px-6" style="border-color:var(--border)">
   <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
     <div class="flex items-center gap-2">
       <span class="ct-logo text-sm">CT</span>
-      <span class="text-[10px] text-zinc-700">ClawTrader v1.0</span>
+      <span class="text-[10px]" style="color:var(--text-muted)">ClawTrader v1.0</span>
     </div>
-    <div class="text-[10px] text-zinc-700 font-mono">
+    <div class="text-[10px] font-mono" style="color:var(--text-muted)">
       built by hermes · powered by tradingview
     </div>
   </div>
 </footer>
+
+<script>
+function setTheme(name) {
+  document.body.setAttribute('data-theme', name);
+  localStorage.setItem('ct-theme', name);
+  // Highlight active button
+  ['mono','warm'].forEach(t => {
+    const btn = document.getElementById('theme-' + t + '-lp');
+    if (btn) btn.style.borderColor = t === name ? 'var(--accent)' : 'var(--border)';
+  });
+}
+// Load saved theme
+(function() {
+  const saved = localStorage.getItem('ct-theme') || 'mono';
+  setTheme(saved);
+})();
+</script>
 
 </body>
 </html>
