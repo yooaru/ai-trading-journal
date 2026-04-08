@@ -276,6 +276,21 @@ tr:hover {
   color: #86efac;
 }
 
+.badge.won {
+  background: #1a2e1a;
+  color: #22c55e;
+}
+
+.badge.lost {
+  background: #2e1a1a;
+  color: #ef4444;
+}
+
+.badge.sold {
+  background: #2e2a1a;
+  color: #facc15;
+}
+
 .badge.tp {
   background: #1a2e1a;
   color: #22c55e;

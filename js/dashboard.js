@@ -198,7 +198,7 @@ function renderBets() {
       <td>${(b.entry_price * 100).toFixed(0)}¢</td>
       <td>$${fmtNum(b.size_usd)}</td>
       <td class="${pnlClass}">${b.pnl_usd !== null ? (b.pnl_usd >= 0 ? '+' : '') + '$' + b.pnl_usd.toFixed(2) : '—'}</td>
-      <td><span class="badge ${b.status}">${b.status}</span></td>
+      <td><span class="badge ${b.status === 'closed' ? (b.close_reason || 'closed') : b.status}">${b.status === 'closed' ? (b.close_reason || 'closed') : b.status}</span></td>
       <td title="${b.notes || ''}">${trunc(b.notes, 30)}</td>
     </tr>`;
   }).join('');
