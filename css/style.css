@@ -809,32 +809,37 @@ tr:last-child td { border-bottom: none; }
   .stat-value { font-size: 22px; }
 
   .stats-detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     background: transparent;
     padding: 0;
   }
   .stats-detail-card {
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
-    padding: 14px 16px;
+    padding: 10px 14px;
     background: var(--bg-panel);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     text-align: left;
-    min-width: 0;
-    overflow: hidden;
   }
   .stats-detail-label {
-    font-size: 11px;
-    margin-bottom: 6px;
+    font-size: 12px;
+    margin-bottom: 0;
     letter-spacing: 0.3px;
+    flex-shrink: 0;
   }
   .stats-detail-value {
-    font-size: 17px;
+    font-size: 16px;
+    font-weight: 590;
     line-height: 1.4;
+    text-align: right;
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
+    max-width: 60%;
   }
 
   th:nth-child(6), td:nth-child(6),
@@ -845,30 +850,35 @@ tr:last-child td { border-bottom: none; }
   .stats-row { grid-template-columns: 1fr; }
   .tab-content { padding: 16px 12px; }
   .stats-detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     background: transparent;
     padding: 0;
   }
   .stats-detail-card {
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
-    padding: 12px 14px;
+    padding: 10px 14px;
     background: var(--bg-panel);
-    min-width: 0;
-    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .stats-detail-label {
-    font-size: 10px;
-    margin-bottom: 4px;
+    font-size: 11px;
+    margin-bottom: 0;
+    flex-shrink: 0;
   }
   .stats-detail-value {
     font-size: 15px;
+    font-weight: 590;
     line-height: 1.4;
+    text-align: right;
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
+    max-width: 60%;
   }
   th:nth-child(5), td:nth-child(5),
   th:nth-child(7), td:nth-child(7) { display: none; }
