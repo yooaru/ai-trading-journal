@@ -2,115 +2,102 @@
 const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? '' : 'https://ready-concentrate-immediate-providers.trycloudflare.com';
 const REFRESH_INTERVAL = 30000;
-let tradesData = null;
-let betsData = null;
-let autoTraderState = null;
-let dailyPnl = null;
-let currentTab = 'dashboard';
+let tradesData = null, betsData = null, autoTraderState = null, dailyPnl = null;
 let refreshTimer = null;
+
+// ============ NAV ============
+const TABS = [
+  { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+  { id: 'trades', label: 'Trades', icon: '💹' },
+  { id: 'bets', label: 'Bets', icon: '🎯' },
+  { id: 'signals', label: 'Signals', icon: '📡' },
+  { id: 'log', label: 'Log', icon: '📋' },
+];
+
+function buildNav() {
+  const nav = document.getElementById('nav-links');
+  nav.innerHTML = TABS.map(t => `
+    <a onclick="switchTab('${t.id}')" data-tab="${t.id}"
+      class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm cursor-pointer transition
+        ${t.id === 'dashboard' ? 'bg-white/[0.06] text-white' : 'text-gray-500 hover:bg-white/[0.04] hover:text-gray-300'}">
+      <span class="w-5 text-center">${t.icon}</span> ${t.label}
+    </a>
+  `).join('');
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.nav-item').forEach(n => {
+    const isActive = n.dataset.tab === tab;
+    n.classList.toggle('bg-white/[0.06]', isActive);
+    n.classList.toggle('text-white', isActive);
+    n.classList.toggle('text-gray-500', !isActive);
+  });
+  document.getElementById('page-title').textContent = TABS.find(t => t.id === tab)?.label || tab;
+  closeSidebar();
+}
+
+// ============ SIDEBAR ============
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sidebar-overlay');
+  const isOpen = !sb.classList.contains('-translate-x-full');
+  if (isOpen) { closeSidebar(); } else {
+    sb.classList.remove('-translate-x-full');
+    ov.classList.remove('hidden');
+  }
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.add('-translate-x-full');
+  document.getElementById('sidebar-overlay').classList.add('hidden');
+}
 
 // ============ AUTH ============
 async function authenticate() {
   const input = document.getElementById('access-key').value;
-  if (!input || input.length < 4) {
-    showError('Key must be at least 4 characters');
-    return;
-  }
+  if (!input || input.length < 4) return;
   try {
     const res = await fetch(API_BASE + '/verify?key=' + encodeURIComponent(input));
     const data = await res.json();
     if (data.valid) {
       localStorage.setItem('journal_session', '1');
-      showDashboard();
+      showApp();
     } else {
-      showError('Wrong key. Try again.');
+      document.getElementById('auth-error').classList.remove('hidden');
       document.getElementById('access-key').value = '';
     }
-  } catch (e) {
-    showError('Connection error');
-  }
+  } catch { document.getElementById('auth-error').textContent = 'Connection error'; document.getElementById('auth-error').classList.remove('hidden'); }
 }
-
-function showError(msg) {
-  const el = document.getElementById('auth-error');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-function showDashboard() {
-  document.getElementById('auth-gate').style.display = 'none';
-  document.getElementById('sidebar').style.display = 'flex';
-  document.getElementById('main-content').style.display = 'block';
+function showApp() {
+  document.getElementById('auth-gate').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  buildNav();
   loadData();
   refreshTimer = setInterval(refreshData, REFRESH_INTERVAL);
 }
-
-function logout() {
-  localStorage.removeItem('journal_session');
-  location.reload();
-}
-
-function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const main = document.getElementById('main-content');
-  const overlay = document.getElementById('sidebar-overlay');
-  const isMobile = window.innerWidth <= 768;
-
-  if (isMobile) {
-    sidebar.classList.toggle('mobile-open');
-    overlay.classList.toggle('active');
-  } else {
-    sidebar.classList.toggle('collapsed');
-    main.classList.toggle('expanded');
-  }
-}
-
-// Close mobile sidebar when nav item clicked
-document.addEventListener('click', (e) => {
-  const navItem = e.target.closest('.nav-item');
-  if (navItem && window.innerWidth <= 768) {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    sidebar.classList.remove('mobile-open');
-    overlay.classList.remove('active');
-  }
-});
-
-// Auto-login
+function logout() { localStorage.removeItem('journal_session'); location.reload(); }
 window.addEventListener('DOMContentLoaded', () => {
-  if (localStorage.getItem('journal_session')) showDashboard();
-  document.getElementById('access-key')?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') authenticate();
-  });
+  if (localStorage.getItem('journal_session')) showApp();
+  document.getElementById('access-key')?.addEventListener('keypress', e => { if (e.key === 'Enter') authenticate(); });
 });
 
-// ============ DATA LOADING ============
+// ============ DATA ============
 async function loadData() {
   try {
-    const [tradesRes, betsRes, stateRes, dailyRes] = await Promise.all([
+    const [tr, br, sr, dr] = await Promise.all([
       fetch(API_BASE + '/data/trades.json?t=' + Date.now()).catch(() => null),
       fetch(API_BASE + '/data/bets.json?t=' + Date.now()).catch(() => null),
       fetch(API_BASE + '/data/auto_trader_state.json?t=' + Date.now()).catch(() => null),
       fetch(API_BASE + '/data/daily_pnl.json?t=' + Date.now()).catch(() => null),
     ]);
-
-    if (tradesRes) tradesData = await tradesRes.json();
-    if (betsRes) betsData = await betsRes.json();
-    if (stateRes) autoTraderState = await stateRes.json();
-    if (dailyRes) {
-      try { dailyPnl = await dailyRes.json(); } catch { dailyPnl = null; }
-    }
-
-    updateStats();
-    renderPositions();
-    renderTradeStats();
-    renderCurrentTab();
-    updateLastUpdated();
-  } catch (err) {
-    console.error('Failed to load data:', err);
-  }
+    if (tr) tradesData = await tr.json();
+    if (br) betsData = await br.json();
+    if (sr) autoTraderState = await sr.json();
+    if (dr) { try { dailyPnl = await dr.json(); } catch {} }
+    updateStats(); renderPositions(); renderTradeStats(); renderTrades();
+    const t = tradesData?.metadata?.last_updated || autoTraderState?.last_scan;
+    if (t) document.getElementById('last-updated').textContent = 'Updated: ' + fmt(t);
+  } catch (e) { console.error(e); }
 }
-
 function refreshData() { loadData(); }
 
 // ============ STATS ============
@@ -118,397 +105,190 @@ function updateStats() {
   const trades = tradesData?.trades || [];
   const bets = betsData?.bets || [];
   const positions = autoTraderState?.positions || {};
-
-  // Cash & portfolio
-  const cash = 99928.34; // fallback, ideally from API
-  let unrealizedPnl = 0;
-  let openCount = 0;
-
-  for (const [sym, pos] of Object.entries(positions)) {
-    const current = pos.current_price || pos.entry_price;
-    const pnl = ((current - pos.entry_price) / pos.entry_price) * (pos.quantity * pos.entry_price);
-    unrealizedPnl += pnl;
-    openCount++;
+  let unreal = 0;
+  for (const [s, p] of Object.entries(positions)) {
+    const c = p.current_price || p.entry_price;
+    unreal += (c - p.entry_price) * p.quantity;
   }
+  const closed = trades.filter(t => t.status === 'closed');
+  const closedB = bets.filter(b => b.status === 'closed');
+  const realized = closed.reduce((s, t) => s + (t.pnl_usd || 0), 0) + closedB.reduce((s, b) => s + (b.pnl_usd || 0), 0);
+  const wins = closed.filter(t => (t.pnl_usd || 0) > 0).length + closedB.filter(b => (b.pnl_usd || 0) > 0).length;
+  const totalC = closed.length + closedB.length;
+  const wr = totalC > 0 ? (wins / totalC * 100).toFixed(1) : '0';
 
-  // Realized P&L
-  const closedTrades = trades.filter(t => t.status === 'closed');
-  const tradePnl = closedTrades.reduce((sum, t) => sum + (t.pnl_usd || 0), 0);
-  const closedBets = bets.filter(b => b.status === 'closed');
-  const betPnl = closedBets.reduce((sum, b) => sum + (b.pnl_usd || 0), 0);
-  const realizedPnl = tradePnl + betPnl;
+  $('#stat-portfolio', '$' + (99928 + unreal).toLocaleString('en', {maximumFractionDigits: 0}));
+  $('#stat-cash', '$99,928');
+  $('#stat-unrealized', (unreal >= 0 ? '+' : '') + '$' + unreal.toFixed(2));
+  el('stat-unrealized').className = 'text-xl md:text-2xl font-bold font-mono ' + (unreal >= 0 ? 'text-green-400' : 'text-red-400');
+  $('#stat-open', Object.keys(positions).length);
+  $('#stat-realized', (realized >= 0 ? '+' : '') + '$' + realized.toFixed(2));
+  el('stat-realized').className = 'text-xl md:text-2xl font-bold font-mono ' + (realized > 0 ? 'text-green-400' : realized < 0 ? 'text-red-400' : '');
+  $('#stat-winrate', wr + '%');
 
-  // Win rate
-  const wins = closedTrades.filter(t => (t.pnl_usd || 0) > 0).length + closedBets.filter(b => (b.pnl_usd || 0) > 0).length;
-  const totalClosed = closedTrades.length + closedBets.length;
-  const winRate = totalClosed > 0 ? ((wins / totalClosed) * 100).toFixed(1) : '0';
-
-  // Portfolio value
-  const portfolioValue = cash + unrealizedPnl;
-
-  // Update DOM
-  const pnlEl = document.getElementById('stat-portfolio');
-  pnlEl.textContent = '$' + portfolioValue.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
-
-  document.getElementById('stat-cash').textContent = '$' + cash.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
-
-  const unrealEl = document.getElementById('stat-unrealized');
-  unrealEl.textContent = (unrealizedPnl >= 0 ? '+' : '') + '$' + unrealizedPnl.toFixed(2);
-  unrealEl.className = 'stat-value ' + (unrealizedPnl >= 0 ? 'positive' : 'negative');
-
-  document.getElementById('stat-open-positions').textContent = openCount;
-
-  const realizedEl = document.getElementById('stat-realized');
-  realizedEl.textContent = (realizedPnl >= 0 ? '+' : '') + '$' + realizedPnl.toFixed(2);
-  realizedEl.className = 'stat-value ' + (realizedPnl > 0 ? 'positive' : realizedPnl < 0 ? 'negative' : '');
-
-  document.getElementById('stat-winrate').textContent = winRate + '%';
-
-  // Today's trades
+  const d = dailyPnl || {};
   const today = new Date().toISOString().slice(0, 10);
-  const todayTrades = (dailyPnl?.trades || []).filter(t => t.time?.startsWith(today));
-  document.getElementById('stat-today-trades').textContent = todayTrades.length;
+  const tt = (d.trades || []).filter(t => t.time?.startsWith(today));
+  $('#stat-today', tt.length);
+  const dp = d.total_pnl_pct || 0;
+  $('#stat-daily-badge', (dp >= 0 ? '+' : '') + dp.toFixed(2) + '%');
+  el('stat-daily-badge').className = 'text-[10px] font-mono font-medium px-2 py-0.5 rounded-full ' + (dp >= 0 ? 'bg-green-500/15 text-green-400' : 'bg-red-500/15 text-red-400');
 
-  // Daily loss bar
-  const dailyPnlPct = dailyPnl?.total_pnl_pct || 0;
-  const maxLoss = 5; // 5% max daily loss
-  const lossRatio = Math.min(Math.abs(Math.min(dailyPnlPct, 0)) / maxLoss * 100, 100);
-  const fillEl = document.getElementById('daily-loss-fill');
-  fillEl.style.width = lossRatio + '%';
-  fillEl.className = 'progress-fill' + (lossRatio > 80 ? ' danger' : lossRatio > 50 ? ' warning' : '');
-  document.getElementById('daily-loss-pct').textContent = dailyPnlPct.toFixed(1) + '% / -5.0%';
-
-  // Daily P&L badge
-  const dailyBadge = document.getElementById('stat-daily-pnl');
-  dailyBadge.textContent = (dailyPnlPct >= 0 ? '+' : '') + dailyPnlPct.toFixed(2) + '%';
-  dailyBadge.className = 'stat-badge ' + (dailyPnlPct >= 0 ? 'positive' : 'negative');
-}
-
-// ============ TRADE STATISTICS ============
-function renderTradeStats() {
-  const trades = tradesData?.trades || [];
-  const bets = betsData?.bets || [];
-  const period = document.getElementById('stats-period')?.value || 'all';
-
-  // Combine trades + bets, filter by period
-  const all = [
-    ...trades.filter(t => t.status === 'closed').map(t => ({
-      pnl: t.pnl_usd || 0,
-      pnl_pct: t.pnl_pct || 0,
-      asset: t.asset,
-      opened: t.opened_at,
-      closed: t.closed_at,
-      type: 'trade',
-    })),
-    ...bets.filter(b => b.status === 'closed').map(b => ({
-      pnl: b.pnl_usd || 0,
-      pnl_pct: 0,
-      asset: b.market,
-      opened: b.opened_at,
-      closed: b.closed_at,
-      type: 'bet',
-    })),
-  ];
-
-  // Filter by period
-  const now = new Date();
-  let filtered = all;
-  if (period === 'today') {
-    const today = now.toISOString().slice(0, 10);
-    filtered = all.filter(t => t.closed?.startsWith(today));
-  } else if (period === 'week') {
-    const weekAgo = new Date(now - 7 * 86400000);
-    filtered = all.filter(t => t.closed && new Date(t.closed) >= weekAgo);
-  } else if (period === 'month') {
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    filtered = all.filter(t => t.closed && new Date(t.closed) >= monthStart);
-  }
-
-  // Calculate stats
-  const total = filtered.length;
-  const wins = filtered.filter(t => t.pnl > 0);
-  const losses = filtered.filter(t => t.pnl < 0);
-  const totalPnl = filtered.reduce((s, t) => s + t.pnl, 0);
-  const winRate = total > 0 ? (wins.length / total * 100) : 0;
-  const avgWin = wins.length > 0 ? wins.reduce((s, t) => s + t.pnl, 0) / wins.length : 0;
-  const avgLoss = losses.length > 0 ? losses.reduce((s, t) => s + t.pnl, 0) / losses.length : 0;
-  const best = filtered.length > 0 ? Math.max(...filtered.map(t => t.pnl)) : 0;
-  const worst = filtered.length > 0 ? Math.min(...filtered.map(t => t.pnl)) : 0;
-  const grossProfit = wins.reduce((s, t) => s + t.pnl, 0);
-  const grossLoss = Math.abs(losses.reduce((s, t) => s + t.pnl, 0));
-  const profitFactor = grossLoss > 0 ? (grossProfit / grossLoss) : (grossProfit > 0 ? Infinity : 0);
-
-  // Avg hold time
-  let avgHold = '—';
-  const holdTimes = filtered.filter(t => t.opened && t.closed).map(t => {
-    return (new Date(t.closed) - new Date(t.opened)) / 60000; // minutes
-  });
-  if (holdTimes.length > 0) {
-    const avgMin = holdTimes.reduce((s, v) => s + v, 0) / holdTimes.length;
-    if (avgMin >= 60) avgHold = (avgMin / 60).toFixed(1) + 'h';
-    else avgHold = avgMin.toFixed(0) + 'm';
-  }
-
-  // Max drawdown (simplified: worst single trade %)
-  const maxDd = filtered.length > 0 ? Math.min(...filtered.map(t => t.pnl_pct)) : 0;
-
-  // Expectancy = (win_rate * avg_win) + (loss_rate * avg_loss)
-  const expectancy = (winRate / 100 * avgWin) + ((100 - winRate) / 100 * avgLoss);
-
-  // Best trade detail
-  const bestTrade = filtered.length > 0 ? filtered.reduce((a, b) => a.pnl > b.pnl ? a : b) : null;
-  const worstTrade = filtered.length > 0 ? filtered.reduce((a, b) => a.pnl < b.pnl ? a : b) : null;
-
-  // Update DOM
-  const setEl = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
-  const setClass = (id, cls) => { const e = document.getElementById(id); if (e) e.className = 'stats-detail-value ' + cls; };
-
-  setEl('td-total-pnl', (totalPnl >= 0 ? '+' : '') + '$' + totalPnl.toFixed(2));
-  setClass('td-total-pnl', totalPnl >= 0 ? 'positive' : 'negative');
-
-  setEl('td-winrate', winRate.toFixed(1) + '%');
-  setClass('td-winrate', winRate >= 50 ? 'positive' : winRate > 0 ? 'negative' : '');
-
-  setEl('td-total-trades', total);
-  setEl('td-wl', wins.length + ' / ' + losses.length);
-
-  setEl('td-avg-win', '+$' + avgWin.toFixed(2));
-  setEl('td-avg-loss', '-$' + Math.abs(avgLoss).toFixed(2));
-
-  setEl('td-best', bestTrade ? (bestTrade.asset + ' +$' + bestTrade.pnl.toFixed(2)) : '—');
-  setEl('td-worst', worstTrade ? (worstTrade.asset + ' -$' + Math.abs(worstTrade.pnl).toFixed(2)) : '—');
-
-  // Add title for long text
-  const bestEl = document.getElementById('td-best');
-  if (bestEl && bestTrade) bestEl.title = bestTrade.asset + ' +$' + bestTrade.pnl.toFixed(2);
-  const worstEl = document.getElementById('td-worst');
-  if (worstEl && worstTrade) worstEl.title = worstTrade.asset + ' -$' + Math.abs(worstTrade.pnl).toFixed(2);
-
-  setEl('td-profit-factor', profitFactor === Infinity ? '∞' : profitFactor.toFixed(2));
-  setClass('td-profit-factor', profitFactor >= 1.5 ? 'positive' : profitFactor < 1 ? 'negative' : '');
-
-  setEl('td-avg-hold', avgHold);
-  setEl('td-max-dd', maxDd.toFixed(1) + '%');
-  setEl('td-expectancy', (expectancy >= 0 ? '+' : '') + '$' + expectancy.toFixed(2));
-  setClass('td-expectancy', expectancy >= 0 ? 'positive' : 'negative');
+  const lossRatio = Math.min(Math.abs(Math.min(dp, 0)) / 5 * 100, 100);
+  el('daily-loss-bar').style.width = lossRatio + '%';
+  el('daily-loss-bar').className = 'h-full rounded-full transition-all duration-500 ' + (lossRatio > 80 ? 'bg-red-500' : lossRatio > 50 ? 'bg-amber-500' : 'bg-green-500');
+  $('#daily-loss-text', dp.toFixed(1) + '% / -5.0%');
 }
 
 // ============ POSITIONS ============
 function renderPositions() {
-  const positions = autoTraderState?.positions || {};
-  const entries = Object.entries(positions);
-
-  // Sidebar count
-  document.getElementById('pos-count').textContent = entries.length;
-
-  // Dashboard list
-  const listEl = document.getElementById('positions-list');
-  if (!entries.length) {
-    listEl.innerHTML = '<div class="empty-state">No open positions — waiting for signals</div>';
-    return;
-  }
-
-  // Badge labels (no emoji)
-  const sideLabels = { long: 'LONG', short: 'SHORT' };
-  const closeLabels = {
-    tp_hit: 'TP Hit',
-    sl_hit: 'SL Hit',
-    trailing_hit: 'Trail SL',
-    early_exit: 'Early Exit',
-    open: 'Open',
-    closed: 'Closed',
-  };
-
-  listEl.innerHTML = entries.map(([sym, pos]) => {
-    const current = pos.current_price || pos.entry_price;
-    const pnlPct = ((current - pos.entry_price) / pos.entry_price * 100);
-    const pnlUsd = (current - pos.entry_price) * pos.quantity;
-    const isPositive = pnlPct >= 0;
-    const trailing = pos.trailing_active;
-    const tpNearest = pos.tp_levels ? Math.min(...pos.tp_levels) : null;
-    const slPrice = pos.sl_price || pos.entry_price * 0.98;
-    const entryTime = pos.entry_time ? new Date(pos.entry_time).toLocaleString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}) : '—';
-
+  const pos = autoTraderState?.positions || {};
+  const entries = Object.entries(pos);
+  $('#pos-count', entries.length);
+  const el = document.getElementById('positions-list');
+  if (!entries.length) { el.innerHTML = '<div class="text-center text-gray-600 text-sm py-8">No positions</div>'; return; }
+  el.innerHTML = entries.map(([sym, p]) => {
+    const c = p.current_price || p.entry_price;
+    const pnl = ((c - p.entry_price) / p.entry_price * 100);
+    const usd = (c - p.entry_price) * p.quantity;
+    const pos = pnl >= 0;
+    const trail = p.trailing_active;
     return `
-      <div class="position-card">
-        <div class="pos-header">
-          <span class="pos-symbol">
-            <span class="badge long">LONG</span>
-            ${sym}
-          </span>
-          <span class="pos-pnl ${isPositive ? 'positive' : 'negative'}">
-            ${isPositive ? '+' : ''}${pnlPct.toFixed(2)}% (${isPositive ? '+' : ''}$${pnlUsd.toFixed(2)})
+      <div class="bg-[#08090a] border border-white/5 rounded-lg p-3">
+        <div class="flex justify-between items-center mb-2">
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-green-500/15 text-green-400">LONG</span>
+            <span class="font-semibold text-sm">${sym}</span>
+          </div>
+          <span class="font-mono text-sm font-medium ${pos ? 'text-green-400' : 'text-red-400'}">
+            ${pos ? '+' : ''}${pnl.toFixed(2)}% (${pos ? '+' : ''}$${usd.toFixed(2)})
           </span>
         </div>
-        <div class="pos-details">
-          <div class="pos-detail">
-            <div class="pos-detail-label">Entry</div>
-            <div class="pos-detail-value">$${pos.entry_price.toLocaleString()}</div>
-          </div>
-          <div class="pos-detail">
-            <div class="pos-detail-label">Current</div>
-            <div class="pos-detail-value">$${current.toLocaleString()}</div>
-          </div>
-          <div class="pos-detail">
-            <div class="pos-detail-label">Size</div>
-            <div class="pos-detail-value">${pos.quantity}</div>
-          </div>
-          <div class="pos-detail">
-            <div class="pos-detail-label">TP Target</div>
-            <div class="pos-detail-value" style="color:var(--green)">${tpNearest ? '$' + tpNearest.toLocaleString() : '—'}</div>
-          </div>
-          <div class="pos-detail">
-            <div class="pos-detail-label">SL</div>
-            <div class="pos-detail-value" style="color:var(--red)">$${slPrice.toLocaleString()}</div>
-          </div>
-          <div class="pos-detail">
-            <div class="pos-detail-label">Opened</div>
-            <div class="pos-detail-value">${entryTime}</div>
-          </div>
+        <div class="grid grid-cols-3 gap-2 text-xs">
+          <div><div class="text-gray-500 mb-0.5">Entry</div><div class="font-mono">$${p.entry_price.toLocaleString()}</div></div>
+          <div><div class="text-gray-500 mb-0.5">Current</div><div class="font-mono">$${c.toLocaleString()}</div></div>
+          <div><div class="text-gray-500 mb-0.5">Size</div><div class="font-mono">${p.quantity}</div></div>
+          <div><div class="text-gray-500 mb-0.5">TP</div><div class="font-mono text-green-400">${p.tp_levels ? '$' + Math.min(...p.tp_levels).toLocaleString() : '—'}</div></div>
+          <div><div class="text-gray-500 mb-0.5">SL</div><div class="font-mono text-red-400">$${(p.sl_price || 0).toLocaleString()}</div></div>
+          <div><div class="text-gray-500 mb-0.5">Opened</div><div class="font-mono">${p.entry_time ? new Date(p.entry_time).toLocaleString('en', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}) : '—'}</div></div>
         </div>
-        ${trailing ? '<div class="pos-trailing">&#9650; Trailing stop active</div>' : ''}
-      </div>
-    `;
+        ${trail ? '<div class="mt-2 text-xs text-accent flex items-center gap-1">▲ Trailing stop active</div>' : ''}
+      </div>`;
   }).join('');
-
-  // Positions tab detail
-  const detailEl = document.getElementById('positions-detail');
-  detailEl.innerHTML = listEl.innerHTML;
 }
 
 // ============ SIGNALS ============
 async function refreshSignals() {
-  const listEl = document.getElementById('signals-list');
-  const detailEl = document.getElementById('signals-detail');
-  listEl.innerHTML = '<div class="empty-state">Scanning...</div>';
-  detailEl.innerHTML = '<div class="empty-state">Scanning 10 assets...</div>';
-
-  const assets = ['BTC', 'ETH', 'SOL', 'PAXG', 'WLD', 'SUI', 'DOGE', 'XRP', 'LINK', 'AVAX'];
+  const el = document.getElementById('signals-list');
+  el.innerHTML = '<div class="text-center text-gray-600 text-sm py-8">Scanning...</div>';
+  const assets = ['BTC','ETH','SOL','PAXG','WLD','SUI','DOGE','XRP','LINK','AVAX'];
   const signals = [];
-
   for (const sym of assets) {
     try {
-      const res = await fetch(API_BASE + '/api/indicators?symbol=' + sym + '&interval=1h');
-      if (!res.ok) continue;
-      const data = await res.json();
-      if (data.error) continue;
-
-      const rsi = data.rsi || 50;
-      const macd = data.macd_hist || 0;
-      const bbPos = data.bb_position || 0.5;
-      const rec = data.recommendation || 'NEUTRAL';
-
-      let signal = 'HOLD';
-      let strength = 50;
+      const r = await fetch(API_BASE + '/api/indicators?symbol=' + sym + '&interval=1h');
+      if (!r.ok) continue;
+      const d = await r.json();
+      if (d.error) continue;
       let score = 0;
-
-      if (rsi < 35) score += 2;
-      else if (rsi < 45) score += 1;
-      else if (rsi > 65) score -= 2;
-      else if (rsi > 55) score -= 1;
-
-      if (macd > 0) score += 1;
-      else score -= 1;
-
-      if (bbPos < 0.25) score += 2;
-      else if (bbPos < 0.4) score += 1;
-      else if (bbPos > 0.75) score -= 2;
-      else if (bbPos > 0.6) score -= 1;
-
-      if (rec.includes('BUY')) score += 1;
-      else if (rec.includes('SELL')) score -= 1;
-
-      if (score >= 3) { signal = 'BUY'; strength = Math.min(50 + score * 8, 95); }
-      else if (score <= -3) { signal = 'SELL'; strength = Math.min(50 + Math.abs(score) * 8, 95); }
-
-      signals.push({ sym, signal, strength, rsi, macd, bbPos, price: data.close || 0, rec });
-    } catch (e) {}
+      if (d.rsi < 35) score += 2; else if (d.rsi > 65) score -= 2;
+      if ((d.macd_hist || 0) > 0) score += 1; else score -= 1;
+      if ((d.bb_position || 0.5) < 0.25) score += 2; else if ((d.bb_position || 0.5) > 0.75) score -= 2;
+      const rec = d.recommendation || '';
+      if (rec.includes('BUY')) score += 1; else if (rec.includes('SELL')) score -= 1;
+      let sig = 'HOLD', str = 50;
+      if (score >= 3) { sig = 'BUY'; str = Math.min(50 + score * 8, 95); }
+      else if (score <= -3) { sig = 'SELL'; str = Math.min(50 + Math.abs(score) * 8, 95); }
+      signals.push({ sym, sig, str, rsi: d.rsi || 50, macd: d.macd_hist || 0, price: d.close || 0 });
+    } catch {}
   }
-
-  // Render sidebar signals
-  const buySignals = signals.filter(s => s.signal === 'BUY').sort((a,b) => b.strength - a.strength);
-  const sellSignals = signals.filter(s => s.signal === 'SELL').sort((a,b) => b.strength - a.strength);
-  const holdSignals = signals.filter(s => s.signal === 'HOLD');
-
-  const topSignals = [...buySignals.slice(0, 3), ...sellSignals.slice(0, 3)];
-
-  if (!topSignals.length) {
-    listEl.innerHTML = '<div class="empty-state">No strong signals detected</div>';
-  } else {
-    listEl.innerHTML = topSignals.map(s => `
-      <div class="signal-card">
-        <div>
-          <div class="signal-asset">${s.sym}</div>
-          <div class="signal-price">$${s.price.toLocaleString()}</div>
-        </div>
-        <span class="signal-type ${s.signal.toLowerCase()}">${s.signal}</span>
-        <span class="signal-strength">${s.strength}%</span>
+  if (!signals.length) { el.innerHTML = '<div class="text-center text-gray-600 text-sm py-8">No data</div>'; return; }
+  el.innerHTML = signals.map(s => `
+    <div class="flex items-center justify-between bg-[#08090a] border border-white/5 rounded-lg px-3 py-2.5">
+      <div>
+        <div class="font-semibold text-sm">${s.sym}</div>
+        <div class="font-mono text-xs text-gray-500">$${s.price.toLocaleString()}</div>
       </div>
-    `).join('');
-  }
-
-  // Render full detail
-  detailEl.innerHTML = signals.map(s => {
-    const typeClass = s.signal === 'BUY' ? 'buy' : s.signal === 'SELL' ? 'sell' : 'hold';
-    return `
-      <div class="signal-detail-card">
-        <div class="signal-detail-header">
-          <span class="pos-symbol">${s.sym}</span>
-          <span class="signal-type ${typeClass}">${s.signal} (${s.strength}%)</span>
-        </div>
-        <div class="signal-detail-grid">
-          <div class="signal-metric">
-            <div class="signal-metric-label">Price</div>
-            <div class="signal-metric-value">$${s.price.toLocaleString()}</div>
-          </div>
-          <div class="signal-metric">
-            <div class="signal-metric-label">RSI</div>
-            <div class="signal-metric-value" style="color:${s.rsi < 35 ? 'var(--green)' : s.rsi > 65 ? 'var(--red)' : 'var(--text-secondary)'}">${s.rsi.toFixed(0)}</div>
-          </div>
-          <div class="signal-metric">
-            <div class="signal-metric-label">MACD Hist</div>
-            <div class="signal-metric-value" style="color:${s.macd > 0 ? 'var(--green)' : 'var(--red)'}">${s.macd.toFixed(2)}</div>
-          </div>
-          <div class="signal-metric">
-            <div class="signal-metric-label">BB Position</div>
-            <div class="signal-metric-value">${(s.bbPos * 100).toFixed(0)}%</div>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
+      <span class="text-[10px] font-medium px-2 py-0.5 rounded-full ${
+        s.sig === 'BUY' ? 'bg-green-500/15 text-green-400' :
+        s.sig === 'SELL' ? 'bg-red-500/15 text-red-400' : 'bg-white/5 text-gray-500'
+      }">${s.sig}</span>
+      <span class="font-mono text-xs text-gray-500">${s.str}%</span>
+    </div>
+  `).join('');
 }
 
-// ============ TABS ============
-const TAB_TITLES = {
-  dashboard: 'Dashboard',
-  positions: 'Positions',
-  trades: 'Trades',
-  bets: 'Bets',
-  signals: 'Signal Scanner',
-  log: 'Activity Log',
-};
+// ============ TRADE STATS ============
+function renderTradeStats() {
+  const trades = tradesData?.trades || [];
+  const bets = betsData?.bets || [];
+  const period = document.getElementById('stats-period')?.value || 'all';
+  const all = [
+    ...trades.filter(t => t.status === 'closed').map(t => ({ pnl: t.pnl_usd || 0, pnl_pct: t.pnl_pct || 0, asset: t.asset, opened: t.opened_at, closed: t.closed_at })),
+    ...bets.filter(b => b.status === 'closed').map(b => ({ pnl: b.pnl_usd || 0, pnl_pct: 0, asset: b.market, opened: b.opened_at, closed: b.closed_at })),
+  ];
+  const now = new Date();
+  let f = all;
+  if (period === 'today') { const d = now.toISOString().slice(0, 10); f = all.filter(t => t.closed?.startsWith(d)); }
+  else if (period === 'week') { const w = new Date(now - 7 * 864e5); f = all.filter(t => t.closed && new Date(t.closed) >= w); }
+  else if (period === 'month') { const m = new Date(now.getFullYear(), now.getMonth(), 1); f = all.filter(t => t.closed && new Date(t.closed) >= m); }
 
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.querySelector(`.nav-item[data-tab="${tab}"]`)?.classList.add('active');
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + tab)?.classList.add('active');
-  document.getElementById('page-title').textContent = TAB_TITLES[tab] || tab;
-  renderCurrentTab();
+  const tot = f.length, wins = f.filter(t => t.pnl > 0), losses = f.filter(t => t.pnl < 0);
+  const totalPnl = f.reduce((s, t) => s + t.pnl, 0);
+  const wr = tot > 0 ? (wins.length / tot * 100) : 0;
+  const avgW = wins.length ? wins.reduce((s, t) => s + t.pnl, 0) / wins.length : 0;
+  const avgL = losses.length ? losses.reduce((s, t) => s + t.pnl, 0) / losses.length : 0;
+  const best = f.length ? f.reduce((a, b) => a.pnl > b.pnl ? a : b) : null;
+  const worst = f.length ? f.reduce((a, b) => a.pnl < b.pnl ? a : b) : null;
+  const gp = wins.reduce((s, t) => s + t.pnl, 0);
+  const gl = Math.abs(losses.reduce((s, t) => s + t.pnl, 0));
+  const pf = gl > 0 ? (gp / gl) : (gp > 0 ? Infinity : 0);
+  const ht = f.filter(t => t.opened && t.closed).map(t => (new Date(t.closed) - new Date(t.opened)) / 6e4);
+  const avgH = ht.length ? (ht.reduce((a, b) => a + b, 0) / ht.length) : 0;
+  const dd = f.length ? Math.min(...f.map(t => t.pnl_pct)) : 0;
+  const exp = (wr / 100 * avgW) + ((100 - wr) / 100 * avgL);
+
+  const bestStr = best ? best.asset + ' +$' + best.pnl.toFixed(2) : '—';
+  const worstStr = worst ? worst.asset + ' -$' + Math.abs(worst.pnl).toFixed(2) : '—';
+  const holdStr = avgH >= 60 ? (avgH / 60).toFixed(1) + 'h' : avgH.toFixed(0) + 'm';
+  const pfStr = pf === Infinity ? '∞' : pf.toFixed(2);
+
+  // Desktop
+  const sd = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  sd('td-total-pnl', (totalPnl >= 0 ? '+' : '') + '$' + totalPnl.toFixed(2));
+  sd('td-winrate', wr.toFixed(1) + '%');
+  sd('td-total-trades', tot);
+  sd('td-wl', wins.length + ' / ' + losses.length);
+  sd('td-avg-win', '+$' + avgW.toFixed(2));
+  sd('td-avg-loss', '-$' + Math.abs(avgL).toFixed(2));
+  sd('td-best', bestStr);
+  sd('td-worst', worstStr);
+  sd('td-pf', pfStr);
+  sd('td-hold', holdStr);
+  sd('td-dd', dd.toFixed(1) + '%');
+  sd('td-exp', (exp >= 0 ? '+' : '') + '$' + exp.toFixed(2));
+
+  // Mobile (tdm- prefix)
+  sd('tdm-total-pnl', (totalPnl >= 0 ? '+' : '') + '$' + totalPnl.toFixed(2));
+  sd('tdm-winrate', wr.toFixed(1) + '%');
+  sd('tdm-trades', tot);
+  sd('tdm-wl', wins.length + ' / ' + losses.length);
+  sd('tdm-avg-win', '+$' + avgW.toFixed(2));
+  sd('tdm-avg-loss', '-$' + Math.abs(avgL).toFixed(2));
+  sd('tdm-best', bestStr);
+  sd('tdm-worst', worstStr);
+  sd('tdm-pf', pfStr);
+  sd('tdm-hold', holdStr);
+  sd('tdm-dd', dd.toFixed(1) + '%');
+  sd('tdm-exp', (exp >= 0 ? '+' : '') + '$' + exp.toFixed(2));
+
+  // Color
+  const sc = (id, v) => { const e = document.getElementById(id); if (e) e.className = 'font-mono text-sm font-medium ' + (v >= 0 ? 'text-green-400' : 'text-red-400'); };
+  sc('td-total-pnl', totalPnl); sc('tdm-total-pnl', totalPnl);
+  sc('td-exp', exp); sc('tdm-exp', exp);
 }
 
-function renderCurrentTab() {
-  if (currentTab === 'trades') renderAllTrades();
-  else if (currentTab === 'bets') renderBets();
-  else if (currentTab === 'log') renderLog();
-}
-
-// ============ RENDER TRADES ============
-function renderTrades() { renderAllTrades(); }
-
-function renderAllTrades() {
+// ============ TRADES TABLE ============
+function renderTrades() {
   const agent = document.getElementById('filter-agent')?.value || 'all';
   const status = document.getElementById('filter-status')?.value || 'all';
   let trades = tradesData?.trades || [];
@@ -516,113 +296,31 @@ function renderAllTrades() {
   if (status !== 'all') trades = trades.filter(t => t.status === status);
   trades.sort((a, b) => new Date(b.opened_at) - new Date(a.opened_at));
 
-  const renderRow = (t) => {
-    const pnlClass = t.pnl_usd > 0 ? 'pnl-positive' : t.pnl_usd < 0 ? 'pnl-negative' : 'pnl-neutral';
-    const sb = t.side === 'long' ? 'long' : 'short';
-    const ab = t.agent === 'hermes1' ? 'hermes1' : 'hermes2';
-    const stb = t.status === 'open' ? 'open' : t.close_reason === 'tp_hit' ? 'tp' : t.close_reason === 'sl_hit' ? 'sl' : t.close_reason === 'trailing_hit' ? 'trailing_hit' : 'closed';
-    const closeLabel = t.close_reason === 'tp_hit' ? '🎯 TP' : t.close_reason === 'sl_hit' ? '🛑 SL' : t.close_reason === 'trailing_hit' ? '📈 Trail' : t.status;
-    return `<tr>
-      <td>${fmtTime(t.opened_at)}</td>
-      <td><span class="badge ${ab}">${t.agent}</span></td>
-      <td><strong>${t.asset}</strong></td>
-      <td><span class="badge ${sb}">${t.side}</span></td>
-      <td>$${fmtNum(t.entry_price)}</td>
-      <td>${t.exit_price ? '$' + fmtNum(t.exit_price) : '—'}</td>
-      <td>$${fmtNum(t.size_usd)}</td>
-      <td class="${pnlClass}">${t.pnl_usd !== null ? (t.pnl_usd >= 0 ? '+' : '') + '$' + t.pnl_usd.toFixed(2) + ' (' + t.pnl_pct + '%)' : '—'}</td>
-      <td><span class="badge ${stb}">${closeLabel}</span></td>
-      <td title="${t.notes || ''}">${trunc(t.notes, 30)}</td>
-    </tr>`;
-  };
-
-  const html = trades.map(renderRow).join('') || '<tr><td colspan="10" class="empty-state">No trades yet</td></tr>';
-
+  const closeLabels = { tp_hit: 'TP Hit', sl_hit: 'SL Hit', trailing_hit: 'Trail', early_exit: 'Early', open: 'Open', closed: 'Closed' };
   const tbody = document.getElementById('trades-body');
-  if (tbody) tbody.innerHTML = html;
-  const allTbody = document.getElementById('all-trades-body');
-  if (allTbody) allTbody.innerHTML = html;
-}
-
-// ============ RENDER BETS ============
-function renderBets() {
-  const bets = betsData?.bets || [];
-  const tbody = document.getElementById('bets-body');
-  if (!bets.length) {
-    tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No bets yet</td></tr>';
-    return;
-  }
-  tbody.innerHTML = bets.sort((a,b) => new Date(b.opened_at) - new Date(a.opened_at)).map(b => {
-    const pnlClass = b.pnl_usd > 0 ? 'pnl-positive' : b.pnl_usd < 0 ? 'pnl-negative' : 'pnl-neutral';
-    const ab = b.agent === 'hermes1' ? 'hermes1' : 'hermes2';
-    return `<tr>
-      <td>${fmtTime(b.opened_at)}</td>
-      <td><span class="badge ${ab}">${b.agent}</span></td>
-      <td>${b.market}</td>
-      <td>${b.outcome}</td>
-      <td>${(b.entry_price * 100).toFixed(0)}¢</td>
-      <td>$${fmtNum(b.size_usd)}</td>
-      <td class="${pnlClass}">${b.pnl_usd !== null ? (b.pnl_usd >= 0 ? '+' : '') + '$' + b.pnl_usd.toFixed(2) : '—'}</td>
-      <td><span class="badge ${b.status}">${b.close_reason || b.status}</span></td>
-      <td title="${b.notes || ''}">${trunc(b.notes, 30)}</td>
+  tbody.innerHTML = trades.map(t => {
+    const pnlC = t.pnl_usd > 0 ? 'text-green-400' : t.pnl_usd < 0 ? 'text-red-400' : 'text-gray-500';
+    const sideC = t.side === 'long' ? 'bg-green-500/15 text-green-400' : 'bg-red-500/15 text-red-400';
+    const agentC = t.agent === 'hermes1' ? 'bg-purple-500/15 text-purple-400' : 'bg-cyan-500/15 text-cyan-400';
+    const st = t.status === 'open' ? 'bg-blue-500/15 text-blue-400' : t.close_reason === 'tp_hit' ? 'bg-green-500/15 text-green-400' : t.close_reason === 'sl_hit' ? 'bg-red-500/15 text-red-400' : 'bg-white/5 text-gray-400';
+    return `<tr class="hover:bg-white/[0.02]">
+      <td class="px-4 py-3 whitespace-nowrap">${fmt(t.opened_at)}</td>
+      <td class="px-4 py-3"><span class="text-[10px] font-medium px-2 py-0.5 rounded-full ${agentC}">${t.agent}</span></td>
+      <td class="px-4 py-3 font-semibold">${t.asset}</td>
+      <td class="px-4 py-3"><span class="text-[10px] font-medium px-2 py-0.5 rounded-full ${sideC}">${t.side?.toUpperCase()}</span></td>
+      <td class="px-4 py-3 font-mono">$${fn(t.entry_price)}</td>
+      <td class="px-4 py-3 font-mono hidden md:table-cell">${t.exit_price ? '$' + fn(t.exit_price) : '—'}</td>
+      <td class="px-4 py-3 font-mono">$${fn(t.size_usd)}</td>
+      <td class="px-4 py-3 font-mono font-medium ${pnlC}">${t.pnl_usd !== null ? (t.pnl_usd >= 0 ? '+' : '') + '$' + t.pnl_usd.toFixed(2) : '—'}</td>
+      <td class="px-4 py-3"><span class="text-[10px] font-medium px-2 py-0.5 rounded-full ${st}">${closeLabels[t.close_reason] || t.status}</span></td>
+      <td class="px-4 py-3 text-gray-500 hidden lg:table-cell" title="${t.notes || ''}">${trunc(t.notes, 30)}</td>
     </tr>`;
-  }).join('');
-}
-
-// ============ RENDER LOG ============
-function renderLog() {
-  const trades = tradesData?.trades || [];
-  const bets = betsData?.bets || [];
-  const entries = [];
-
-  trades.forEach(t => {
-    const c = t.agent === 'hermes1' ? '#c084fc' : '#67e8f9';
-    entries.push({ time: t.opened_at, type: 'trade-open',
-      text: `<span class="log-agent" style="color:${c}">${t.agent}</span> OPENED ${t.side.toUpperCase()} ${t.asset} @ $${fmtNum(t.entry_price)} ($${fmtNum(t.size_usd)})` });
-    if (t.status === 'closed') {
-      const labels = { tp_hit: 'TP HIT', sl_hit: 'SL HIT', trailing_hit: 'TRAILING SL', early_exit: 'EARLY EXIT' };
-      const types = { tp_hit: 'trade-tp', sl_hit: 'trade-sl', trailing_hit: 'trailing_hit', early_exit: 'trade-close' };
-      const r = labels[t.close_reason] || 'CLOSED';
-      entries.push({ time: t.closed_at, type: types[t.close_reason] || 'trade-close',
-        text: `<span class="log-agent" style="color:${c}">${t.agent}</span> ${r} ${t.asset} — P&L: ${(t.pnl_usd >= 0 ? '+' : '')}$${t.pnl_usd.toFixed(2)} (${t.pnl_pct}%)` });
-    }
-  });
-
-  bets.forEach(b => {
-    const c = b.agent === 'hermes1' ? '#c084fc' : '#67e8f9';
-    entries.push({ time: b.opened_at, type: 'trade-open',
-      text: `<span class="log-agent" style="color:${c}">${b.agent}</span> BET ${b.outcome} on "${b.market}" @ ${(b.entry_price * 100).toFixed(0)}¢ ($${fmtNum(b.size_usd)})` });
-  });
-
-  entries.sort((a, b) => new Date(b.time) - new Date(a.time));
-  const container = document.getElementById('log-entries');
-  if (!entries.length) { container.innerHTML = '<p class="empty-state">No log entries</p>'; return; }
-  container.innerHTML = entries.map(e => `
-    <div class="log-entry ${e.type}">
-      <div class="log-time">${fmtTimeFull(e.time)}</div>
-      <div>${e.text}</div>
-    </div>`).join('');
+  }).join('') || '<tr><td colspan="10" class="text-center text-gray-600 py-8">No trades</td></tr>';
 }
 
 // ============ UTILS ============
-function fmtTime(iso) {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' +
-    d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-}
-function fmtTimeFull(iso) {
-  if (!iso) return '—';
-  return new Date(iso).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-}
-function fmtNum(n) {
-  if (n == null) return '—';
-  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
+function el(id) { return document.getElementById(id); }
+function $(id, v) { const e = el(id); if (e) e.textContent = v; }
+function fmt(iso) { if (!iso) return '—'; const d = new Date(iso); return d.toLocaleDateString('en', {month:'short',day:'numeric'}) + ' ' + d.toLocaleTimeString('en', {hour:'2-digit',minute:'2-digit',hour12:false}); }
+function fn(n) { if (n == null) return '—'; return n.toLocaleString('en', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
 function trunc(s, l) { return !s ? '' : s.length > l ? s.substring(0, l) + '…' : s; }
-function updateLastUpdated() {
-  const t = tradesData?.metadata?.last_updated;
-  const s = autoTraderState?.last_scan;
-  const latest = [t, s].filter(Boolean).sort().pop();
-  if (latest) document.getElementById('last-updated').textContent = 'Updated: ' + fmtTimeFull(latest);
-}

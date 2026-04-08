@@ -1,311 +1,250 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClawTrader — AI Trading Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;510;590&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<title>ClawTrader</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        surface: { DEFAULT: '#191a1b', card: '#0f1011', elevated: '#28282c' },
+        accent: { DEFAULT: '#7132f5', hover: '#828fff', subtle: 'rgba(133,91,251,0.16)' },
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body { background: #08090a; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #08090a; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.scroll-x::-webkit-scrollbar { height: 4px; }
+</style>
 </head>
-<body>
+<body class="bg-[#08090a] text-gray-200 min-h-screen font-sans antialiased">
 
-<!-- AUTH GATE -->
-<div id="auth-gate">
-  <div class="auth-box">
-    <div class="auth-logo"><span class="icon-bolt"></span></div>
-    <h2>ClawTrader</h2>
-    <p>Enter access key to continue</p>
-    <input type="password" id="access-key" placeholder="Access key..." autocomplete="off">
-    <button onclick="authenticate()">Unlock</button>
-    <p id="auth-error" class="error" style="display:none">Wrong key. Try again.</p>
+<!-- AUTH -->
+<div id="auth-gate" class="flex items-center justify-center min-h-screen">
+  <div class="bg-[#191a1b] border border-white/5 rounded-xl p-10 text-center max-w-sm w-full mx-4">
+    <div class="text-4xl mb-4">⚡</div>
+    <h2 class="text-xl font-semibold mb-2">ClawTrader</h2>
+    <p class="text-gray-500 text-sm mb-6">Enter access key</p>
+    <input id="access-key" type="password" placeholder="Access key..."
+      class="w-full px-4 py-3 bg-[#08090a] border border-white/10 rounded-lg text-white mb-3 outline-none focus:border-accent transition">
+    <button onclick="authenticate()" class="w-full py-3 bg-accent hover:bg-accent-hover rounded-lg text-white font-medium transition">
+      Unlock
+    </button>
+    <p id="auth-error" class="text-red-400 text-sm mt-3 hidden">Wrong key</p>
   </div>
 </div>
 
-<!-- SIDEBAR OVERLAY (mobile) -->
-<div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+<!-- LAYOUT -->
+<div id="app" class="hidden">
+  <!-- SIDEBAR OVERLAY (mobile) -->
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden" onclick="closeSidebar()"></div>
 
-<!-- SIDEBAR -->
-<nav id="sidebar" style="display:none">
-  <button class="sidebar-close" onclick="toggleSidebar()">&#10005;</button>
-  <div class="sidebar-header">
-    <span class="logo-icon icon-bolt"></span>
-    <span class="logo-text">ClawTrader</span>
-  </div>
-  <div class="sidebar-nav">
-    <a class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
-      <span class="nav-icon icon-chart"></span> Dashboard
-    </a>
-    <a class="nav-item" data-tab="positions" onclick="switchTab('positions')">
-      <span class="nav-icon icon-trend"></span> Positions
-    </a>
-    <a class="nav-item" data-tab="trades" onclick="switchTab('trades')">
-      <span class="nav-icon icon-trade"></span> Trades
-    </a>
-    <a class="nav-item" data-tab="bets" onclick="switchTab('bets')">
-      <span class="nav-icon icon-target"></span> Bets
-    </a>
-    <a class="nav-item" data-tab="signals" onclick="switchTab('signals')">
-      <span class="nav-icon icon-signal"></span> Signals
-    </a>
-    <a class="nav-item" data-tab="log" onclick="switchTab('log')">
-      <span class="nav-icon icon-log"></span> Log
-    </a>
-  </div>
-  <div class="sidebar-footer">
-    <div class="sidebar-status" id="sidebar-status">
-      <span class="status-dot active"></span> Connected
+  <!-- SIDEBAR -->
+  <nav id="sidebar" class="fixed left-0 top-0 h-screen w-56 bg-[#0f1011] border-r border-white/5 z-50 flex flex-col
+    -translate-x-full md:translate-x-0 transition-transform duration-200">
+    <div class="p-5 border-b border-white/5 flex items-center gap-3">
+      <span class="text-xl">⚡</span>
+      <span class="font-semibold text-sm">ClawTrader</span>
     </div>
-    <button class="btn-logout" onclick="logout()">Logout</button>
-  </div>
-</nav>
-
-<!-- MAIN CONTENT -->
-<main id="main-content" style="display:none">
-  
-  <!-- TOP BAR -->
-  <header class="topbar">
-    <div class="topbar-left">
-      <button class="btn-icon sidebar-toggle" onclick="toggleSidebar()">&#9776;</button>
-      <h1 id="page-title">Dashboard</h1>
+    <div class="flex-1 p-3 space-y-1" id="nav-links"></div>
+    <div class="p-4 border-t border-white/5">
+      <div class="flex items-center gap-2 text-xs text-gray-500 mb-3">
+        <span class="w-2 h-2 rounded-full bg-green-500"></span> Connected
+      </div>
+      <button onclick="logout()" class="w-full py-2 text-xs text-gray-500 border border-white/10 rounded-lg hover:border-red-500/50 hover:text-red-400 transition">
+        Logout
+      </button>
     </div>
-    <div class="topbar-right">
-      <span id="last-updated" class="topbar-meta"></span>
-      <button onclick="refreshData()" class="btn-ghost">&#8635; Refresh</button>
-      <div class="topbar-avatar" title="Hermes2">H2</div>
-    </div>
-  </header>
+  </nav>
 
-  <!-- DASHBOARD TAB -->
-  <div id="tab-dashboard" class="tab-content active">
-    
-    <!-- STATS ROW -->
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-header">
-          <span class="stat-label">Portfolio Value</span>
-          <span class="stat-badge positive" id="stat-daily-pnl">+0.00%</span>
-        </div>
-        <div class="stat-value" id="stat-portfolio">$100,000</div>
-        <div class="stat-sub">Cash: <span id="stat-cash">$99,928</span></div>
+  <!-- MAIN -->
+  <main class="md:ml-56 min-h-screen">
+    <!-- TOPBAR -->
+    <header class="sticky top-0 z-30 bg-[#08090a]/80 backdrop-blur-xl border-b border-white/5 h-14 flex items-center justify-between px-4 md:px-6">
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSidebar()" class="md:hidden text-gray-400 text-xl p-1">☰</button>
+        <h1 id="page-title" class="text-sm font-semibold">Dashboard</h1>
       </div>
-      <div class="stat-card">
-        <div class="stat-header">
-          <span class="stat-label">Unrealized P&amp;L</span>
-        </div>
-        <div class="stat-value positive" id="stat-unrealized">+$0.00</div>
-        <div class="stat-sub"><span id="stat-open-positions">0</span> open positions</div>
+      <div class="flex items-center gap-3">
+        <span id="last-updated" class="text-xs text-gray-600 font-mono hidden sm:block"></span>
+        <button onclick="refreshData()" class="text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition">
+          ↻ Refresh
+        </button>
+        <div class="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-semibold">H2</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-header">
-          <span class="stat-label">Realized P&amp;L</span>
-        </div>
-        <div class="stat-value" id="stat-realized">$0.00</div>
-        <div class="stat-sub">Win rate: <span id="stat-winrate">0%</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-header">
-          <span class="stat-label">Today's Trades</span>
-        </div>
-        <div class="stat-value" id="stat-today-trades">0</div>
-        <div class="stat-sub">Daily limit: <span id="stat-daily-limit">10</span></div>
-      </div>
-    </div>
+    </header>
 
-    <!-- DAILY LOSS BAR -->
-    <div class="daily-bar">
-      <div class="daily-bar-header">
-        <span>Daily Loss Limit</span>
-        <span id="daily-loss-pct">0.0% / -5.0%</span>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="daily-loss-fill" style="width:0%"></div>
-      </div>
-    </div>
+    <!-- CONTENT -->
+    <div class="p-4 md:p-6 space-y-5">
 
-    <!-- TWO COLUMN LAYOUT -->
-    <div class="grid-2col">
-      
-      <!-- LEFT: OPEN POSITIONS -->
-      <div class="card">
-        <div class="card-header">
-          <h3>Open Positions</h3>
-          <span class="card-badge" id="pos-count">0</span>
+      <!-- STATS CARDS -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="bg-[#191a1b] border border-white/5 rounded-xl p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] uppercase tracking-wider text-gray-500">Portfolio</span>
+            <span id="stat-daily-badge" class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-green-500/15 text-green-400">+0.00%</span>
+          </div>
+          <div id="stat-portfolio" class="text-xl md:text-2xl font-bold font-mono">$100,000</div>
+          <div class="text-xs text-gray-500 mt-1">Cash: <span id="stat-cash" class="font-mono">$99,928</span></div>
         </div>
-        <div id="positions-list" class="positions-list">
-          <div class="empty-state">No open positions</div>
+        <div class="bg-[#191a1b] border border-white/5 rounded-xl p-4">
+          <div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Unrealized P&L</div>
+          <div id="stat-unrealized" class="text-xl md:text-2xl font-bold font-mono text-green-400">+$0.00</div>
+          <div class="text-xs text-gray-500 mt-1"><span id="stat-open">0</span> positions</div>
+        </div>
+        <div class="bg-[#191a1b] border border-white/5 rounded-xl p-4">
+          <div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Realized P&L</div>
+          <div id="stat-realized" class="text-xl md:text-2xl font-bold font-mono">$0.00</div>
+          <div class="text-xs text-gray-500 mt-1">Win rate: <span id="stat-winrate" class="font-mono">0%</span></div>
+        </div>
+        <div class="bg-[#191a1b] border border-white/5 rounded-xl p-4">
+          <div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Today</div>
+          <div id="stat-today" class="text-xl md:text-2xl font-bold font-mono">0</div>
+          <div class="text-xs text-gray-500 mt-1">Limit: 10 trades</div>
         </div>
       </div>
 
-      <!-- RIGHT: SIGNALS -->
-      <div class="card">
-        <div class="card-header">
-          <h3>Market Signals</h3>
-          <button class="btn-ghost btn-sm" onclick="refreshSignals()">&#8635; Scan</button>
+      <!-- DAILY LOSS BAR -->
+      <div class="bg-[#191a1b] border border-white/5 rounded-xl p-4">
+        <div class="flex justify-between text-xs text-gray-500 mb-2">
+          <span>Daily Loss Limit</span>
+          <span id="daily-loss-text" class="font-mono">0.0% / -5.0%</span>
         </div>
-        <div id="signals-list" class="signals-list">
-          <div class="empty-state">Click scan to check signals</div>
+        <div class="h-1.5 bg-[#08090a] rounded-full overflow-hidden">
+          <div id="daily-loss-bar" class="h-full bg-green-500 rounded-full transition-all duration-500" style="width:0%"></div>
         </div>
       </div>
-    </div>
 
-    <!-- TRADE STATISTICS -->
-    <div class="card" style="margin-bottom:20px">
-      <div class="card-header">
-        <h3>Trade Statistics</h3>
-        <div class="card-filters">
-          <select id="stats-period" onchange="renderTradeStats()">
+      <!-- TWO COLUMN: POSITIONS + SIGNALS -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- POSITIONS -->
+        <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-white/5">
+            <h3 class="text-sm font-semibold">Open Positions</h3>
+            <span id="pos-count" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-accent/15 text-accent">0</span>
+          </div>
+          <div id="positions-list" class="p-3 space-y-2 max-h-80 overflow-y-auto">
+            <div class="text-center text-gray-600 text-sm py-8">No positions</div>
+          </div>
+        </div>
+        <!-- SIGNALS -->
+        <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-white/5">
+            <h3 class="text-sm font-semibold">Market Signals</h3>
+            <button onclick="refreshSignals()" class="text-xs px-3 py-1 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition">
+              ↻ Scan
+            </button>
+          </div>
+          <div id="signals-list" class="p-3 space-y-2 max-h-80 overflow-y-auto">
+            <div class="text-center text-gray-600 text-sm py-8">Click scan</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRADE STATISTICS -->
+      <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-white/5">
+          <h3 class="text-sm font-semibold">Trade Statistics</h3>
+          <select id="stats-period" onchange="renderTradeStats()" class="text-xs bg-[#08090a] border border-white/10 rounded-lg px-3 py-1.5 text-gray-300 outline-none">
             <option value="all">All Time</option>
             <option value="month">This Month</option>
             <option value="week">This Week</option>
             <option value="today">Today</option>
           </select>
         </div>
-      </div>
-      <div class="stats-detail-grid">
-        <div class="stats-detail-card">
-          <div class="stats-detail-label">Total P&amp;L</div>
-          <div class="stats-detail-value" id="td-total-pnl">$0.00</div>
+        <!-- Desktop: 6-col grid -->
+        <div class="hidden md:grid grid-cols-6 gap-px bg-white/5">
+          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="total-pnl"><div class="stat-label">Total P&L</div><div class="stat-value" id="td-total-pnl">$0.00</div></div>
+          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="winrate"><div class="stat-label">Win Rate</div><div class="stat-value" id="td-winrate">0%</div></div>
+          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="trades"><div class="stat-label">Total Trades</div><div class="stat-value" id="td-total-trades">0</div></div>
+          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="wl"><div class="stat-label">Wins / Losses</div><div class="stat-value" id="td-wl">0 / 0</div></div>
+          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="avg-win"><div class="stat-label">Avg Win</div><div class="stat-value text-green-400" id="td-avg-win">+$0</div></div>
+          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="avg-loss"><div class="stat-label">Avg Loss</div><div class="stat-value text-red-400" id="td-avg-loss">-$0</div></div>
+          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="best"><div class="stat-label">Best Trade</div><div class="stat-value text-green-400 text-sm" id="td-best">—</div></div>
+          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="worst"><div class="stat-label">Worst Trade</div><div class="stat-value text-red-400 text-sm" id="td-worst">—</div></div>
+          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="pf"><div class="stat-label">Profit Factor</div><div class="stat-value" id="td-pf">0.00</div></div>
+          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="hold"><div class="stat-label">Avg Hold</div><div class="stat-value" id="td-hold">—</div></div>
+          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="dd"><div class="stat-label">Max DD</div><div class="stat-value text-red-400" id="td-dd">0%</div></div>
+          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="exp"><div class="stat-label">Expectancy</div><div class="stat-value" id="td-exp">$0.00</div></div>
         </div>
-        <div class="stats-detail-card">
-          <div class="stats-detail-label">Win Rate</div>
-          <div class="stats-detail-value" id="td-winrate">0%</div>
-        </div>
-        <div class="stats-detail-card">
-          <div class="stats-detail-label">Total Trades</div>
-          <div class="stats-detail-value" id="td-total-trades">0</div>
-        </div>
-        <div class="stats-detail-card">
-          <div class="stats-detail-label">Wins / Losses</div>
-          <div class="stats-detail-value" id="td-wl">0 / 0</div>
-        </div>
-        <div class="stats-detail-card">
-          <div class="stats-detail-label">Avg Win</div>
-          <div class="stats-detail-value positive" id="td-avg-win">+$0.00</div>
-        </div>
-        <div class="stats-detail-card">
-          <div class="stats-detail-label">Avg Loss</div>
-          <div class="stats-detail-value negative" id="td-avg-loss">-$0.00</div>
-        </div>
-        <div class="stats-detail-card">
-          <div class="stats-detail-label">Best Trade</div>
-          <div class="stats-detail-value positive" id="td-best">—</div>
-        </div>
-        <div class="stats-detail-card">
-          <div class="stats-detail-label">Worst Trade</div>
-          <div class="stats-detail-value negative" id="td-worst">—</div>
-        </div>
-        <div class="stats-detail-card">
-          <div class="stats-detail-label">Profit Factor</div>
-          <div class="stats-detail-value" id="td-profit-factor">0.00</div>
-        </div>
-        <div class="stats-detail-card">
-          <div class="stats-detail-label">Avg Hold Time</div>
-          <div class="stats-detail-value" id="td-avg-hold">—</div>
-        </div>
-        <div class="stats-detail-card">
-          <div class="stats-detail-label">Max Drawdown</div>
-          <div class="stats-detail-value negative" id="td-max-dd">0%</div>
-        </div>
-        <div class="stats-detail-card">
-          <div class="stats-detail-label">Expectancy</div>
-          <div class="stats-detail-value" id="td-expectancy">$0.00</div>
+        <!-- Mobile: scrollable list -->
+        <div class="md:hidden divide-y divide-white/5" id="stats-mobile">
+          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Total P&L</span><span class="font-mono text-sm font-medium" id="tdm-total-pnl">$0.00</span></div>
+          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Win Rate</span><span class="font-mono text-sm font-medium" id="tdm-winrate">0%</span></div>
+          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Total Trades</span><span class="font-mono text-sm font-medium" id="tdm-trades">0</span></div>
+          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Wins / Losses</span><span class="font-mono text-sm font-medium" id="tdm-wl">0 / 0</span></div>
+          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Avg Win</span><span class="font-mono text-sm font-medium text-green-400" id="tdm-avg-win">+$0</span></div>
+          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Avg Loss</span><span class="font-mono text-sm font-medium text-red-400" id="tdm-avg-loss">-$0</span></div>
+          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Best Trade</span><span class="font-mono text-xs font-medium text-green-400 scroll-x max-w-[55%] text-right" id="tdm-best">—</span></div>
+          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Worst Trade</span><span class="font-mono text-xs font-medium text-red-400 scroll-x max-w-[55%] text-right" id="tdm-worst">—</span></div>
+          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Profit Factor</span><span class="font-mono text-sm font-medium" id="tdm-pf">0.00</span></div>
+          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Avg Hold</span><span class="font-mono text-sm font-medium" id="tdm-hold">—</span></div>
+          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Max DD</span><span class="font-mono text-sm font-medium text-red-400" id="tdm-dd">0%</span></div>
+          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Expectancy</span><span class="font-mono text-sm font-medium" id="tdm-exp">$0.00</span></div>
         </div>
       </div>
-    </div>
 
-    <!-- TRADES TABLE -->
-    <div class="card">
-      <div class="card-header">
-        <h3>Recent Trades</h3>
-        <div class="card-filters">
-          <select id="filter-agent" onchange="renderTrades()">
-            <option value="all">All Agents</option>
-            <option value="hermes1">Hermes1</option>
-            <option value="hermes2">Hermes2</option>
-          </select>
-          <select id="filter-status" onchange="renderTrades()">
-            <option value="all">All Status</option>
-            <option value="open">Open</option>
-            <option value="closed">Closed</option>
-          </select>
+      <!-- TRADES TABLE -->
+      <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-white/5 flex-wrap gap-2">
+          <h3 class="text-sm font-semibold">Recent Trades</h3>
+          <div class="flex gap-2">
+            <select id="filter-agent" onchange="renderTrades()" class="text-xs bg-[#08090a] border border-white/10 rounded-lg px-2 py-1.5 outline-none">
+              <option value="all">All Agents</option>
+              <option value="hermes1">Hermes1</option>
+              <option value="hermes2">Hermes2</option>
+            </select>
+            <select id="filter-status" onchange="renderTrades()" class="text-xs bg-[#08090a] border border-white/10 rounded-lg px-2 py-1.5 outline-none">
+              <option value="all">All Status</option>
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs">
+            <thead class="bg-white/[0.02]">
+              <tr class="text-left text-gray-500 uppercase tracking-wider">
+                <th class="px-4 py-3 whitespace-nowrap">Time</th>
+                <th class="px-4 py-3">Agent</th>
+                <th class="px-4 py-3">Asset</th>
+                <th class="px-4 py-3">Side</th>
+                <th class="px-4 py-3">Entry</th>
+                <th class="px-4 py-3 hidden md:table-cell">Exit</th>
+                <th class="px-4 py-3">Size</th>
+                <th class="px-4 py-3">P&L</th>
+                <th class="px-4 py-3">Status</th>
+                <th class="px-4 py-3 hidden lg:table-cell">Notes</th>
+              </tr>
+            </thead>
+            <tbody id="trades-body" class="divide-y divide-white/5"></tbody>
+          </table>
         </div>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>Agent</th>
-              <th>Asset</th>
-              <th>Side</th>
-              <th>Entry</th>
-              <th>Exit</th>
-              <th>Size</th>
-              <th>P&amp;L</th>
-              <th>Status</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody id="trades-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
-  <!-- POSITIONS TAB -->
-  <div id="tab-positions" class="tab-content">
-    <div class="card">
-      <div class="card-header"><h3>Position Details</h3></div>
-      <div id="positions-detail" class="positions-detail"></div>
     </div>
-  </div>
+  </main>
+</div>
 
-  <!-- TRADES TAB -->
-  <div id="tab-trades" class="tab-content">
-    <div class="card">
-      <div class="card-header"><h3>All Trades</h3></div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Time</th><th>Agent</th><th>Asset</th><th>Side</th><th>Entry</th><th>Exit</th><th>Size</th><th>P&amp;L</th><th>Status</th><th>Notes</th></tr></thead>
-          <tbody id="all-trades-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- BETS TAB -->
-  <div id="tab-bets" class="tab-content">
-    <div class="card">
-      <div class="card-header"><h3>Bets</h3></div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Time</th><th>Agent</th><th>Market</th><th>Outcome</th><th>Entry</th><th>Size</th><th>P&amp;L</th><th>Status</th><th>Notes</th></tr></thead>
-          <tbody id="bets-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- SIGNALS TAB -->
-  <div id="tab-signals" class="tab-content">
-    <div class="card">
-      <div class="card-header">
-        <h3>Signal Scanner</h3>
-        <button class="btn-primary" onclick="refreshSignals()">Run Full Scan</button>
-      </div>
-      <div id="signals-detail" class="signals-detail"></div>
-    </div>
-  </div>
-
-  <!-- LOG TAB -->
-  <div id="tab-log" class="tab-content">
-    <div class="card">
-      <div class="card-header"><h3>Activity Log</h3></div>
-      <div id="log-entries" class="log-container"></div>
-    </div>
-  </div>
-
-</main>
+<style>
+.stat-label { @apply text-[10px] uppercase tracking-wider text-gray-500 mb-2 font-medium; }
+.stat-value { @apply text-lg font-bold font-mono; }
+</style>
 
 <script src="js/dashboard.js"></script>
 </body>

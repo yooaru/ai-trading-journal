@@ -80,7 +80,11 @@ def save_state(s):
 
 def get_price(symbol):
     try:
+        time.sleep(1.1)  # Respect 1 req/sec rate limit
         r = requests.get(f"{BASE}/price?symbol={symbol}&market=crypto", headers=get_headers(), timeout=15)
+        if r.status_code == 429:
+            time.sleep(2)
+            r = requests.get(f"{BASE}/price?symbol={symbol}&market=crypto", headers=get_headers(), timeout=15)
         return r.json().get("price", 0)
     except:
         return 0
@@ -289,7 +293,7 @@ def get_signal(symbol):
                     pass  # Fall through to SL check below
                 elif elapsed_min < 15:
                     log(f"  ⏳ {symbol}: Hold period ({elapsed_min:.0f}/15 min) — skipping TP/SL")
-                    positions[sym]["current_price"] = price
+                    positions[symbol]["current_price"] = price
                     return "hold", price
             except:
                 pass  # If time parsing fails, proceed normally
