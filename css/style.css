@@ -818,17 +818,20 @@ tr:last-child td { border-bottom: none; }
   .stats-detail-card {
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
-    padding: 12px;
+    padding: 14px 16px;
     background: var(--bg-panel);
     text-align: left;
+    min-width: 0;
+    overflow: hidden;
   }
   .stats-detail-label {
-    font-size: 10px;
-    margin-bottom: 4px;
+    font-size: 11px;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
   }
   .stats-detail-value {
-    font-size: 15px;
-    line-height: 1.3;
+    font-size: 17px;
+    line-height: 1.4;
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
@@ -846,24 +849,26 @@ tr:last-child td { border-bottom: none; }
     grid-template-columns: 1fr 1fr;
     gap: 8px;
     background: transparent;
-    padding: 4px;
+    padding: 0;
   }
   .stats-detail-card {
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
-    padding: 12px 10px;
+    padding: 12px 14px;
     background: var(--bg-panel);
+    min-width: 0;
+    overflow: hidden;
+  }
+  .stats-detail-label {
+    font-size: 10px;
+    margin-bottom: 4px;
   }
   .stats-detail-value {
     font-size: 15px;
-    line-height: 1.3;
+    line-height: 1.4;
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
-  }
-  .stats-detail-label {
-    font-size: 9px;
-    margin-bottom: 4px;
   }
   th:nth-child(5), td:nth-child(5),
   th:nth-child(7), td:nth-child(7) { display: none; }
