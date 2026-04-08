@@ -56,6 +56,18 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps({"status": "ok"}).encode())
             return
+        # Serve static files with CORS headers
+        path = self.translate_path(self.path)
+        if os.path.isfile(path):
+            self.send_response(200)
+            import mimetypes
+            ctype = mimetypes.guess_type(path)[0] or 'application/octet-stream'
+            self.send_header('Content-type', ctype)
+            self.send_cors_headers()
+            self.end_headers()
+            with open(path, 'rb') as f:
+                self.wfile.write(f.read())
+            return
         return super().do_GET()
 
     def send_cors_headers(self):
