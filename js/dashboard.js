@@ -94,8 +94,11 @@ function updateStats() {
   const betPnl = closedBets.reduce((sum, b) => sum + (b.pnl_usd || 0), 0);
   const totalPnl = tradePnl + betPnl;
 
-  const wins = closedTrades.filter(t => (t.pnl_usd || 0) > 0).length;
-  const winRate = closedTrades.length > 0 ? ((wins / closedTrades.length) * 100).toFixed(1) : 0;
+  const closedTradesWins = closedTrades.filter(t => (t.pnl_usd || 0) > 0).length;
+  const closedBetsWins = closedBets.filter(b => (b.pnl_usd || 0) > 0).length;
+  const totalClosed = closedTrades.length + closedBets.length;
+  const totalWins = closedTradesWins + closedBetsWins;
+  const winRate = totalClosed > 0 ? ((totalWins / totalClosed) * 100).toFixed(1) : 0;
 
   const openTrades = trades.filter(t => t.status === 'open').length;
   const openBets = bets.filter(b => b.status === 'open').length;
