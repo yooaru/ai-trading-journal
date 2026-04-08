@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Trading Journal — Hermes1 & Hermes2</title>
+<title>ClawTrader — AI Trading Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;510;590&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -11,7 +12,8 @@
 <!-- AUTH GATE -->
 <div id="auth-gate">
   <div class="auth-box">
-    <h2>🔒 AI Trading Journal</h2>
+    <div class="auth-logo">⚡</div>
+    <h2>ClawTrader</h2>
     <p>Enter access key to continue</p>
     <input type="password" id="access-key" placeholder="Access key..." autocomplete="off">
     <button onclick="authenticate()">Unlock</button>
@@ -19,112 +21,225 @@
   </div>
 </div>
 
-<!-- DASHBOARD (hidden until auth) -->
-<div id="dashboard" style="display:none">
-
-  <header>
-    <div class="header-left">
-      <h1>📊 AI Trading Journal</h1>
-      <span class="subtitle">Hermes1 & Hermes2</span>
+<!-- SIDEBAR -->
+<nav id="sidebar" style="display:none">
+  <div class="sidebar-header">
+    <span class="logo-icon">⚡</span>
+    <span class="logo-text">ClawTrader</span>
+  </div>
+  <div class="sidebar-nav">
+    <a class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
+      <span class="nav-icon">📊</span> Dashboard
+    </a>
+    <a class="nav-item" data-tab="positions" onclick="switchTab('positions')">
+      <span class="nav-icon">📈</span> Positions
+    </a>
+    <a class="nav-item" data-tab="trades" onclick="switchTab('trades')">
+      <span class="nav-icon">💹</span> Trades
+    </a>
+    <a class="nav-item" data-tab="bets" onclick="switchTab('bets')">
+      <span class="nav-icon">🎯</span> Bets
+    </a>
+    <a class="nav-item" data-tab="signals" onclick="switchTab('signals')">
+      <span class="nav-icon">📡</span> Signals
+    </a>
+    <a class="nav-item" data-tab="log" onclick="switchTab('log')">
+      <span class="nav-icon">📋</span> Log
+    </a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="sidebar-status" id="sidebar-status">
+      <span class="status-dot active"></span> Connected
     </div>
-    <div class="header-right">
-      <span id="last-updated" class="updated"></span>
-      <button onclick="refreshData()" class="btn-refresh">↻ Refresh</button>
-      <button onclick="logout()" class="btn-refresh" style="color:#ef4444">⊘ Logout</button>
+    <button class="btn-logout" onclick="logout()">⊘ Logout</button>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main-content" style="display:none">
+  
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="btn-icon sidebar-toggle" onclick="toggleSidebar()">☰</button>
+      <h1 id="page-title">Dashboard</h1>
+    </div>
+    <div class="topbar-right">
+      <span id="last-updated" class="topbar-meta"></span>
+      <button onclick="refreshData()" class="btn-ghost">↻ Refresh</button>
+      <div class="topbar-avatar" title="Hermes2">H2</div>
     </div>
   </header>
 
-  <!-- STATS OVERVIEW -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-label">Total P&L</div>
-      <div class="stat-value" id="stat-total-pnl">$0.00</div>
+  <!-- DASHBOARD TAB -->
+  <div id="tab-dashboard" class="tab-content active">
+    
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Portfolio Value</span>
+          <span class="stat-badge positive" id="stat-daily-pnl">+0.00%</span>
+        </div>
+        <div class="stat-value" id="stat-portfolio">$100,000</div>
+        <div class="stat-sub">Cash: <span id="stat-cash">$99,928</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Unrealized P&L</span>
+          <span class="stat-icon">📈</span>
+        </div>
+        <div class="stat-value positive" id="stat-unrealized">+$0.00</div>
+        <div class="stat-sub"><span id="stat-open-positions">0</span> open positions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Realized P&L</span>
+          <span class="stat-icon">💰</span>
+        </div>
+        <div class="stat-value" id="stat-realized">$0.00</div>
+        <div class="stat-sub">Win rate: <span id="stat-winrate">0%</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Today's Trades</span>
+          <span class="stat-icon">⚡</span>
+        </div>
+        <div class="stat-value" id="stat-today-trades">0</div>
+        <div class="stat-sub">Daily limit: <span id="stat-daily-limit">10</span></div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Win Rate</div>
-      <div class="stat-value" id="stat-winrate">0%</div>
+
+    <!-- DAILY LOSS BAR -->
+    <div class="daily-bar">
+      <div class="daily-bar-header">
+        <span>Daily Loss Limit</span>
+        <span id="daily-loss-pct">0.0% / -5.0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="daily-loss-fill" style="width:0%"></div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Open Positions</div>
-      <div class="stat-value" id="stat-open">0</div>
+
+    <!-- TWO COLUMN LAYOUT -->
+    <div class="grid-2col">
+      
+      <!-- LEFT: OPEN POSITIONS -->
+      <div class="card">
+        <div class="card-header">
+          <h3>📈 Open Positions</h3>
+          <span class="card-badge" id="pos-count">0</span>
+        </div>
+        <div id="positions-list" class="positions-list">
+          <div class="empty-state">No open positions</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: SIGNALS -->
+      <div class="card">
+        <div class="card-header">
+          <h3>📡 Market Signals</h3>
+          <button class="btn-ghost btn-sm" onclick="refreshSignals()">↻ Scan</button>
+        </div>
+        <div id="signals-list" class="signals-list">
+          <div class="empty-state">Click scan to check signals</div>
+        </div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Total Trades</div>
-      <div class="stat-value" id="stat-total">0</div>
+
+    <!-- TRADES TABLE -->
+    <div class="card">
+      <div class="card-header">
+        <h3>💹 Recent Trades</h3>
+        <div class="card-filters">
+          <select id="filter-agent" onchange="renderTrades()">
+            <option value="all">All Agents</option>
+            <option value="hermes1">Hermes1</option>
+            <option value="hermes2">Hermes2</option>
+          </select>
+          <select id="filter-status" onchange="renderTrades()">
+            <option value="all">All Status</option>
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Agent</th>
+              <th>Asset</th>
+              <th>Side</th>
+              <th>Entry</th>
+              <th>Exit</th>
+              <th>Size</th>
+              <th>P&L</th>
+              <th>Status</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="trades-body"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('trades')">💹 Trades</button>
-    <button class="tab" onclick="switchTab('bets')">🎯 Bets</button>
-    <button class="tab" onclick="switchTab('log')">📋 Log</button>
+  <!-- POSITIONS TAB -->
+  <div id="tab-positions" class="tab-content">
+    <div class="card">
+      <div class="card-header"><h3>📈 Position Details</h3></div>
+      <div id="positions-detail" class="positions-detail"></div>
+    </div>
   </div>
 
-  <!-- FILTERS -->
-  <div class="filters">
-    <select id="filter-agent" onchange="renderCurrentTab()">
-      <option value="all">All Agents</option>
-      <option value="hermes1">Hermes1</option>
-      <option value="hermes2">Hermes2</option>
-    </select>
-    <select id="filter-status" onchange="renderCurrentTab()">
-      <option value="all">All Status</option>
-      <option value="open">Open</option>
-      <option value="closed">Closed</option>
-    </select>
-    <select id="filter-asset" onchange="renderCurrentTab()">
-      <option value="all">All Assets</option>
-    </select>
+  <!-- TRADES TAB -->
+  <div id="tab-trades" class="tab-content">
+    <div class="card">
+      <div class="card-header"><h3>💹 All Trades</h3></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Time</th><th>Agent</th><th>Asset</th><th>Side</th><th>Entry</th><th>Exit</th><th>Size</th><th>P&L</th><th>Status</th><th>Notes</th></tr></thead>
+          <tbody id="all-trades-body"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
-  <!-- TRADES TABLE -->
-  <div id="tab-trades" class="tab-content active">
-    <table>
-      <thead>
-        <tr>
-          <th>Time</th>
-          <th>Agent</th>
-          <th>Asset</th>
-          <th>Side</th>
-          <th>Entry</th>
-          <th>Exit</th>
-          <th>Size</th>
-          <th>P&L</th>
-          <th>Status</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody id="trades-body"></tbody>
-    </table>
-  </div>
-
-  <!-- BETS TABLE -->
+  <!-- BETS TAB -->
   <div id="tab-bets" class="tab-content">
-    <table>
-      <thead>
-        <tr>
-          <th>Time</th>
-          <th>Agent</th>
-          <th>Market</th>
-          <th>Outcome</th>
-          <th>Entry</th>
-          <th>Size</th>
-          <th>P&L</th>
-          <th>Status</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody id="bets-body"></tbody>
-    </table>
+    <div class="card">
+      <div class="card-header"><h3>🎯 Bets</h3></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Time</th><th>Agent</th><th>Market</th><th>Outcome</th><th>Entry</th><th>Size</th><th>P&L</th><th>Status</th><th>Notes</th></tr></thead>
+          <tbody id="bets-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGNALS TAB -->
+  <div id="tab-signals" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <h3>📡 Signal Scanner</h3>
+        <button class="btn-primary" onclick="refreshSignals()">Run Full Scan</button>
+      </div>
+      <div id="signals-detail" class="signals-detail"></div>
+    </div>
   </div>
 
   <!-- LOG TAB -->
   <div id="tab-log" class="tab-content">
-    <div id="log-entries" class="log-container"></div>
+    <div class="card">
+      <div class="card-header"><h3>📋 Activity Log</h3></div>
+      <div id="log-entries" class="log-container"></div>
+    </div>
   </div>
 
-</div>
+</main>
 
 <script src="js/dashboard.js"></script>
 </body>

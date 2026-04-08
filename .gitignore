@@ -1,4 +1,5 @@
 .access_key
+.ai4trade.json
 __pycache__/
 *.pyc
 .env
