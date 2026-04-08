@@ -7,6 +7,49 @@ PORT = 8501
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 KEY_FILE = os.path.join(BASE_DIR, ".access_key")
 
+# Import indicators lazily
+_indicators_loaded = False
+def load_indicators():
+    global _indicators_loaded
+    if not _indicators_loaded:
+        import sys
+        sys.path.insert(0, os.path.join(BASE_DIR, "scripts"))
+    try:
+        from indicators import get_indicators
+        return get_indicators
+    except ImportError:
+        return None
+
+def _binance_fallback(symbol):
+    """Basic price + RSI from Binance when TradingView is rate-limited."""
+    import urllib.request
+    pairs = {"BTC":"BTCUSDT","ETH":"ETHUSDT","SOL":"SOLUSDT","PAXG":"PAXGUSDT",
+             "XRP":"XRPUSDT","DOGE":"DOGEUSDT","WLD":"WLDUSDT","SUI":"SUIUSDT",
+             "LINK":"LINKUSDT","AVAX":"AVAXUSDT","BNB":"BNBUSDT","ADA":"ADAUSDT",
+             "DOT":"DOTUSDT","NEAR":"NEARUSDT","ARB":"ARBUSDT","OP":"OPUSDT"}
+    pair = pairs.get(symbol.upper(), symbol.upper() + "USDT")
+    try:
+        url = f"https://api.binance.com/api/v3/ticker/price?symbol={pair}"
+        req = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0"})
+        resp = urllib.request.urlopen(req, timeout=5)
+        price = json.loads(resp.read()).get("price", "0")
+        return {
+            "symbol": symbol.upper(),
+            "close": float(price),
+            "rsi": 50,
+            "macd_hist": 0,
+            "recommendation": "NO_DATA (rate limited)",
+            "stoch_k": 50,
+            "ema10": float(price),
+            "ema20": float(price),
+            "volume": 0,
+            "fallback": True
+        }
+    except Exception:
+        return {"symbol": symbol.upper(), "close": 0, "rsi": 50, "macd_hist": 0,
+                "recommendation": "UNAVAILABLE", "stoch_k": 50, "ema10": 0, "ema20": 0,
+                "volume": 0, "fallback": True}
+
 # Allowed origins for CORS
 ALLOWED_ORIGINS = [
     "http://localhost:8501",
@@ -33,6 +76,16 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        # Root → landing page
+        if self.path == "/" or self.path == "":
+            path = os.path.join(BASE_DIR, "landing.html")
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.send_cors_headers()
+            self.end_headers()
+            with open(path, 'rb') as f:
+                self.wfile.write(f.read())
+            return
         if self.path.startswith("/verify"):
             params = parse_qs(urlparse(self.path).query)
             key = params.get("key", [""])[0]
@@ -55,6 +108,28 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_cors_headers()
             self.end_headers()
             self.wfile.write(json.dumps({"status": "ok"}).encode())
+            return
+        # /api/indicators?symbol=BTC&interval=1h
+        if self.path.startswith("/api/indicators"):
+            params = parse_qs(urlparse(self.path).query)
+            symbol = params.get("symbol", ["BTC"])[0].upper()
+            interval = params.get("interval", ["1h"])[0]
+            get_indicators = load_indicators()
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_cors_headers()
+            self.end_headers()
+            data = None
+            if get_indicators:
+                try:
+                    data = get_indicators(symbol, interval)
+                    if data and data.get("error"):
+                        data = None  # Treat error response as no data
+                except Exception:
+                    data = None
+            if not data:
+                data = _binance_fallback(symbol)
+            self.wfile.write(json.dumps(data).encode())
             return
         # Serve static files with CORS headers
         path = self.translate_path(self.path)

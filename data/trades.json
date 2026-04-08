@@ -1,0 +1,78 @@
+{
+  "trades": [
+    {
+      "id": "trade_001",
+      "agent": "hermes2",
+      "asset": "BTC",
+      "side": "long",
+      "entry_price": 84200.0,
+      "exit_price": 85100.0,
+      "size_usd": 100.0,
+      "leverage": 1,
+      "tp_price": 85500.0,
+      "sl_price": 83000.0,
+      "status": "closed",
+      "pnl_usd": 1.07,
+      "pnl_pct": 1.07,
+      "opened_at": "2026-04-07T10:30:00Z",
+      "closed_at": "2026-04-07T14:22:00Z",
+      "close_reason": "tp_hit",
+      "notes": "Support bounce at 84K, RSI oversold on 4H",
+      "tags": [
+        "spot",
+        "scalp"
+      ]
+    },
+    {
+      "id": "trade_002",
+      "agent": "hermes2",
+      "asset": "PAXG",
+      "side": "long",
+      "entry_price": 3245.0,
+      "exit_price": null,
+      "size_usd": 50.0,
+      "leverage": 1,
+      "tp_price": 3350.0,
+      "sl_price": 3180.0,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-08T02:15:00Z",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Gold hedge, geopolitical uncertainty",
+      "tags": [
+        "spot",
+        "hedge"
+      ]
+    },
+    {
+      "id": "auto_001",
+      "agent": "hermes2",
+      "asset": "BTC",
+      "side": "long",
+      "entry_price": 71591.0,
+      "exit_price": null,
+      "size_usd": 71.59,
+      "leverage": 1,
+      "tp_price": 74096.68,
+      "sl_price": 70159.18,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-08T11:30:00Z",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Auto trader position",
+      "tags": [
+        "spot",
+        "auto-trader"
+      ]
+    }
+  ],
+  "metadata": {
+    "last_updated": "2026-04-08T15:30:00Z",
+    "total_trades": 3,
+    "version": "1.0"
+  }
+}

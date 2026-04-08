@@ -1,7 +1,10 @@
-.access_key
-.ai4trade.json
 __pycache__/
 *.pyc
 .env
-data/trades.json
-data/bets.json
+.access_key
+node_modules/
+.vercel/
+data/auto_trader.log
+data/sports_auto_trader.log
+data/market_snapshot.json
+scripts/__pycache__/

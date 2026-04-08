@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.+\\.json)$", "dest": "/data/$1" },
+    { "src": "/dashboard", "dest": "/index.html" },
+    { "src": "/", "dest": "/landing.html" }
+  ]
+}

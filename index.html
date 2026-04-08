@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClawTrader</title>
+<title>CT — ClawTrader</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
@@ -11,7 +11,7 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        accent: { DEFAULT: '#7132f5', hover: '#828fff' },
+        accent: { DEFAULT: '#a1a1aa', hover: '#d4d4d8' },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -23,25 +23,164 @@ tailwind.config = {
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-body { background: #08090a; }
+body { background: #09090b; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #08090a; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+::-webkit-scrollbar-track { background: #09090b; }
+::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+
+/* Tab transitions */
+.tab-content { display: none; opacity: 0; transform: translateY(6px); }
+.tab-content.active { display: block; animation: tabIn 0.25s ease forwards; }
+@keyframes tabIn { to { opacity: 1; transform: translateY(0); } }
+
+/* Card glow on hover */
+.card-glow {
+  background: linear-gradient(135deg, #18181b 0%, #1c1c1f 100%);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+}
+.card-glow:hover {
+  border-color: rgba(161,161,170,0.2);
+  box-shadow: 0 0 20px rgba(161,161,170,0.04), 0 4px 16px rgba(0,0,0,0.3);
+  transform: translateY(-1px);
+}
+
+/* Stat card shimmer */
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent);
+  transition: left 0.6s ease;
+}
+.stat-card:hover::after { left: 120%; }
+
+/* Glassmorphism header */
+.glass-header {
+  background: rgba(9,9,11,0.8);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Glass sidebar */
+.glass-sidebar {
+  background: rgba(12,12,14,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Pulse indicator */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.pulse-dot { animation: pulse 2s ease-in-out infinite; }
+
+/* Table row transitions */
+.trade-row {
+  transition: background 0.15s, border-color 0.15s;
+}
+.trade-row:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+/* Button press */
+.btn-press {
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.btn-press:active {
+  transform: scale(0.96);
+  filter: brightness(0.9);
+}
+
+/* Nav item transitions */
+.nav-item {
+  transition: all 0.2s ease;
+  position: relative;
+}
+.nav-item.active-nav::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 60%;
+  background: #a1a1aa;
+  border-radius: 0 2px 2px 0;
+}
+
+/* Progress bar glow */
+.bar-glow {
+  box-shadow: 0 0 8px currentColor;
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Position card hover */
+.pos-card {
+  transition: border-color 0.2s, background 0.2s;
+}
+.pos-card:hover {
+  border-color: rgba(161,161,170,0.25);
+  background: rgba(161,161,170,0.03);
+}
+
+/* Signal strength bar */
+.signal-bar {
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+.signal-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* Auth card entrance */
+@keyframes authIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.auth-card { animation: authIn 0.4s ease; }
+
+/* Smooth number transitions */
+.num-transition { transition: color 0.3s; }
+
+/* Log entry slide */
+@keyframes logSlide {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.log-entry { animation: logSlide 0.3s ease; }
+.log-accent { border-color: #52525b; }
+
+/* Scrollbar fade */
+.scroll-area { scrollbar-color: #333 transparent; }
+.scroll-area:hover { scrollbar-color: #555 transparent; }
 </style>
 </head>
-<body class="bg-[#08090a] text-gray-200 min-h-screen font-sans antialiased">
+<body class="bg-[#09090b] text-zinc-300 min-h-screen font-sans antialiased">
 
 <!-- AUTH -->
 <div id="auth-gate" class="flex items-center justify-center min-h-screen">
-  <div class="bg-[#191a1b] border border-white/5 rounded-xl p-10 text-center max-w-sm w-full mx-4">
-    <div class="text-4xl mb-4">⚡</div>
+  <div class="auth-card bg-[#18181b] border border-white/5 rounded-xl p-10 text-center max-w-sm w-full mx-4">
+    <div class="text-4xl mb-4 font-bold tracking-tight"><span class="text-zinc-400">C</span><span class="text-zinc-600">T</span></div>
     <h2 class="text-xl font-semibold mb-2">ClawTrader</h2>
-    <p class="text-gray-500 text-sm mb-6">Enter access key</p>
+    <p class="text-zinc-500 text-sm mb-6">Enter access key</p>
     <input id="access-key" type="password" placeholder="Access key..."
-      class="w-full px-4 py-3 bg-[#08090a] border border-white/10 rounded-lg text-white mb-3 outline-none focus:border-accent transition">
-    <button onclick="authenticate()" class="w-full py-3 bg-accent hover:bg-accent-hover rounded-lg text-white font-medium transition">Unlock</button>
+      class="w-full px-4 py-3 bg-[#09090b] border border-white/10 rounded-lg text-white mb-3 outline-none focus:border-zinc-500 transition">
+    <button onclick="authenticate()" class="btn-press w-full py-3 bg-zinc-700 hover:bg-zinc-600 rounded-lg text-white font-medium transition mb-3">Unlock</button>
+    <div class="flex items-center gap-3 mb-4">
+      <div class="flex-1 h-px bg-white/5"></div>
+      <span class="text-[10px] text-zinc-600 uppercase tracking-wider">or</span>
+      <div class="flex-1 h-px bg-white/5"></div>
+    </div>
+    <button onclick="enterSurfing()" class="btn-press w-full py-2.5 bg-transparent border border-white/10 rounded-lg text-zinc-500 text-sm hover:border-zinc-600 hover:text-zinc-400 transition">Browse in preview mode</button>
     <p id="auth-error" class="text-red-400 text-sm mt-3 hidden">Wrong key</p>
   </div>
 </div>
@@ -50,38 +189,39 @@ body { background: #08090a; }
 <div id="app" class="hidden">
   <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden" onclick="closeSidebar()"></div>
 
-  <nav id="sidebar" class="fixed left-0 top-0 h-screen w-56 bg-[#0f1011] border-r border-white/5 z-50 flex flex-col
+  <nav id="sidebar" class="glass-sidebar fixed left-0 top-0 h-screen w-56 border-r border-white/5 z-50 flex flex-col
     -translate-x-full md:translate-x-0 transition-transform duration-200">
     <div class="p-5 border-b border-white/5 flex items-center gap-3">
-      <span class="text-xl">⚡</span>
+      <div class="text-lg font-bold tracking-tight"><span class="text-zinc-400">C</span><span class="text-zinc-600">T</span></div>
       <span class="font-semibold text-sm">ClawTrader</span>
     </div>
     <div class="flex-1 p-3 space-y-1" id="nav-links"></div>
     <div class="p-4 border-t border-white/5">
       <div class="flex items-center gap-2 text-xs text-gray-500 mb-3">
-        <span class="w-2 h-2 rounded-full bg-green-500"></span> Connected
+        <span class="pulse-dot w-2 h-2 rounded-full bg-green-500"></span> Connected
       </div>
       <button onclick="logout()" class="w-full py-2 text-xs text-gray-500 border border-white/10 rounded-lg hover:border-red-500/50 hover:text-red-400 transition">Logout</button>
     </div>
   </nav>
 
   <main class="md:ml-56 min-h-screen">
-    <header class="sticky top-0 z-30 bg-[#08090a]/80 backdrop-blur-xl border-b border-white/5 h-14 flex items-center justify-between px-4 md:px-6">
+    <header class="glass-header sticky top-0 z-30 h-14 flex items-center justify-between px-4 md:px-6">
       <div class="flex items-center gap-3">
-        <button onclick="toggleSidebar()" class="md:hidden text-gray-400 text-xl p-1">☰</button>
+        <button onclick="toggleSidebar()" class="md:hidden text-zinc-400 text-xl p-1">☰</button>
         <h1 id="page-title" class="text-sm font-semibold">Dashboard</h1>
+        <span id="preview-badge" class="hidden text-[9px] font-medium px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-500 border border-zinc-700/50 uppercase tracking-wider">Preview</span>
       </div>
       <div class="flex items-center gap-3">
         <span id="last-updated" class="text-xs text-gray-600 font-mono hidden sm:block"></span>
-        <button onclick="refreshData()" class="text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition">↻ Refresh</button>
-        <div class="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-semibold">H2</div>
+        <button onclick="refreshData()" class="btn-press text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10">↻ Refresh</button>
+        <div class="w-8 h-8 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center text-xs font-semibold">CT</div>
       </div>
     </header>
 
     <!-- TAB: DASHBOARD -->
     <div id="tab-dashboard" class="tab-content active p-4 md:p-6 space-y-5">
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div class="bg-[#191a1b] border border-white/5 rounded-xl p-4">
+        <div class="card-glow stat-card rounded-xl p-4">
           <div class="flex items-center justify-between mb-2">
             <span class="text-[10px] uppercase tracking-wider text-gray-500">Portfolio</span>
             <span id="stat-daily-badge" class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-green-500/15 text-green-400">+0.00%</span>
@@ -89,17 +229,17 @@ body { background: #08090a; }
           <div id="stat-portfolio" class="text-xl md:text-2xl font-bold font-mono">$100,000</div>
           <div class="text-xs text-gray-500 mt-1">Cash: <span id="stat-cash" class="font-mono">$99,928</span></div>
         </div>
-        <div class="bg-[#191a1b] border border-white/5 rounded-xl p-4">
+        <div class="card-glow stat-card rounded-xl p-4">
           <div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Unrealized P&L</div>
           <div id="stat-unrealized" class="text-xl md:text-2xl font-bold font-mono text-green-400">+$0.00</div>
           <div class="text-xs text-gray-500 mt-1"><span id="stat-open">0</span> positions</div>
         </div>
-        <div class="bg-[#191a1b] border border-white/5 rounded-xl p-4">
+        <div class="card-glow stat-card rounded-xl p-4">
           <div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Realized P&L</div>
           <div id="stat-realized" class="text-xl md:text-2xl font-bold font-mono">$0.00</div>
           <div class="text-xs text-gray-500 mt-1">Win rate: <span id="stat-winrate" class="font-mono">0%</span></div>
         </div>
-        <div class="bg-[#191a1b] border border-white/5 rounded-xl p-4">
+        <div class="card-glow stat-card rounded-xl p-4">
           <div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Today</div>
           <div id="stat-today" class="text-xl md:text-2xl font-bold font-mono">0</div>
           <div class="text-xs text-gray-500 mt-1">Limit: 10 trades</div>
@@ -112,33 +252,33 @@ body { background: #08090a; }
           <span id="daily-loss-text" class="font-mono">0.0% / -5.0%</span>
         </div>
         <div class="h-1.5 bg-[#08090a] rounded-full overflow-hidden">
-          <div id="daily-loss-bar" class="h-full bg-green-500 rounded-full transition-all duration-500" style="width:0%"></div>
+          <div id="daily-loss-bar" class="h-full bar-glow bg-green-500 rounded-full" style="width:0%"></div>
         </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+        <div class="card-glow rounded-xl overflow-hidden">
           <div class="flex items-center justify-between px-4 py-3 border-b border-white/5">
             <h3 class="text-sm font-semibold">Open Positions</h3>
-            <span id="pos-count" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-accent/15 text-accent">0</span>
+            <span id="pos-count" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400">0</span>
           </div>
-          <div id="positions-list" class="p-3 space-y-2 max-h-80 overflow-y-auto">
+          <div id="positions-list" class="p-3 space-y-2 max-h-80 overflow-y-auto scroll-area">
             <div class="text-center text-gray-600 text-sm py-8">No positions</div>
           </div>
         </div>
-        <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+        <div class="card-glow rounded-xl overflow-hidden">
           <div class="flex items-center justify-between px-4 py-3 border-b border-white/5">
             <h3 class="text-sm font-semibold">Market Signals</h3>
-            <button onclick="refreshSignals()" class="text-xs px-3 py-1 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition">↻ Scan</button>
+            <button onclick="refreshSignals()" class="btn-press text-xs px-3 py-1 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10">↻ Scan</button>
           </div>
-          <div id="signals-list" class="p-3 space-y-2 max-h-80 overflow-y-auto">
+          <div id="signals-list" class="p-3 space-y-2 max-h-80 overflow-y-auto scroll-area">
             <div class="text-center text-gray-600 text-sm py-8">Click scan</div>
           </div>
         </div>
       </div>
 
       <!-- TRADE STATS -->
-      <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+      <div class="card-glow rounded-xl overflow-hidden">
         <div class="flex items-center justify-between px-4 py-3 border-b border-white/5">
           <h3 class="text-sm font-semibold">Trade Statistics</h3>
           <select id="stats-period" onchange="renderTradeStats()" class="text-xs bg-[#08090a] border border-white/10 rounded-lg px-3 py-1.5 outline-none">
@@ -166,7 +306,7 @@ body { background: #08090a; }
       </div>
 
       <!-- TRADES TABLE -->
-      <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+      <div class="card-glow rounded-xl overflow-hidden">
         <div class="flex items-center justify-between px-4 py-3 border-b border-white/5 flex-wrap gap-2">
           <h3 class="text-sm font-semibold">Recent Trades</h3>
           <div class="flex gap-2">
@@ -190,8 +330,26 @@ body { background: #08090a; }
     </div>
 
     <!-- TAB: TRADES -->
-    <div id="tab-trades" class="tab-content p-4 md:p-6">
-      <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+    <div id="tab-trades" class="tab-content p-4 md:p-6 space-y-4">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] uppercase tracking-wider text-zinc-500">From</span>
+          <input type="date" id="trades-from" class="text-xs bg-[#18181b] border border-white/10 rounded-lg px-3 py-1.5 outline-none text-zinc-300" onchange="renderAllTrades()">
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] uppercase tracking-wider text-zinc-500">To</span>
+          <input type="date" id="trades-to" class="text-xs bg-[#18181b] border border-white/10 rounded-lg px-3 py-1.5 outline-none text-zinc-300" onchange="renderAllTrades()">
+        </div>
+        <select id="trades-sort" onchange="renderAllTrades()" class="text-xs bg-[#18181b] border border-white/10 rounded-lg px-3 py-1.5 outline-none">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="pnl-high">P&L high → low</option>
+          <option value="pnl-low">P&L low → high</option>
+          <option value="size">Size large → small</option>
+        </select>
+        <button onclick="clearFilters('trades')" class="text-[10px] text-zinc-600 hover:text-zinc-400 transition">Clear</button>
+      </div>
+      <div class="card-glow rounded-xl overflow-hidden">
         <div class="px-4 py-3 border-b border-white/5"><h3 class="text-sm font-semibold">All Trades</h3></div>
         <div class="overflow-x-auto"><table class="w-full text-xs">
           <thead class="bg-white/[0.02]"><tr class="text-left text-gray-500 uppercase tracking-wider">
@@ -205,8 +363,25 @@ body { background: #08090a; }
     </div>
 
     <!-- TAB: BETS -->
-    <div id="tab-bets" class="tab-content p-4 md:p-6">
-      <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+    <div id="tab-bets" class="tab-content p-4 md:p-6 space-y-4">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] uppercase tracking-wider text-zinc-500">From</span>
+          <input type="date" id="bets-from" class="text-xs bg-[#18181b] border border-white/10 rounded-lg px-3 py-1.5 outline-none text-zinc-300" onchange="renderBets()">
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] uppercase tracking-wider text-zinc-500">To</span>
+          <input type="date" id="bets-to" class="text-xs bg-[#18181b] border border-white/10 rounded-lg px-3 py-1.5 outline-none text-zinc-300" onchange="renderBets()">
+        </div>
+        <select id="bets-sort" onchange="renderBets()" class="text-xs bg-[#18181b] border border-white/10 rounded-lg px-3 py-1.5 outline-none">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="pnl-high">P&L high → low</option>
+          <option value="pnl-low">P&L low → high</option>
+        </select>
+        <button onclick="clearFilters('bets')" class="text-[10px] text-zinc-600 hover:text-zinc-400 transition">Clear</button>
+      </div>
+      <div class="card-glow rounded-xl overflow-hidden">
         <div class="px-4 py-3 border-b border-white/5"><h3 class="text-sm font-semibold">Bets</h3></div>
         <div class="overflow-x-auto"><table class="w-full text-xs">
           <thead class="bg-white/[0.02]"><tr class="text-left text-gray-500 uppercase tracking-wider">
@@ -220,23 +395,56 @@ body { background: #08090a; }
     </div>
 
     <!-- TAB: SIGNALS -->
-    <div id="tab-signals" class="tab-content p-4 md:p-6">
-      <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+    <div id="tab-signals" class="tab-content p-4 md:p-6 space-y-4">
+      <div class="card-glow rounded-xl overflow-hidden">
         <div class="flex items-center justify-between px-4 py-3 border-b border-white/5">
           <h3 class="text-sm font-semibold">Signal Scanner</h3>
-          <button onclick="refreshSignals()" class="text-xs px-3 py-1.5 bg-accent hover:bg-accent-hover rounded-lg text-white transition">Run Full Scan</button>
+          <button onclick="runFullScan()" class="btn-press text-xs px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 rounded-lg text-white">Run Scan</button>
+        </div>
+        <div class="px-4 py-3 border-b border-white/5">
+          <div class="text-[10px] uppercase tracking-wider text-zinc-500 mb-2">Assets</div>
+          <div id="asset-checkboxes" class="flex flex-wrap gap-2"></div>
+        </div>
+        <div class="px-4 py-3 border-b border-white/5 flex items-center gap-3">
+          <span class="text-[10px] uppercase tracking-wider text-zinc-500">Interval</span>
+          <select id="scan-interval" class="text-xs bg-[#09090b] border border-white/10 rounded-lg px-3 py-1.5 outline-none">
+            <option value="15m">15m</option>
+            <option value="1h" selected>1h</option>
+            <option value="4h">4h</option>
+            <option value="1d">1d</option>
+          </select>
         </div>
         <div id="signals-detail" class="p-3 space-y-2">
-          <div class="text-center text-gray-600 text-sm py-8">Click scan to check all assets</div>
+          <div class="text-center text-zinc-600 text-sm py-8">Select assets and click Run Scan</div>
         </div>
       </div>
     </div>
 
     <!-- TAB: LOG -->
-    <div id="tab-log" class="tab-content p-4 md:p-6">
-      <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+    <div id="tab-log" class="tab-content p-4 md:p-6 space-y-4">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] uppercase tracking-wider text-zinc-500">From</span>
+          <input type="date" id="log-from" class="text-xs bg-[#18181b] border border-white/10 rounded-lg px-3 py-1.5 outline-none text-zinc-300" onchange="renderLog()">
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] uppercase tracking-wider text-zinc-500">To</span>
+          <input type="date" id="log-to" class="text-xs bg-[#18181b] border border-white/10 rounded-lg px-3 py-1.5 outline-none text-zinc-300" onchange="renderLog()">
+        </div>
+        <select id="log-type" onchange="renderLog()" class="text-xs bg-[#18181b] border border-white/10 rounded-lg px-3 py-1.5 outline-none">
+          <option value="all">All</option>
+          <option value="trades">Trades only</option>
+          <option value="bets">Bets only</option>
+        </select>
+        <select id="log-sort" onchange="renderLog()" class="text-xs bg-[#18181b] border border-white/10 rounded-lg px-3 py-1.5 outline-none">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+        </select>
+        <button onclick="clearFilters('log')" class="text-[10px] text-zinc-600 hover:text-zinc-400 transition">Clear</button>
+      </div>
+      <div class="card-glow rounded-xl overflow-hidden">
         <div class="px-4 py-3 border-b border-white/5"><h3 class="text-sm font-semibold">Activity Log</h3></div>
-        <div id="log-entries" class="p-3 space-y-2 max-h-[70vh] overflow-y-auto">
+        <div id="log-entries" class="p-3 space-y-2 max-h-[70vh] overflow-y-auto scroll-area">
           <div class="text-center text-gray-600 text-sm py-8">No log entries</div>
         </div>
       </div>
