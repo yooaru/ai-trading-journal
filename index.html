@@ -148,64 +148,67 @@
       </div>
     </div>
 
-    <!-- FULL SUMMARY -->
+    <!-- TRADE STATISTICS -->
     <div class="card" style="margin-bottom:20px">
-      <div class="card-header" style="cursor:pointer" onclick="this.parentElement.classList.toggle('collapsed-section')">
-        <h3>System Overview</h3>
-        <span class="card-toggle">&#9662;</span>
+      <div class="card-header">
+        <h3>Trade Statistics</h3>
+        <div class="card-filters">
+          <select id="stats-period" onchange="renderTradeStats()">
+            <option value="all">All Time</option>
+            <option value="month">This Month</option>
+            <option value="week">This Week</option>
+            <option value="today">Today</option>
+          </select>
+        </div>
       </div>
-      <div class="summary-grid">
-        <div class="summary-block">
-          <div class="summary-title">Portfolio</div>
-          <div class="summary-row"><span>Cash</span><span id="sum-cash">$99,928</span></div>
-          <div class="summary-row"><span>Open Positions</span><span id="sum-positions">1</span></div>
-          <div class="summary-row"><span>Total Trades</span><span id="sum-trades">3</span></div>
-          <div class="summary-row"><span>Total Bets</span><span id="sum-bets">17</span></div>
+      <div class="stats-detail-grid">
+        <div class="stats-detail-card">
+          <div class="stats-detail-label">Total P&amp;L</div>
+          <div class="stats-detail-value" id="td-total-pnl">$0.00</div>
         </div>
-        <div class="summary-block">
-          <div class="summary-title">Trading Config</div>
-          <div class="summary-row"><span>Risk / Trade</span><span>2% (vol-adjusted)</span></div>
-          <div class="summary-row"><span>Max Positions</span><span>5</span></div>
-          <div class="summary-row"><span>TP Levels</span><span>+2% / +3.5% / +5%</span></div>
-          <div class="summary-row"><span>Stop Loss</span><span>-2% (trail after +1.5%)</span></div>
-          <div class="summary-row"><span>Hold Period</span><span>15 min</span></div>
+        <div class="stats-detail-card">
+          <div class="stats-detail-label">Win Rate</div>
+          <div class="stats-detail-value" id="td-winrate">0%</div>
         </div>
-        <div class="summary-block">
-          <div class="summary-title">Daily Limits</div>
-          <div class="summary-row"><span>Max Loss</span><span>-5%</span></div>
-          <div class="summary-row"><span>Max Trades</span><span>10 / day</span></div>
-          <div class="summary-row"><span>Cooldown</span><span>4h after limit</span></div>
-          <div class="summary-row"><span>Today P&amp;L</span><span id="sum-daily-pnl">+0.00%</span></div>
-          <div class="summary-row"><span>Today Trades</span><span id="sum-daily-trades">0</span></div>
+        <div class="stats-detail-card">
+          <div class="stats-detail-label">Total Trades</div>
+          <div class="stats-detail-value" id="td-total-trades">0</div>
         </div>
-        <div class="summary-block">
-          <div class="summary-title">Watchlist</div>
-          <div class="watchlist-tags" id="sum-watchlist">
-            <span class="watch-tag">BTC</span>
-            <span class="watch-tag">ETH</span>
-            <span class="watch-tag">SOL</span>
-            <span class="watch-tag">PAXG</span>
-            <span class="watch-tag">WLD</span>
-            <span class="watch-tag">SUI</span>
-            <span class="watch-tag">DOGE</span>
-            <span class="watch-tag">XRP</span>
-            <span class="watch-tag">LINK</span>
-            <span class="watch-tag">AVAX</span>
-          </div>
+        <div class="stats-detail-card">
+          <div class="stats-detail-label">Wins / Losses</div>
+          <div class="stats-detail-value" id="td-wl">0 / 0</div>
         </div>
-        <div class="summary-block">
-          <div class="summary-title">Cron Jobs</div>
-          <div class="summary-row"><span>Auto Trader</span><span class="cron-status active">every 30m</span></div>
-          <div class="summary-row"><span>News Monitor</span><span class="cron-status active">every 45m</span></div>
-          <div class="summary-row"><span>Daily Football</span><span class="cron-status active">02:00 UTC</span></div>
+        <div class="stats-detail-card">
+          <div class="stats-detail-label">Avg Win</div>
+          <div class="stats-detail-value positive" id="td-avg-win">+$0.00</div>
         </div>
-        <div class="summary-block">
-          <div class="summary-title">Features Active</div>
-          <div class="summary-row"><span>15-min Hold</span><span class="feat-on">ON</span></div>
-          <div class="summary-row"><span>Trailing Stop</span><span class="feat-on">ON</span></div>
-          <div class="summary-row"><span>Vol Sizing</span><span class="feat-on">ON</span></div>
-          <div class="summary-row"><span>Daily Loss Limit</span><span class="feat-on">ON</span></div>
-          <div class="summary-row"><span>Indicator Signals</span><span class="feat-on">ON</span></div>
+        <div class="stats-detail-card">
+          <div class="stats-detail-label">Avg Loss</div>
+          <div class="stats-detail-value negative" id="td-avg-loss">-$0.00</div>
+        </div>
+        <div class="stats-detail-card">
+          <div class="stats-detail-label">Best Trade</div>
+          <div class="stats-detail-value positive" id="td-best">—</div>
+        </div>
+        <div class="stats-detail-card">
+          <div class="stats-detail-label">Worst Trade</div>
+          <div class="stats-detail-value negative" id="td-worst">—</div>
+        </div>
+        <div class="stats-detail-card">
+          <div class="stats-detail-label">Profit Factor</div>
+          <div class="stats-detail-value" id="td-profit-factor">0.00</div>
+        </div>
+        <div class="stats-detail-card">
+          <div class="stats-detail-label">Avg Hold Time</div>
+          <div class="stats-detail-value" id="td-avg-hold">—</div>
+        </div>
+        <div class="stats-detail-card">
+          <div class="stats-detail-label">Max Drawdown</div>
+          <div class="stats-detail-value negative" id="td-max-dd">0%</div>
+        </div>
+        <div class="stats-detail-card">
+          <div class="stats-detail-label">Expectancy</div>
+          <div class="stats-detail-value" id="td-expectancy">$0.00</div>
         </div>
       </div>
     </div>

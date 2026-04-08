@@ -103,7 +103,7 @@ async function loadData() {
 
     updateStats();
     renderPositions();
-    renderSummary();
+    renderTradeStats();
     renderCurrentTab();
     updateLastUpdated();
   } catch (err) {
@@ -184,26 +184,107 @@ function updateStats() {
   dailyBadge.className = 'stat-badge ' + (dailyPnlPct >= 0 ? 'positive' : 'negative');
 }
 
-// ============ SUMMARY ============
-function renderSummary() {
-  const positions = autoTraderState?.positions || {};
+// ============ TRADE STATISTICS ============
+function renderTradeStats() {
   const trades = tradesData?.trades || [];
   const bets = betsData?.bets || [];
+  const period = document.getElementById('stats-period')?.value || 'all';
 
+  // Combine trades + bets, filter by period
+  const all = [
+    ...trades.filter(t => t.status === 'closed').map(t => ({
+      pnl: t.pnl_usd || 0,
+      pnl_pct: t.pnl_pct || 0,
+      asset: t.asset,
+      opened: t.opened_at,
+      closed: t.closed_at,
+      type: 'trade',
+    })),
+    ...bets.filter(b => b.status === 'closed').map(b => ({
+      pnl: b.pnl_usd || 0,
+      pnl_pct: 0,
+      asset: b.market,
+      opened: b.opened_at,
+      closed: b.closed_at,
+      type: 'bet',
+    })),
+  ];
+
+  // Filter by period
+  const now = new Date();
+  let filtered = all;
+  if (period === 'today') {
+    const today = now.toISOString().slice(0, 10);
+    filtered = all.filter(t => t.closed?.startsWith(today));
+  } else if (period === 'week') {
+    const weekAgo = new Date(now - 7 * 86400000);
+    filtered = all.filter(t => t.closed && new Date(t.closed) >= weekAgo);
+  } else if (period === 'month') {
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    filtered = all.filter(t => t.closed && new Date(t.closed) >= monthStart);
+  }
+
+  // Calculate stats
+  const total = filtered.length;
+  const wins = filtered.filter(t => t.pnl > 0);
+  const losses = filtered.filter(t => t.pnl < 0);
+  const totalPnl = filtered.reduce((s, t) => s + t.pnl, 0);
+  const winRate = total > 0 ? (wins.length / total * 100) : 0;
+  const avgWin = wins.length > 0 ? wins.reduce((s, t) => s + t.pnl, 0) / wins.length : 0;
+  const avgLoss = losses.length > 0 ? losses.reduce((s, t) => s + t.pnl, 0) / losses.length : 0;
+  const best = filtered.length > 0 ? Math.max(...filtered.map(t => t.pnl)) : 0;
+  const worst = filtered.length > 0 ? Math.min(...filtered.map(t => t.pnl)) : 0;
+  const grossProfit = wins.reduce((s, t) => s + t.pnl, 0);
+  const grossLoss = Math.abs(losses.reduce((s, t) => s + t.pnl, 0));
+  const profitFactor = grossLoss > 0 ? (grossProfit / grossLoss) : (grossProfit > 0 ? Infinity : 0);
+
+  // Avg hold time
+  let avgHold = '—';
+  const holdTimes = filtered.filter(t => t.opened && t.closed).map(t => {
+    return (new Date(t.closed) - new Date(t.opened)) / 60000; // minutes
+  });
+  if (holdTimes.length > 0) {
+    const avgMin = holdTimes.reduce((s, v) => s + v, 0) / holdTimes.length;
+    if (avgMin >= 60) avgHold = (avgMin / 60).toFixed(1) + 'h';
+    else avgHold = avgMin.toFixed(0) + 'm';
+  }
+
+  // Max drawdown (simplified: worst single trade %)
+  const maxDd = filtered.length > 0 ? Math.min(...filtered.map(t => t.pnl_pct)) : 0;
+
+  // Expectancy = (win_rate * avg_win) + (loss_rate * avg_loss)
+  const expectancy = (winRate / 100 * avgWin) + ((100 - winRate) / 100 * avgLoss);
+
+  // Best trade detail
+  const bestTrade = filtered.length > 0 ? filtered.reduce((a, b) => a.pnl > b.pnl ? a : b) : null;
+  const worstTrade = filtered.length > 0 ? filtered.reduce((a, b) => a.pnl < b.pnl ? a : b) : null;
+
+  // Update DOM
   const setEl = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+  const setClass = (id, cls) => { const e = document.getElementById(id); if (e) e.className = 'stats-detail-value ' + cls; };
 
-  setEl('sum-cash', '$99,928');
-  setEl('sum-positions', Object.keys(positions).length);
-  setEl('sum-trades', trades.length);
-  setEl('sum-bets', bets.length);
+  setEl('td-total-pnl', (totalPnl >= 0 ? '+' : '') + '$' + totalPnl.toFixed(2));
+  setClass('td-total-pnl', totalPnl >= 0 ? 'positive' : 'negative');
 
-  const daily = dailyPnl || {};
-  const today = new Date().toISOString().slice(0, 10);
-  const todayTrades = (daily.trades || []).filter(t => t.time?.startsWith(today));
+  setEl('td-winrate', winRate.toFixed(1) + '%');
+  setClass('td-winrate', winRate >= 50 ? 'positive' : winRate > 0 ? 'negative' : '');
 
-  const pnl = daily.total_pnl_pct || 0;
-  setEl('sum-daily-pnl', (pnl >= 0 ? '+' : '') + pnl.toFixed(2) + '%');
-  setEl('sum-daily-trades', todayTrades.length);
+  setEl('td-total-trades', total);
+  setEl('td-wl', wins.length + ' / ' + losses.length);
+
+  setEl('td-avg-win', '+$' + avgWin.toFixed(2));
+  setEl('td-avg-loss', '-$' + Math.abs(avgLoss).toFixed(2));
+
+  setEl('td-best', bestTrade ? (bestTrade.asset + ' +$' + bestTrade.pnl.toFixed(2)) : '—');
+  setEl('td-worst', worstTrade ? (worstTrade.asset + ' -$' + Math.abs(worstTrade.pnl).toFixed(2)) : '—');
+
+  setEl('td-profit-factor', profitFactor === Infinity ? '∞' : profitFactor.toFixed(2));
+  setClass('td-profit-factor', profitFactor >= 1.5 ? 'positive' : profitFactor < 1 ? 'negative' : '');
+
+  setEl('td-avg-hold', avgHold);
+  setEl('td-max-dd', maxDd.toFixed(1) + '%');
+  setEl('td-expectancy', (expectancy >= 0 ? '+' : '') + '$' + expectancy.toFixed(2));
+  setClass('td-expectancy', expectancy >= 0 ? 'positive' : 'negative');
 }
 
 // ============ POSITIONS ============

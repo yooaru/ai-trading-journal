@@ -797,7 +797,7 @@ tr:last-child td { border-bottom: none; }
 @media (max-width: 1024px) {
   .stats-row { grid-template-columns: repeat(2, 1fr); }
   .grid-2col { grid-template-columns: 1fr; }
-  .summary-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-detail-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -824,93 +824,38 @@ tr:last-child td { border-bottom: none; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-/* ===== SUMMARY GRID ===== */
-.summary-grid {
+/* ===== TRADE STATISTICS GRID ===== */
+.stats-detail-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 1px;
   background: var(--border-subtle);
 }
 
-.summary-block {
+.stats-detail-card {
   background: var(--bg-surface);
   padding: 16px 20px;
+  text-align: center;
 }
 
-.summary-title {
+.stats-detail-label {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--text-muted);
-  font-weight: 590;
-  margin-bottom: 12px;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 0;
-  font-size: 13px;
-}
-
-.summary-row span:first-child {
-  color: var(--text-tertiary);
-}
-
-.summary-row span:last-child {
-  color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-}
-
-.watchlist-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.watch-tag {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border-subtle);
-  padding: 3px 10px;
-  border-radius: 9999px;
-  font-size: 11px;
   font-weight: 510;
-  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.stats-detail-value {
+  font-size: 20px;
+  font-weight: 590;
+  letter-spacing: -0.3px;
   font-family: 'JetBrains Mono', monospace;
 }
 
-.cron-status {
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 9999px;
-}
-
-.cron-status.active {
-  background: var(--green-bg);
-  color: var(--green);
-}
-
-.feat-on {
-  font-size: 11px;
-  font-weight: 590;
-  color: var(--green);
-}
-
-.card-toggle {
-  font-size: 12px;
-  color: var(--text-muted);
-  transition: transform 0.2s;
-}
-
-.collapsed-section .summary-grid {
-  display: none;
-}
-
-.collapsed-section .card-toggle {
-  transform: rotate(-90deg);
-}
+.stats-detail-value.positive { color: var(--green); }
+.stats-detail-value.negative { color: var(--red); }
 
 /* ===== SVG ICONS (no emoji) ===== */
 .icon-bolt::before { content: "⚡"; font-size: 18px; }
