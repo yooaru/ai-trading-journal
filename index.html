@@ -11,8 +11,7 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        surface: { DEFAULT: '#191a1b', card: '#0f1011', elevated: '#28282c' },
-        accent: { DEFAULT: '#7132f5', hover: '#828fff', subtle: 'rgba(133,91,251,0.16)' },
+        accent: { DEFAULT: '#7132f5', hover: '#828fff' },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -28,8 +27,8 @@ body { background: #08090a; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #08090a; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.scroll-x::-webkit-scrollbar { height: 4px; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 </style>
 </head>
 <body class="bg-[#08090a] text-gray-200 min-h-screen font-sans antialiased">
@@ -42,19 +41,15 @@ body { background: #08090a; }
     <p class="text-gray-500 text-sm mb-6">Enter access key</p>
     <input id="access-key" type="password" placeholder="Access key..."
       class="w-full px-4 py-3 bg-[#08090a] border border-white/10 rounded-lg text-white mb-3 outline-none focus:border-accent transition">
-    <button onclick="authenticate()" class="w-full py-3 bg-accent hover:bg-accent-hover rounded-lg text-white font-medium transition">
-      Unlock
-    </button>
+    <button onclick="authenticate()" class="w-full py-3 bg-accent hover:bg-accent-hover rounded-lg text-white font-medium transition">Unlock</button>
     <p id="auth-error" class="text-red-400 text-sm mt-3 hidden">Wrong key</p>
   </div>
 </div>
 
-<!-- LAYOUT -->
+<!-- APP -->
 <div id="app" class="hidden">
-  <!-- SIDEBAR OVERLAY (mobile) -->
   <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden" onclick="closeSidebar()"></div>
 
-  <!-- SIDEBAR -->
   <nav id="sidebar" class="fixed left-0 top-0 h-screen w-56 bg-[#0f1011] border-r border-white/5 z-50 flex flex-col
     -translate-x-full md:translate-x-0 transition-transform duration-200">
     <div class="p-5 border-b border-white/5 flex items-center gap-3">
@@ -66,15 +61,11 @@ body { background: #08090a; }
       <div class="flex items-center gap-2 text-xs text-gray-500 mb-3">
         <span class="w-2 h-2 rounded-full bg-green-500"></span> Connected
       </div>
-      <button onclick="logout()" class="w-full py-2 text-xs text-gray-500 border border-white/10 rounded-lg hover:border-red-500/50 hover:text-red-400 transition">
-        Logout
-      </button>
+      <button onclick="logout()" class="w-full py-2 text-xs text-gray-500 border border-white/10 rounded-lg hover:border-red-500/50 hover:text-red-400 transition">Logout</button>
     </div>
   </nav>
 
-  <!-- MAIN -->
   <main class="md:ml-56 min-h-screen">
-    <!-- TOPBAR -->
     <header class="sticky top-0 z-30 bg-[#08090a]/80 backdrop-blur-xl border-b border-white/5 h-14 flex items-center justify-between px-4 md:px-6">
       <div class="flex items-center gap-3">
         <button onclick="toggleSidebar()" class="md:hidden text-gray-400 text-xl p-1">☰</button>
@@ -82,17 +73,13 @@ body { background: #08090a; }
       </div>
       <div class="flex items-center gap-3">
         <span id="last-updated" class="text-xs text-gray-600 font-mono hidden sm:block"></span>
-        <button onclick="refreshData()" class="text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition">
-          ↻ Refresh
-        </button>
+        <button onclick="refreshData()" class="text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition">↻ Refresh</button>
         <div class="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-semibold">H2</div>
       </div>
     </header>
 
-    <!-- CONTENT -->
-    <div class="p-4 md:p-6 space-y-5">
-
-      <!-- STATS CARDS -->
+    <!-- TAB: DASHBOARD -->
+    <div id="tab-dashboard" class="tab-content active p-4 md:p-6 space-y-5">
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="bg-[#191a1b] border border-white/5 rounded-xl p-4">
           <div class="flex items-center justify-between mb-2">
@@ -119,7 +106,6 @@ body { background: #08090a; }
         </div>
       </div>
 
-      <!-- DAILY LOSS BAR -->
       <div class="bg-[#191a1b] border border-white/5 rounded-xl p-4">
         <div class="flex justify-between text-xs text-gray-500 mb-2">
           <span>Daily Loss Limit</span>
@@ -130,9 +116,7 @@ body { background: #08090a; }
         </div>
       </div>
 
-      <!-- TWO COLUMN: POSITIONS + SIGNALS -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- POSITIONS -->
         <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
           <div class="flex items-center justify-between px-4 py-3 border-b border-white/5">
             <h3 class="text-sm font-semibold">Open Positions</h3>
@@ -142,13 +126,10 @@ body { background: #08090a; }
             <div class="text-center text-gray-600 text-sm py-8">No positions</div>
           </div>
         </div>
-        <!-- SIGNALS -->
         <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
           <div class="flex items-center justify-between px-4 py-3 border-b border-white/5">
             <h3 class="text-sm font-semibold">Market Signals</h3>
-            <button onclick="refreshSignals()" class="text-xs px-3 py-1 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition">
-              ↻ Scan
-            </button>
+            <button onclick="refreshSignals()" class="text-xs px-3 py-1 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition">↻ Scan</button>
           </div>
           <div id="signals-list" class="p-3 space-y-2 max-h-80 overflow-y-auto">
             <div class="text-center text-gray-600 text-sm py-8">Click scan</div>
@@ -156,47 +137,32 @@ body { background: #08090a; }
         </div>
       </div>
 
-      <!-- TRADE STATISTICS -->
+      <!-- TRADE STATS -->
       <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
         <div class="flex items-center justify-between px-4 py-3 border-b border-white/5">
           <h3 class="text-sm font-semibold">Trade Statistics</h3>
-          <select id="stats-period" onchange="renderTradeStats()" class="text-xs bg-[#08090a] border border-white/10 rounded-lg px-3 py-1.5 text-gray-300 outline-none">
+          <select id="stats-period" onchange="renderTradeStats()" class="text-xs bg-[#08090a] border border-white/10 rounded-lg px-3 py-1.5 outline-none">
             <option value="all">All Time</option>
             <option value="month">This Month</option>
             <option value="week">This Week</option>
             <option value="today">Today</option>
           </select>
         </div>
-        <!-- Desktop: 6-col grid -->
         <div class="hidden md:grid grid-cols-6 gap-px bg-white/5">
-          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="total-pnl"><div class="stat-label">Total P&L</div><div class="stat-value" id="td-total-pnl">$0.00</div></div>
-          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="winrate"><div class="stat-label">Win Rate</div><div class="stat-value" id="td-winrate">0%</div></div>
-          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="trades"><div class="stat-label">Total Trades</div><div class="stat-value" id="td-total-trades">0</div></div>
-          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="wl"><div class="stat-label">Wins / Losses</div><div class="stat-value" id="td-wl">0 / 0</div></div>
-          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="avg-win"><div class="stat-label">Avg Win</div><div class="stat-value text-green-400" id="td-avg-win">+$0</div></div>
-          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="avg-loss"><div class="stat-label">Avg Loss</div><div class="stat-value text-red-400" id="td-avg-loss">-$0</div></div>
-          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="best"><div class="stat-label">Best Trade</div><div class="stat-value text-green-400 text-sm" id="td-best">—</div></div>
-          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="worst"><div class="stat-label">Worst Trade</div><div class="stat-value text-red-400 text-sm" id="td-worst">—</div></div>
-          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="pf"><div class="stat-label">Profit Factor</div><div class="stat-value" id="td-pf">0.00</div></div>
-          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="hold"><div class="stat-label">Avg Hold</div><div class="stat-value" id="td-hold">—</div></div>
-          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="dd"><div class="stat-label">Max DD</div><div class="stat-value text-red-400" id="td-dd">0%</div></div>
-          <div class="bg-[#191a1b] p-4 text-center stat-cell" data-key="exp"><div class="stat-label">Expectancy</div><div class="stat-value" id="td-exp">$0.00</div></div>
+          <div class="bg-[#191a1b] p-4 text-center"><div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Total P&L</div><div class="text-lg font-bold font-mono" id="td-total-pnl">$0.00</div></div>
+          <div class="bg-[#191a1b] p-4 text-center"><div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Win Rate</div><div class="text-lg font-bold font-mono" id="td-winrate">0%</div></div>
+          <div class="bg-[#191a1b] p-4 text-center"><div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Trades</div><div class="text-lg font-bold font-mono" id="td-total-trades">0</div></div>
+          <div class="bg-[#191a1b] p-4 text-center"><div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">W / L</div><div class="text-lg font-bold font-mono" id="td-wl">0 / 0</div></div>
+          <div class="bg-[#191a1b] p-4 text-center"><div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Avg Win</div><div class="text-lg font-bold font-mono text-green-400" id="td-avg-win">+$0</div></div>
+          <div class="bg-[#191a1b] p-4 text-center"><div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Avg Loss</div><div class="text-lg font-bold font-mono text-red-400" id="td-avg-loss">-$0</div></div>
+          <div class="bg-[#191a1b] p-4 text-center"><div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Best</div><div class="text-sm font-bold font-mono text-green-400" id="td-best">—</div></div>
+          <div class="bg-[#191a1b] p-4 text-center"><div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Worst</div><div class="text-sm font-bold font-mono text-red-400" id="td-worst">—</div></div>
+          <div class="bg-[#191a1b] p-4 text-center"><div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">PF</div><div class="text-lg font-bold font-mono" id="td-pf">0.00</div></div>
+          <div class="bg-[#191a1b] p-4 text-center"><div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Avg Hold</div><div class="text-lg font-bold font-mono" id="td-hold">—</div></div>
+          <div class="bg-[#191a1b] p-4 text-center"><div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Max DD</div><div class="text-lg font-bold font-mono text-red-400" id="td-dd">0%</div></div>
+          <div class="bg-[#191a1b] p-4 text-center"><div class="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Exp</div><div class="text-lg font-bold font-mono" id="td-exp">$0.00</div></div>
         </div>
-        <!-- Mobile: scrollable list -->
-        <div class="md:hidden divide-y divide-white/5" id="stats-mobile">
-          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Total P&L</span><span class="font-mono text-sm font-medium" id="tdm-total-pnl">$0.00</span></div>
-          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Win Rate</span><span class="font-mono text-sm font-medium" id="tdm-winrate">0%</span></div>
-          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Total Trades</span><span class="font-mono text-sm font-medium" id="tdm-trades">0</span></div>
-          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Wins / Losses</span><span class="font-mono text-sm font-medium" id="tdm-wl">0 / 0</span></div>
-          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Avg Win</span><span class="font-mono text-sm font-medium text-green-400" id="tdm-avg-win">+$0</span></div>
-          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Avg Loss</span><span class="font-mono text-sm font-medium text-red-400" id="tdm-avg-loss">-$0</span></div>
-          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Best Trade</span><span class="font-mono text-xs font-medium text-green-400 scroll-x max-w-[55%] text-right" id="tdm-best">—</span></div>
-          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Worst Trade</span><span class="font-mono text-xs font-medium text-red-400 scroll-x max-w-[55%] text-right" id="tdm-worst">—</span></div>
-          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Profit Factor</span><span class="font-mono text-sm font-medium" id="tdm-pf">0.00</span></div>
-          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Avg Hold</span><span class="font-mono text-sm font-medium" id="tdm-hold">—</span></div>
-          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Max DD</span><span class="font-mono text-sm font-medium text-red-400" id="tdm-dd">0%</span></div>
-          <div class="flex justify-between items-center px-4 py-3"><span class="text-sm text-gray-400">Expectancy</span><span class="font-mono text-sm font-medium" id="tdm-exp">$0.00</span></div>
-        </div>
+        <div class="md:hidden divide-y divide-white/5" id="stats-mobile"></div>
       </div>
 
       <!-- TRADES TABLE -->
@@ -205,46 +171,79 @@ body { background: #08090a; }
           <h3 class="text-sm font-semibold">Recent Trades</h3>
           <div class="flex gap-2">
             <select id="filter-agent" onchange="renderTrades()" class="text-xs bg-[#08090a] border border-white/10 rounded-lg px-2 py-1.5 outline-none">
-              <option value="all">All Agents</option>
-              <option value="hermes1">Hermes1</option>
-              <option value="hermes2">Hermes2</option>
+              <option value="all">All Agents</option><option value="hermes1">Hermes1</option><option value="hermes2">Hermes2</option>
             </select>
             <select id="filter-status" onchange="renderTrades()" class="text-xs bg-[#08090a] border border-white/10 rounded-lg px-2 py-1.5 outline-none">
-              <option value="all">All Status</option>
-              <option value="open">Open</option>
-              <option value="closed">Closed</option>
+              <option value="all">All Status</option><option value="open">Open</option><option value="closed">Closed</option>
             </select>
           </div>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs">
-            <thead class="bg-white/[0.02]">
-              <tr class="text-left text-gray-500 uppercase tracking-wider">
-                <th class="px-4 py-3 whitespace-nowrap">Time</th>
-                <th class="px-4 py-3">Agent</th>
-                <th class="px-4 py-3">Asset</th>
-                <th class="px-4 py-3">Side</th>
-                <th class="px-4 py-3">Entry</th>
-                <th class="px-4 py-3 hidden md:table-cell">Exit</th>
-                <th class="px-4 py-3">Size</th>
-                <th class="px-4 py-3">P&L</th>
-                <th class="px-4 py-3">Status</th>
-                <th class="px-4 py-3 hidden lg:table-cell">Notes</th>
-              </tr>
-            </thead>
-            <tbody id="trades-body" class="divide-y divide-white/5"></tbody>
-          </table>
+        <div class="overflow-x-auto"><table class="w-full text-xs">
+          <thead class="bg-white/[0.02]"><tr class="text-left text-gray-500 uppercase tracking-wider">
+            <th class="px-4 py-3 whitespace-nowrap">Time</th><th class="px-4 py-3">Agent</th><th class="px-4 py-3">Asset</th>
+            <th class="px-4 py-3">Side</th><th class="px-4 py-3">Entry</th><th class="px-4 py-3 hidden md:table-cell">Exit</th>
+            <th class="px-4 py-3">Size</th><th class="px-4 py-3">P&L</th><th class="px-4 py-3">Status</th><th class="px-4 py-3 hidden lg:table-cell">Notes</th>
+          </tr></thead>
+          <tbody id="trades-body" class="divide-y divide-white/5"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- TAB: TRADES -->
+    <div id="tab-trades" class="tab-content p-4 md:p-6">
+      <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+        <div class="px-4 py-3 border-b border-white/5"><h3 class="text-sm font-semibold">All Trades</h3></div>
+        <div class="overflow-x-auto"><table class="w-full text-xs">
+          <thead class="bg-white/[0.02]"><tr class="text-left text-gray-500 uppercase tracking-wider">
+            <th class="px-4 py-3">Time</th><th class="px-4 py-3">Agent</th><th class="px-4 py-3">Asset</th>
+            <th class="px-4 py-3">Side</th><th class="px-4 py-3">Entry</th><th class="px-4 py-3">Exit</th>
+            <th class="px-4 py-3">Size</th><th class="px-4 py-3">P&L</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Notes</th>
+          </tr></thead>
+          <tbody id="all-trades-body" class="divide-y divide-white/5"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- TAB: BETS -->
+    <div id="tab-bets" class="tab-content p-4 md:p-6">
+      <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+        <div class="px-4 py-3 border-b border-white/5"><h3 class="text-sm font-semibold">Bets</h3></div>
+        <div class="overflow-x-auto"><table class="w-full text-xs">
+          <thead class="bg-white/[0.02]"><tr class="text-left text-gray-500 uppercase tracking-wider">
+            <th class="px-4 py-3">Time</th><th class="px-4 py-3">Agent</th><th class="px-4 py-3">Market</th>
+            <th class="px-4 py-3">Outcome</th><th class="px-4 py-3">Entry</th><th class="px-4 py-3">Size</th>
+            <th class="px-4 py-3">P&L</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Notes</th>
+          </tr></thead>
+          <tbody id="bets-body" class="divide-y divide-white/5"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- TAB: SIGNALS -->
+    <div id="tab-signals" class="tab-content p-4 md:p-6">
+      <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-white/5">
+          <h3 class="text-sm font-semibold">Signal Scanner</h3>
+          <button onclick="refreshSignals()" class="text-xs px-3 py-1.5 bg-accent hover:bg-accent-hover rounded-lg text-white transition">Run Full Scan</button>
+        </div>
+        <div id="signals-detail" class="p-3 space-y-2">
+          <div class="text-center text-gray-600 text-sm py-8">Click scan to check all assets</div>
         </div>
       </div>
-
     </div>
+
+    <!-- TAB: LOG -->
+    <div id="tab-log" class="tab-content p-4 md:p-6">
+      <div class="bg-[#191a1b] border border-white/5 rounded-xl overflow-hidden">
+        <div class="px-4 py-3 border-b border-white/5"><h3 class="text-sm font-semibold">Activity Log</h3></div>
+        <div id="log-entries" class="p-3 space-y-2 max-h-[70vh] overflow-y-auto">
+          <div class="text-center text-gray-600 text-sm py-8">No log entries</div>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
-
-<style>
-.stat-label { @apply text-[10px] uppercase tracking-wider text-gray-500 mb-2 font-medium; }
-.stat-value { @apply text-lg font-bold font-mono; }
-</style>
 
 <script src="js/dashboard.js"></script>
 </body>

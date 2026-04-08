@@ -26,13 +26,25 @@ function buildNav() {
 }
 
 function switchTab(tab) {
+  // Update nav styling
   document.querySelectorAll('.nav-item').forEach(n => {
     const isActive = n.dataset.tab === tab;
     n.classList.toggle('bg-white/[0.06]', isActive);
     n.classList.toggle('text-white', isActive);
     n.classList.toggle('text-gray-500', !isActive);
   });
+  // Show/hide tab content
+  document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+  const target = document.getElementById('tab-' + tab);
+  if (target) target.classList.add('active');
+  // Update title
   document.getElementById('page-title').textContent = TABS.find(t => t.id === tab)?.label || tab;
+  // Render content for the tab
+  if (tab === 'trades') renderAllTrades();
+  else if (tab === 'bets') renderBets();
+  else if (tab === 'log') renderLog();
+  else if (tab === 'signals') refreshSignals();
+  // Close sidebar on mobile
   closeSidebar();
 }
 
@@ -295,10 +307,18 @@ function renderTrades() {
   if (agent !== 'all') trades = trades.filter(t => t.agent === agent);
   if (status !== 'all') trades = trades.filter(t => t.status === status);
   trades.sort((a, b) => new Date(b.opened_at) - new Date(a.opened_at));
-
-  const closeLabels = { tp_hit: 'TP Hit', sl_hit: 'SL Hit', trailing_hit: 'Trail', early_exit: 'Early', open: 'Open', closed: 'Closed' };
+  const html = tradeRows(trades);
   const tbody = document.getElementById('trades-body');
-  tbody.innerHTML = trades.map(t => {
+  if (tbody) tbody.innerHTML = html;
+  const allTbody = document.getElementById('all-trades-body');
+  if (allTbody) allTbody.innerHTML = html;
+}
+
+function renderAllTrades() { renderTrades(); }
+
+function tradeRows(trades) {
+  const closeLabels = { tp_hit: 'TP Hit', sl_hit: 'SL Hit', trailing_hit: 'Trail', early_exit: 'Early', open: 'Open', closed: 'Closed' };
+  return trades.map(t => {
     const pnlC = t.pnl_usd > 0 ? 'text-green-400' : t.pnl_usd < 0 ? 'text-red-400' : 'text-gray-500';
     const sideC = t.side === 'long' ? 'bg-green-500/15 text-green-400' : 'bg-red-500/15 text-red-400';
     const agentC = t.agent === 'hermes1' ? 'bg-purple-500/15 text-purple-400' : 'bg-cyan-500/15 text-cyan-400';
@@ -316,6 +336,61 @@ function renderTrades() {
       <td class="px-4 py-3 text-gray-500 hidden lg:table-cell" title="${t.notes || ''}">${trunc(t.notes, 30)}</td>
     </tr>`;
   }).join('') || '<tr><td colspan="10" class="text-center text-gray-600 py-8">No trades</td></tr>';
+}
+
+// ============ BETS ============
+function renderBets() {
+  const bets = betsData?.bets || [];
+  const tbody = document.getElementById('bets-body');
+  if (!bets.length) { tbody.innerHTML = '<tr><td colspan="9" class="text-center text-gray-600 py-8">No bets</td></tr>'; return; }
+  tbody.innerHTML = bets.sort((a, b) => new Date(b.opened_at) - new Date(a.opened_at)).map(b => {
+    const pnlC = b.pnl_usd > 0 ? 'text-green-400' : b.pnl_usd < 0 ? 'text-red-400' : 'text-gray-500';
+    const agentC = b.agent === 'hermes1' ? 'bg-purple-500/15 text-purple-400' : 'bg-cyan-500/15 text-cyan-400';
+    return `<tr class="hover:bg-white/[0.02]">
+      <td class="px-4 py-3 whitespace-nowrap">${fmt(b.opened_at)}</td>
+      <td class="px-4 py-3"><span class="text-[10px] font-medium px-2 py-0.5 rounded-full ${agentC}">${b.agent}</span></td>
+      <td class="px-4 py-3">${b.market}</td>
+      <td class="px-4 py-3">${b.outcome}</td>
+      <td class="px-4 py-3 font-mono">${(b.entry_price * 100).toFixed(0)}¢</td>
+      <td class="px-4 py-3 font-mono">$${fn(b.size_usd)}</td>
+      <td class="px-4 py-3 font-mono font-medium ${pnlC}">${b.pnl_usd !== null ? (b.pnl_usd >= 0 ? '+' : '') + '$' + b.pnl_usd.toFixed(2) : '—'}</td>
+      <td class="px-4 py-3"><span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/5 text-gray-400">${b.close_reason || b.status}</span></td>
+      <td class="px-4 py-3 text-gray-500">${trunc(b.notes, 30)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ============ LOG ============
+function renderLog() {
+  const trades = tradesData?.trades || [];
+  const bets = betsData?.bets || [];
+  const entries = [];
+  trades.forEach(t => {
+    const c = t.agent === 'hermes1' ? '#c084fc' : '#67e8f9';
+    entries.push({ time: t.opened_at, color: c, agent: t.agent,
+      text: `OPENED ${t.side?.toUpperCase()} ${t.asset} @ $${fn(t.entry_price)} ($${fn(t.size_usd)})` });
+    if (t.status === 'closed') {
+      const labels = { tp_hit: 'TP HIT', sl_hit: 'SL HIT', trailing_hit: 'TRAILING SL', early_exit: 'EARLY EXIT' };
+      const colors = { tp_hit: 'border-green-500', sl_hit: 'border-red-500', trailing_hit: 'border-amber-500' };
+      entries.push({ time: t.closed_at, color: c, agent: t.agent,
+        border: colors[t.close_reason] || 'border-green-500',
+        text: `${labels[t.close_reason] || 'CLOSED'} ${t.asset} — P&L: ${(t.pnl_usd >= 0 ? '+' : '')}$${t.pnl_usd?.toFixed(2)} (${t.pnl_pct}%)` });
+    }
+  });
+  bets.forEach(b => {
+    const c = b.agent === 'hermes1' ? '#c084fc' : '#67e8f9';
+    entries.push({ time: b.opened_at, color: c, agent: b.agent,
+      text: `BET ${b.outcome} on "${b.market}" @ ${(b.entry_price * 100).toFixed(0)}¢ ($${fn(b.size_usd)})` });
+  });
+  entries.sort((a, b) => new Date(b.time) - new Date(a.time));
+  const container = document.getElementById('log-entries');
+  if (!entries.length) { container.innerHTML = '<div class="text-center text-gray-600 text-sm py-8">No log entries</div>'; return; }
+  container.innerHTML = entries.map(e => `
+    <div class="bg-[#08090a] border-l-2 ${e.border || 'border-accent'} rounded-r-lg px-4 py-3">
+      <div class="text-[10px] text-gray-600 font-mono mb-1">${fmt(e.time)}</div>
+      <div class="text-sm"><span class="font-medium" style="color:${e.color}">${e.agent}</span> ${e.text}</div>
+    </div>
+  `).join('');
 }
 
 // ============ UTILS ============
