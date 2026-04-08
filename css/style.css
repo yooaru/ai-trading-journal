@@ -807,13 +807,21 @@ tr:last-child td { border-bottom: none; }
   .sidebar-close { display: block; }
   .stats-row { grid-template-columns: 1fr 1fr; }
   .stat-value { font-size: 22px; }
+  .stats-detail-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-detail-value { font-size: 16px; }
+  .stats-detail-card { padding: 12px; }
+  .stats-detail-label { font-size: 10px; }
   th:nth-child(6), td:nth-child(6),
   th:nth-child(10), td:nth-child(10) { display: none; }
 }
 
 @media (max-width: 480px) {
   .stats-row { grid-template-columns: 1fr; }
-  .tab-content { padding: 16px; }
+  .tab-content { padding: 16px 12px; }
+  .stats-detail-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-detail-value { font-size: 15px; }
+  .stats-detail-label { font-size: 9px; }
+  .stats-detail-card { padding: 10px 8px; }
   th:nth-child(5), td:nth-child(5),
   th:nth-child(7), td:nth-child(7) { display: none; }
 }
