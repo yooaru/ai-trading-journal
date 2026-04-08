@@ -103,6 +103,7 @@ async function loadData() {
 
     updateStats();
     renderPositions();
+    renderSummary();
     renderCurrentTab();
     updateLastUpdated();
   } catch (err) {
@@ -181,6 +182,28 @@ function updateStats() {
   const dailyBadge = document.getElementById('stat-daily-pnl');
   dailyBadge.textContent = (dailyPnlPct >= 0 ? '+' : '') + dailyPnlPct.toFixed(2) + '%';
   dailyBadge.className = 'stat-badge ' + (dailyPnlPct >= 0 ? 'positive' : 'negative');
+}
+
+// ============ SUMMARY ============
+function renderSummary() {
+  const positions = autoTraderState?.positions || {};
+  const trades = tradesData?.trades || [];
+  const bets = betsData?.bets || [];
+
+  const setEl = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+
+  setEl('sum-cash', '$99,928');
+  setEl('sum-positions', Object.keys(positions).length);
+  setEl('sum-trades', trades.length);
+  setEl('sum-bets', bets.length);
+
+  const daily = dailyPnl || {};
+  const today = new Date().toISOString().slice(0, 10);
+  const todayTrades = (daily.trades || []).filter(t => t.time?.startsWith(today));
+
+  const pnl = daily.total_pnl_pct || 0;
+  setEl('sum-daily-pnl', (pnl >= 0 ? '+' : '') + pnl.toFixed(2) + '%');
+  setEl('sum-daily-trades', todayTrades.length);
 }
 
 // ============ POSITIONS ============
