@@ -278,6 +278,12 @@ function renderTradeStats() {
   setEl('td-best', bestTrade ? (bestTrade.asset + ' +$' + bestTrade.pnl.toFixed(2)) : '—');
   setEl('td-worst', worstTrade ? (worstTrade.asset + ' -$' + Math.abs(worstTrade.pnl).toFixed(2)) : '—');
 
+  // Add title for long text
+  const bestEl = document.getElementById('td-best');
+  if (bestEl && bestTrade) bestEl.title = bestTrade.asset + ' +$' + bestTrade.pnl.toFixed(2);
+  const worstEl = document.getElementById('td-worst');
+  if (worstEl && worstTrade) worstEl.title = worstTrade.asset + ' -$' + Math.abs(worstTrade.pnl).toFixed(2);
+
   setEl('td-profit-factor', profitFactor === Infinity ? '∞' : profitFactor.toFixed(2));
   setClass('td-profit-factor', profitFactor >= 1.5 ? 'positive' : profitFactor < 1 ? 'negative' : '');
 
