@@ -1,0 +1,26 @@
+[2026-04-08 11:44:29] 🤖 Auto Trader started
+[2026-04-08 11:44:39] 🔍 Scanning... Cash: $0.00 | Positions: 0
+[2026-04-08 11:45:35] 🤖 Auto Trader started
+[2026-04-08 11:45:35]   API OK: 1 positions, $99,928.34 cash
+[2026-04-08 11:45:35] 🔍 Scanning... Cash: $99,928.34 | Positions: 0
+[2026-04-08 11:45:57] 🤖 Auto Trader started
+[2026-04-08 11:46:12]   ⚠️ get_positions error: HTTPSConnectionPool(host='ai4trade.ai', port=443): Read timed out. (read timeout=15)
+[2026-04-08 11:46:12] 🔍 Scanning... Cash: $0.00 | Positions: 1
+[2026-04-08 11:46:20]   🔴 BTC: -0.09% (entry $71,591 → $71,525)
+[2026-04-08 11:46:20]   📊 Avg unrealized: -0.09%
+[2026-04-08 11:46:45] 🤖 Auto Trader started
+[2026-04-08 11:46:46] 🔍 Scanning... Cash: $99,928.34 | Positions: 1
+[2026-04-08 11:46:50]   🔴 BTC: -0.05% (entry $71,591 → $71,554)
+[2026-04-08 11:46:50]   📊 Avg unrealized: -0.05%
+[2026-04-08 11:55:00] 🤖 Auto Trader started
+[2026-04-08 11:55:20] 🔍 Scan | Cash: $99,000.00 | Pos: 1
+[2026-04-08 11:55:43]   🟢 BTC: +0.14% ($71,591→$71,692)
+[2026-04-08 11:55:43]   📊 Avg: +0.14%
+[2026-04-08 11:57:37] 🤖 Auto Trader started
+[2026-04-08 11:57:37] 🔍 Scan | Cash: $99,928.34 | Pos: 1
+[2026-04-08 11:58:24]   🟢 BTC: +0.11% ($71,591→$71,669)
+[2026-04-08 11:58:24]   📊 Avg: +0.11%
+[2026-04-08 12:08:48] 🤖 Auto Trader started
+[2026-04-08 12:09:08] 🔍 Scan | Cash: $99,000.00 | Pos: 1
+[2026-04-08 12:09:32]   🔴 BTC: -100.00% ($71,591→$0)
+[2026-04-08 12:09:32]   📊 Avg: -100.00%
