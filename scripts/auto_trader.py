@@ -5,11 +5,86 @@ Hermes2 Crypto Auto Trader — Scalp & Day Trading
 - TradingView indicators: RSI, MACD, Bollinger, EMA (multi-TF)
 - Assets: BTC, ETH, SOL, PAXG, WLD, SUI, DOGE, XRP, LINK, AVAX
 """
-import requests, json, time, os, sys
+import requests, json, time, os, sys, asyncio
 from datetime import datetime, timezone, timedelta
+from threading import Lock
+
+try:
+    import aiohttp
+except ImportError:
+    aiohttp = None
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from indicators import get_indicators, analyze_signal
+
+# ============================================================
+# PERFORMANCE: Caching layer with TTL
+# ============================================================
+_price_cache = {}       # symbol -> (price, timestamp)
+_indicator_cache = {}   # (symbol, interval) -> (data, timestamp)
+_cache_lock = Lock()
+
+PRICE_CACHE_TTL = 30    # seconds - prices are fetched often
+INDICATOR_CACHE_TTL = 60  # seconds - indicators change slowly
+
+def _cache_get(cache, key, ttl):
+    """Get a cached value if not expired. Thread-safe."""
+    with _cache_lock:
+        entry = cache.get(key)
+        if entry and (time.time() - entry[1]) < ttl:
+            return entry[0]
+    return None
+
+def _cache_set(cache, key, value):
+    """Set a cached value with current timestamp. Thread-safe."""
+    with _cache_lock:
+        cache[key] = (value, time.time())
+
+def cached_get_price(symbol):
+    """Get price with caching layer (30s TTL)."""
+    cached = _cache_get(_price_cache, symbol, PRICE_CACHE_TTL)
+    if cached is not None:
+        return cached
+    price = get_price(symbol)
+    if price > 0:
+        _cache_set(_price_cache, symbol, price)
+    return price
+
+def cached_get_indicators(symbol, interval="1h"):
+    """Get indicators with caching layer (60s TTL)."""
+    key = (symbol.upper(), interval)
+    cached = _cache_get(_indicator_cache, key, INDICATOR_CACHE_TTL)
+    if cached is not None:
+        return cached
+    ind = get_indicators(symbol, interval)
+    if ind and "error" not in ind:
+        _cache_set(_indicator_cache, key, ind)
+    return ind
+
+def get_multi_tf_cached(symbol, timeframes=("15m", "1h", "4h")):
+    """Fetch indicators for multiple timeframes, using cache where possible.
+    Only fetches uncached timeframes, no sleep between cached hits."""
+    results = {}
+    to_fetch = []
+    for tf in timeframes:
+        key = (symbol.upper(), tf)
+        cached = _cache_get(_indicator_cache, key, INDICATOR_CACHE_TTL)
+        if cached is not None:
+            results[tf] = cached
+        else:
+            to_fetch.append(tf)
+
+    for i, tf in enumerate(to_fetch):
+        ind = get_indicators(symbol, tf)
+        if ind and "error" not in ind:
+            key = (symbol.upper(), tf)
+            _cache_set(_indicator_cache, key, ind)
+            results[tf] = ind
+        # Only sleep between actual API calls, not cached ones
+        if i < len(to_fetch) - 1:
+            time.sleep(0.1)  # Reduced from 0.3s to 0.1s
+
+    return results
 
 # Config
 BASE = "https://ai4trade.ai/api"
@@ -26,6 +101,14 @@ MAX_POSITIONS = 5
 TP_LEVELS = [0.02, 0.035, 0.05]
 SL_LEVEL = -0.02
 WATCHLIST = ["BTC", "ETH", "SOL", "PAXG", "WLD", "SUI", "DOGE", "XRP", "LINK", "AVAX"]
+
+# Symbol mapping constants (used by async price fetching)
+SYMBOL_TO_BINANCE = {"BTC":"BTCUSDT","ETH":"ETHUSDT","SOL":"SOLUSDT","PAXG":"PAXGUSDT",
+        "XRP":"XRPUSDT","DOGE":"DOGEUSDT","WLD":"WLDUSDT","SUI":"SUIUSDT",
+        "LINK":"LINKUSDT","AVAX":"AVAXUSDT"}
+SYMBOL_TO_COINGECKO = {"BTC":"bitcoin","ETH":"ethereum","SOL":"solana","PAXG":"pax-gold",
+        "XRP":"ripple","DOGE":"dogecoin","WLD":"worldcoin-wld","SUI":"sui",
+        "LINK":"chainlink","AVAX":"avalanche-2"}
 
 # === NEW: Trailing Stop Config ===
 TRAILING_STOP_CONFIG = {
@@ -80,48 +163,172 @@ def save_state(s):
     with open(STATE_FILE, "w") as f:
         json.dump(s, f, indent=2, default=str)
 
+async def _fetch_price_async(session, symbol, headers):
+    """Fetch a single symbol price with async fallback chain: ai4trade -> Binance -> CoinGecko.
+    Tries ai4trade first; on failure, races Binance and CoinGecko concurrently."""
+    sym_upper = symbol.upper()
+
+    # Try ai4trade first
+    try:
+        async with session.get(
+            f"{BASE}/price?symbol={symbol}&market=crypto",
+            headers=headers, timeout=aiohttp.ClientTimeout(total=10)
+        ) as resp:
+            data = await resp.json()
+            price = data.get("price", 0)
+            if price and price > 0:
+                return price
+    except Exception:
+        pass
+
+    # Fallback: race Binance and CoinGecko concurrently
+    tasks = []
+    pair = SYMBOL_TO_BINANCE.get(sym_upper)
+    if pair:
+        tasks.append(_fetch_binance(session, symbol, pair))
+    cg_id = SYMBOL_TO_COINGECKO.get(sym_upper)
+    if cg_id:
+        tasks.append(_fetch_coingecko(session, symbol, cg_id))
+
+    if tasks:
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        for r in results:
+            if isinstance(r, (int, float)) and r > 0:
+                return r
+
+    log(f"  ⚠️ {symbol}: all price sources failed")
+    return 0
+
+
+async def _fetch_binance(session, symbol, pair):
+    """Fetch price from Binance."""
+    try:
+        async with session.get(
+            f"https://api.binance.com/api/v3/ticker/price?symbol={pair}",
+            timeout=aiohttp.ClientTimeout(total=10)
+        ) as resp:
+            data = await resp.json()
+            price = float(data.get("price", 0))
+            if price > 0:
+                log(f"  📡 {symbol} price from Binance: ${price:,.2f}")
+                return price
+    except Exception:
+        pass
+    return 0
+
+
+async def _fetch_coingecko(session, symbol, cg_id):
+    """Fetch price from CoinGecko."""
+    try:
+        async with session.get(
+            f"https://api.coingecko.com/api/v3/simple/price?ids={cg_id}&vs_currencies=usd",
+            timeout=aiohttp.ClientTimeout(total=10)
+        ) as resp:
+            data = await resp.json()
+            price = data.get(cg_id, {}).get("usd", 0)
+            if price and price > 0:
+                log(f"  📡 {symbol} price from CoinGecko: ${price:,.2f}")
+                return price
+    except Exception:
+        pass
+    return 0
+
+
+async def get_all_prices_async(symbols):
+    """Fetch prices for multiple symbols concurrently using aiohttp.
+    Returns dict {symbol: price}."""
+    if aiohttp is None:
+        return {s: get_price(s) for s in symbols}
+
+    headers = {}
+    try:
+        headers = get_headers()
+    except Exception:
+        pass
+
+    async with aiohttp.ClientSession() as session:
+        tasks = [_fetch_price_async(session, s, headers) for s in symbols]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    prices = {}
+    for sym, result in zip(symbols, results):
+        if isinstance(result, Exception):
+            log(f"  ⚠️ {sym}: async fetch error: {result}")
+            prices[sym] = 0
+        else:
+            prices[sym] = result
+    return prices
+
+
+def get_all_prices(symbols):
+    """Sync wrapper: fetch all prices concurrently.
+    Returns dict {symbol: price}."""
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            # Fallback to sequential if already in async context
+            return {s: get_price(s) for s in symbols}
+        return loop.run_until_complete(get_all_prices_async(symbols))
+    except RuntimeError:
+        return asyncio.run(get_all_prices_async(symbols))
+
+
 def get_price(symbol):
-    """Get price with fallback chain: ai4trade → Binance → CoinGecko."""
-    MAP = {"BTC":"BTCUSDT","ETH":"ETHUSDT","SOL":"SOLUSDT","PAXG":"PAXGUSDT",
-           "XRP":"XRPUSDT","DOGE":"DOGEUSDT","WLD":"WLDUSDT","SUI":"SUIUSDT",
-           "LINK":"LINKUSDT","AVAX":"AVAXUSDT"}
-    
+    """Get price with fallback chain: ai4trade → Binance → CoinGecko.
+    Sync wrapper around async implementation."""
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            # Fallback to sync requests if already in async context
+            return _get_price_sync(symbol)
+        return loop.run_until_complete(_fetch_price_async(
+            aiohttp.ClientSession(), symbol, get_headers()
+        ))
+    except RuntimeError:
+        return asyncio.run(_fetch_price_async(
+            aiohttp.ClientSession(), symbol, get_headers()
+        ))
+    except Exception:
+        return _get_price_sync(symbol)
+
+
+def _get_price_sync(symbol):
+    """Synchronous fallback for get_price using requests library."""
+    sym_upper = symbol.upper()
+
     # Try ai4trade first
     try:
         r = requests.get(f"{BASE}/price?symbol={symbol}&market=crypto", headers=get_headers(), timeout=10)
         price = r.json().get("price", 0)
-        if price > 0:
+        if price and price > 0:
             return price
-    except:
+    except Exception:
         pass
-    
-    # Fallback 1: Binance public API (no auth needed)
-    try:
-        pair = MAP.get(symbol.upper())
-        if pair:
+
+    # Fallback 1: Binance
+    pair = SYMBOL_TO_BINANCE.get(sym_upper)
+    if pair:
+        try:
             r = requests.get(f"https://api.binance.com/api/v3/ticker/price?symbol={pair}", timeout=10)
             price = float(r.json().get("price", 0))
             if price > 0:
                 log(f"  📡 {symbol} price from Binance: ${price:,.2f}")
                 return price
-    except:
-        pass
-    
+        except Exception:
+            pass
+
     # Fallback 2: CoinGecko
-    try:
-        CG_MAP = {"BTC":"bitcoin","ETH":"ethereum","SOL":"solana","PAXG":"pax-gold",
-                  "XRP":"ripple","DOGE":"dogecoin","WLD":"worldcoin-wld","SUI":"sui",
-                  "LINK":"chainlink","AVAX":"avalanche-2"}
-        cg_id = CG_MAP.get(symbol.upper())
-        if cg_id:
+    cg_id = SYMBOL_TO_COINGECKO.get(sym_upper)
+    if cg_id:
+        try:
             r = requests.get(f"https://api.coingecko.com/api/v3/simple/price?ids={cg_id}&vs_currencies=usd", timeout=10)
             price = r.json().get(cg_id, {}).get("usd", 0)
-            if price > 0:
+            if price and price > 0:
                 log(f"  📡 {symbol} price from CoinGecko: ${price:,.2f}")
                 return price
-    except:
-        pass
-    
+        except Exception:
+            pass
+
     log(f"  ⚠️ {symbol}: all price sources failed")
     return 0
 
@@ -156,10 +363,10 @@ def get_volatility_risk(symbol):
     if not VOLATILITY_CONFIG["enabled"]:
         return VOLATILITY_CONFIG["base_risk_pct"]
     
-    ind = get_indicators(symbol, "1h")
+    ind = cached_get_indicators(symbol, "1h")
     if not ind or "error" in ind:
         return VOLATILITY_CONFIG["base_risk_pct"]
-    
+
     bb_width = ind.get("bb_width", 3.0)  # Default medium vol
     cfg = VOLATILITY_CONFIG
     thresholds = cfg["bb_width_thresholds"]
@@ -349,9 +556,11 @@ def log_daily_trade(symbol, pnl_pct, trade_type="closed"):
     save_daily_log(daily)
     log(f"  📋 Daily: {len(daily['trades'])} trades, P&L: {daily['total_pnl_pct']:+.2f}%")
 
-def get_signal(symbol):
-    """Multi-TF indicator signal with TP/SL/early-exit for existing positions."""
-    price = get_price(symbol)
+def get_signal(symbol, price=None):
+    """Multi-TF indicator signal with TP/SL/early-exit for existing positions.
+    If price is provided, skips fetching (use with batch get_all_prices)."""
+    if price is None:
+        price = cached_get_price(symbol)
     if price == 0:
         return None, price
 
@@ -363,15 +572,16 @@ def get_signal(symbol):
         pos = positions[symbol]
         entry = pos["entry_price"]
         pnl = (price - entry) / entry
-        
+
         # 15-minute hold: skip TP/SL checks for first 15 min after entry
         entry_time = pos.get("entry_time")
+        in_hold_period = False
         if entry_time:
             try:
                 entry_dt = datetime.fromisoformat(entry_time.replace("Z", "+00:00"))
                 now_dt = datetime.now(timezone.utc)
                 elapsed_min = (now_dt - entry_dt).total_seconds() / 60
-                
+
                 # SL exception: always check SL even during hold period (risk management)
                 sl = pos.get("sl_price", entry * (1 + SL_LEVEL))
                 if price <= sl:
@@ -379,6 +589,7 @@ def get_signal(symbol):
                 elif elapsed_min < 15:
                     log(f"  ⏳ {symbol}: Hold period ({elapsed_min:.0f}/15 min) — skipping TP/SL")
                     positions[symbol]["current_price"] = price
+                    in_hold_period = True
                     return "hold", price
             except:
                 pass  # If time parsing fails, proceed normally
@@ -396,22 +607,22 @@ def get_signal(symbol):
         trail_result = check_trailing_stop(symbol, pos, price)
         if trail_result == "trailing_hit":
             return "trailing_hit", price
-        
-        # Early exit on strong signal flip
-        ind = get_indicators(symbol, "1h")
-        if ind and "error" not in ind:
-            sig = analyze_signal(ind)
-            if sig["signal"] == "SELL" and sig["strength"] >= 75 and pnl > 0.005:
-                return "early_sell", price
+
+        # Early exit on strong signal flip (use cached indicators)
+        if not in_hold_period:
+            ind = cached_get_indicators(symbol, "1h")
+            if ind and "error" not in ind:
+                sig = analyze_signal(ind)
+                if sig["signal"] == "SELL" and sig["strength"] >= 75 and pnl > 0.005:
+                    return "early_sell", price
         return "hold", price
 
-    # New entry: multi-TF scan
+    # New entry: multi-TF scan using cached batch fetch
+    multi = get_multi_tf_cached(symbol)
     signals = {}
-    for tf in ["15m", "1h", "4h"]:
-        ind = get_indicators(symbol, tf)
+    for tf, ind in multi.items():
         if ind and "error" not in ind:
             signals[tf] = analyze_signal(ind)
-        time.sleep(0.3)
 
     if not signals:
         return "no_signal", price
@@ -462,9 +673,161 @@ def get_signal(symbol):
                 return "buy_support", price
     return "no_signal", price
 
+async def _async_fetch_single_price(session, symbol, headers):
+    """Fetch price for a single symbol with async fallback: ai4trade -> race(Binance, CoinGecko)."""
+    sym_upper = symbol.upper()
+
+    # Try ai4trade first
+    try:
+        async with session.get(
+            f"{BASE}/price?symbol={symbol}&market=crypto",
+            headers=headers, timeout=aiohttp.ClientTimeout(total=8)
+        ) as resp:
+            data = await resp.json()
+            price = data.get("price", 0)
+            if price and price > 0:
+                return symbol, price
+    except Exception:
+        pass
+
+    # Fallback: race Binance and CoinGecko concurrently for this symbol
+    tasks = []
+    pair = SYMBOL_TO_BINANCE.get(sym_upper)
+    if pair:
+        tasks.append(_fetch_binance_price(session, symbol, pair))
+    cg_id = SYMBOL_TO_COINGECKO.get(sym_upper)
+    if cg_id:
+        tasks.append(_fetch_coingecko_price(session, symbol, cg_id))
+
+    if tasks:
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        for r in results:
+            if isinstance(r, (int, float)) and r > 0:
+                return symbol, r
+
+    return symbol, 0
+
+
+async def _fetch_binance_price(session, symbol, pair):
+    """Async fetch from Binance."""
+    try:
+        async with session.get(
+            f"https://api.binance.com/api/v3/ticker/price?symbol={pair}",
+            timeout=aiohttp.ClientTimeout(total=8)
+        ) as resp:
+            data = await resp.json()
+            price = float(data.get("price", 0))
+            if price > 0:
+                return price
+    except Exception:
+        pass
+    return 0
+
+
+async def _fetch_coingecko_price(session, symbol, cg_id):
+    """Async fetch from CoinGecko."""
+    try:
+        async with session.get(
+            f"https://api.coingecko.com/api/v3/simple/price?ids={cg_id}&vs_currencies=usd",
+            timeout=aiohttp.ClientTimeout(total=8)
+        ) as resp:
+            data = await resp.json()
+            price = data.get(cg_id, {}).get("usd", 0)
+            if price and price > 0:
+                return price
+    except Exception:
+        pass
+    return 0
+
+
+async def _async_prefetch_all_prices(symbols):
+    """Fetch all symbol prices concurrently via aiohttp.
+    Returns dict {symbol: price}."""
+    headers = {}
+    try:
+        headers = get_headers()
+    except Exception:
+        pass
+
+    async with aiohttp.ClientSession() as session:
+        tasks = [_async_fetch_single_price(session, s, headers) for s in symbols]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    prices = {}
+    for r in results:
+        if isinstance(r, tuple) and len(r) == 2:
+            sym, price = r
+            prices[sym] = price if not isinstance(price, Exception) else 0
+        elif isinstance(r, Exception):
+            pass  # skip failed tasks
+    return prices
+
+
+def prefetch_prices_batch():
+    """Batch fetch all watchlist prices concurrently, then warm the cache.
+    Uses async aiohttp for parallel fetching across all symbols and sources.
+    Falls back to single Binance bulk call if aiohttp unavailable."""
+    if aiohttp is not None:
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                _prefetch_sync_fallback()
+                return
+            prices = loop.run_until_complete(_async_prefetch_all_prices(WATCHLIST))
+        except RuntimeError:
+            prices = asyncio.run(_async_prefetch_all_prices(WATCHLIST))
+        except Exception:
+            _prefetch_sync_fallback()
+            return
+
+        cached_count = 0
+        for sym, price in prices.items():
+            if price > 0:
+                _cache_set(_price_cache, sym, price)
+                cached_count += 1
+        log(f"  📡 Async batch price prefetch: {cached_count}/{len(WATCHLIST)} symbols cached")
+    else:
+        _prefetch_sync_fallback()
+
+
+def _prefetch_sync_fallback():
+    """Synchronous fallback: batch fetch from Binance bulk endpoint + CoinGecko bulk."""
+    # Try Binance bulk endpoint first (single call, all pairs)
+    try:
+        r = requests.get("https://api.binance.com/api/v3/ticker/price", timeout=10)
+        prices = r.json()
+        symbol_to_pair = {v: k for k, v in SYMBOL_TO_BINANCE.items()}
+        for item in prices:
+            sym = symbol_to_pair.get(item.get("symbol", ""))
+            if sym:
+                price = float(item.get("price", 0))
+                if price > 0:
+                    _cache_set(_price_cache, sym, price)
+        cached = len([s for s in WATCHLIST if _cache_get(_price_cache, s, PRICE_CACHE_TTL)])
+        log(f"  📡 Sync batch price prefetch (Binance): {cached} symbols cached")
+    except Exception as e:
+        log(f"  ⚠️ Batch price prefetch failed: {e}")
+        # Last resort: fetch individually with CoinGecko bulk
+        try:
+            cg_ids = ",".join(SYMBOL_TO_COINGECKO.values())
+            r = requests.get(
+                f"https://api.coingecko.com/api/v3/simple/price?ids={cg_ids}&vs_currencies=usd",
+                timeout=15
+            )
+            data = r.json()
+            for sym, cg_id in SYMBOL_TO_COINGECKO.items():
+                price = data.get(cg_id, {}).get("usd", 0)
+                if price and price > 0 and not _cache_get(_price_cache, sym, PRICE_CACHE_TTL):
+                    _cache_set(_price_cache, sym, price)
+        except Exception:
+            pass
+
 def run_scan():
     state = load_state()
     positions = state.get("positions", {})
+
+    # Pre-warm price cache for all watchlist symbols in one API call
+    prefetch_prices_batch()
 
     # Get cash
     try:
