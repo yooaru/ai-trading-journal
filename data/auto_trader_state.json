@@ -10,14 +10,15 @@
         74096.685,
         75170.55
       ],
-      "sl_price": 70159.18,
+      "sl_price": 71591.0,
       "recent_prices": [
         71591,
         71509,
         71525.0,
         71554.0
       ],
-      "current_price": 72318.3
+      "current_price": 72773.01,
+      "sl_moved": "breakeven"
     },
     "PAXG": {
       "entry_price": 4717.65,
@@ -30,7 +31,7 @@
         4953.5325
       ],
       "sl_price": 4623.297,
-      "current_price": 4752.75,
+      "current_price": 4752.72,
       "highest_price": 4717.65,
       "trailing_active": false
     },
@@ -45,7 +46,7 @@
         1.4152950000000002
       ],
       "sl_price": 1.320942,
-      "current_price": 1.3555,
+      "current_price": 1.3637,
       "highest_price": 1.3479,
       "trailing_active": false
     },
@@ -59,10 +60,11 @@
         2268.0989999999997,
         2300.9700000000003
       ],
-      "sl_price": 2147.572,
-      "current_price": 2212.56,
+      "sl_price": 2191.4,
+      "current_price": 2229.63,
       "highest_price": 2191.4,
-      "trailing_active": false
+      "trailing_active": false,
+      "sl_moved": "breakeven"
     },
     "SOL": {
       "entry_price": 84.6,
@@ -75,7 +77,7 @@
         88.83
       ],
       "sl_price": 82.90799999999999,
-      "current_price": 84.26,
+      "current_price": 85.19,
       "highest_price": 84.6,
       "trailing_active": false
     }
@@ -96,5 +98,5 @@
       "closed_at": "2026-04-09T18:00:51.909734+00:00"
     }
   ],
-  "last_scan": "2026-04-09T22:06:24.171254+00:00"
+  "last_scan": "2026-04-09T22:22:35.071343+00:00"
 }
