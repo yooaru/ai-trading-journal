@@ -422,11 +422,30 @@
       "close_reason": null,
       "notes": "Auto: EV +10%, UCL",
       "tags": []
+    },
+    {
+      "id": "bet_020",
+      "agent": "hermes1",
+      "platform": "polymarket",
+      "market": "Barcelona vs Atletico Madrid \u2014 UCL",
+      "outcome": "Draw",
+      "side": "yes",
+      "entry_price": 0.18,
+      "exit_price": null,
+      "size_usd": 2.5,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-09T13:46:42Z",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Auto: EV +10%, UCL",
+      "tags": []
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-09T13:46:40Z",
-    "total_bets": 19,
+    "last_updated": "2026-04-09T13:46:42Z",
+    "total_bets": 20,
     "version": "1.0"
   }
 }
