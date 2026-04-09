@@ -50,6 +50,7 @@ tailwind.config = {
   --badge-bg: rgba(0,113,227,0.12);
   --badge-text: #2997ff;
   --scroll-thumb: #333;
+  --shadow: rgba(0,0,0,0.3);
   --green: #30d158;
   --green-bg: rgba(48,209,88,0.15);
   --red: #ff453a;
@@ -85,6 +86,7 @@ tailwind.config = {
   --badge-bg: rgba(0,113,227,0.08);
   --badge-text: #0071e3;
   --scroll-thumb: #ccc;
+  --shadow: rgba(0,0,0,0.08);
   --green: #30d158;
   --green-bg: rgba(48,209,88,0.12);
   --red: #ff453a;
@@ -115,7 +117,7 @@ body { background: var(--bg); }
   transition: box-shadow 0.3s ease;
 }
 .card-glow:hover {
-  box-shadow: 3px 5px 30px rgba(0,0,0,0.22);
+  box-shadow: 3px 5px 30px var(--shadow);
 }
 
 /* Stat card shimmer */
@@ -127,22 +129,22 @@ body { background: var(--bg); }
   content: '';
   position: absolute;
   top: 0; left: -100%; width: 60%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent);
+  background: linear-gradient(90deg, transparent, var(--glow), transparent);
   transition: left 0.6s ease;
 }
 .stat-card:hover::after { left: 120%; }
 
 /* Glassmorphism header */
 .glass-header {
-  background: rgba(0,0,0,0.72);
+  background: var(--bg-header);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid var(--border);
 }
 
 /* Glass sidebar */
 .glass-sidebar {
-  background: rgba(0,0,0,0.85);
+  background: var(--bg-sidebar);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
 }
@@ -187,7 +189,7 @@ body { background: var(--bg); }
 }
 
 /* Signal strength bar */
-.signal-bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
+.signal-bar { height: 3px; border-radius: 2px; background: var(--border); overflow: hidden; }
 .signal-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
 
 /* Auth card entrance */
