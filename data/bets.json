@@ -384,11 +384,30 @@
       "close_reason": null,
       "notes": "Auto: EV +5%, EPL",
       "tags": []
+    },
+    {
+      "id": "bet_018",
+      "agent": "hermes1",
+      "platform": "polymarket",
+      "market": "PSG vs Liverpool \u2014 UCL",
+      "outcome": "Draw",
+      "side": "yes",
+      "entry_price": 0.24,
+      "exit_price": null,
+      "size_usd": 2.5,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-09T13:46:38Z",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Auto: EV +10%, UCL",
+      "tags": []
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-08T12:14:42Z",
-    "total_bets": 17,
+    "last_updated": "2026-04-09T13:46:38Z",
+    "total_bets": 18,
     "version": "1.0"
   }
 }
