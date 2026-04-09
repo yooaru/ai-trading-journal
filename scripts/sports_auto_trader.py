@@ -12,8 +12,8 @@ Usage:
   python3 sports_auto_trader.py close    # Auto-close TP/SL only
 """
 
-import json, os, sys, subprocess, argparse
-from datetime import datetime, timezone
+import json, os, sys, subprocess, argparse, urllib.request
+from datetime import datetime, timezone, timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -28,6 +28,11 @@ MAX_OPEN = 5
 TP_LOCK = 0.85   # Sell at 85¢ to lock profit
 SL_CUT = 0.10    # Sell at 10¢ to cut loss
 MIN_EV = 0.03
+
+# Fixture validation
+REQUIRE_VALID_VOLUME = True   # Skip matches with volume="TBD" or "$0"
+SKIP_PAST_MATCHES = True       # Skip matches whose date < today
+VERIFY_FIXTURE_ONLINE = False  # Optional: verify against livescore (slow)
 
 def log(msg):
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
@@ -72,6 +77,52 @@ def close_bet(bet_id, exit_price, reason):
         log(f"ERROR: {e}")
         return False
 
+def is_valid_fixture(match):
+    """Validate fixture before betting. Returns (valid, reason)."""
+    # 1. Skip past matches
+    if SKIP_PAST_MATCHES:
+        match_date = match.get("date", "")
+        if match_date:
+            try:
+                mdate = datetime.strptime(match_date, "%Y-%m-%d").date()
+                today = datetime.now(timezone.utc).date()
+                if mdate < today:
+                    return False, f"past match ({match_date})"
+            except ValueError:
+                return False, f"invalid date format ({match_date})"
+
+    # 2. Skip TBD/zero volume (unlisted or phantom markets)
+    if REQUIRE_VALID_VOLUME:
+        vol = match.get("volume", "")
+        if not vol or vol in ("TBD", "$0", "$0K", "0"):
+            return False, f"no volume ({vol})"
+
+    # 3. Skip matches with no outcomes
+    outcomes = match.get("outcomes", [])
+    if not outcomes:
+        return False, "no outcomes"
+
+    # 4. Verify all outcome prices are reasonable (not 0 or 1)
+    for o in outcomes:
+        if o.get("price", 0) <= 0 or o.get("price", 0) >= 1:
+            return False, f"invalid price for {o.get('name')}: {o.get('price')}"
+
+    return True, "ok"
+
+def verify_fixture_online(team1, team2, date):
+    """Optional: verify fixture exists via livescore. Returns True if found."""
+    try:
+        url = f"https://www.livescore.com/en/football/{date}/"
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        resp = urllib.request.urlopen(req, timeout=10)
+        html = resp.read().decode("utf-8", errors="ignore").lower()
+        t1 = team1.lower()
+        t2 = team2.lower()
+        return t1 in html and t2 in html
+    except Exception as e:
+        log(f"  ⚠️ Online verification failed: {e}")
+        return True  # Don't block on network errors
+
 def scan():
     """Scan market snapshot for value bets"""
     if not os.path.exists(SNAPSHOT_FILE):
@@ -88,6 +139,18 @@ def scan():
     suggestions = []
     for match in snapshot["matches"]:
         market = f'{match["team1"]} vs {match["team2"]} — {match["league"]}'
+
+        # Validate fixture
+        valid, reason = is_valid_fixture(match)
+        if not valid:
+            log(f"  ⏭️ SKIP {match['team1']} vs {match['team2']}: {reason}")
+            continue
+
+        # Optional online verification
+        if VERIFY_FIXTURE_ONLINE:
+            if not verify_fixture_online(match["team1"], match["team2"], match.get("date", "")):
+                log(f"  ⏭️ SKIP {match['team1']} vs {match['team2']}: not found online")
+                continue
 
         # Skip existing
         if any(match["team1"] in m or match["team2"] in m for m in existing):
