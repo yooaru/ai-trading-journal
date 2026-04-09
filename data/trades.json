@@ -167,17 +167,17 @@
       "asset": "ETH",
       "side": "long",
       "entry_price": 2191.4,
-      "exit_price": null,
+      "exit_price": 2184.66,
       "size_usd": 1841.49,
       "leverage": 1,
       "tp_price": 2268.1,
       "sl_price": 2147.57,
-      "status": "open",
-      "pnl_usd": null,
-      "pnl_pct": null,
+      "status": "closed",
+      "pnl_usd": -5.66,
+      "pnl_pct": -0.31,
       "opened_at": "2026-04-09T10:43:44.276265+00:00",
-      "closed_at": null,
-      "close_reason": null,
+      "closed_at": "2026-04-09T23:17:05.990069+00:00",
+      "close_reason": "sl_hit",
       "notes": "Support level",
       "tags": [
         "spot",
@@ -206,11 +206,34 @@
         "spot",
         "auto-trader"
       ]
+    },
+    {
+      "id": "auto_010",
+      "agent": "hermes2",
+      "asset": "WLD",
+      "side": "long",
+      "entry_price": 0.26857,
+      "exit_price": null,
+      "size_usd": 990.0,
+      "leverage": 1,
+      "tp_price": 0.28,
+      "sl_price": 0.26,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-09T23:17:10.685453+00:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Indicator signal",
+      "tags": [
+        "spot",
+        "auto-trader"
+      ]
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-09T18:00:54.331916+00:00",
-    "total_trades": 9,
+    "last_updated": "2026-04-09T23:17:10.685664+00:00",
+    "total_trades": 10,
     "version": "1.0"
   }
 }
