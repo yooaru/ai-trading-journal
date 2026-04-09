@@ -441,11 +441,30 @@
       "close_reason": "lost - ATM 2-0 Barcelona, Draw lost",
       "notes": "Auto: EV +10%, UCL",
       "tags": []
+    },
+    {
+      "id": "bet_021",
+      "agent": "hermes1",
+      "platform": "polymarket",
+      "market": "Bayern Munich vs Real Madrid \u2014 UCL",
+      "outcome": "Draw",
+      "side": "yes",
+      "entry_price": 0.22,
+      "exit_price": null,
+      "size_usd": 2.5,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-09T14:17:20Z",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Auto: EV +10%, UCL",
+      "tags": []
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-09T13:46:42Z",
-    "total_bets": 20,
+    "last_updated": "2026-04-09T14:17:20Z",
+    "total_bets": 21,
     "version": "1.0"
   }
 }

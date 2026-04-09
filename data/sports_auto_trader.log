@@ -126,3 +126,31 @@
 ✅ Git push: bet Draw on PSG vs Liverpool — UCL (hermes1)
 [2026-04-09 13:46:42] PLACE: Liverpool ML @ 0¢ ($2.0) — 🎯 BET: Liverpool ML on "PSG vs Liverpool — UCL" @ 33¢ ($2.0)
 ✅ Git push: bet Liverpool ML on PSG vs Liverpool — UCL (hermes1)
+[2026-04-09 13:46:44] PLACE: Draw @ 0¢ ($2.5) — 🎯 BET: Draw on "Barcelona vs Atletico Madrid — UCL" @ 18¢ ($2.5)
+✅ Git push: bet Draw on Barcelona vs Atletico Madrid — UCL (hermes1)
+[2026-04-09 13:46:44] ==================================================
+[2026-04-09 13:46:44] RESULT: 3 placed, 5 open, 15 closed, PnL: $-7.60
+[2026-04-09 13:50:30] === SCAN (snapshot: 2026-04-08T11:45:00Z) ===
+[2026-04-09 13:50:30] Open bets: 5/5
+[2026-04-09 13:50:30]   ⏭️ SKIP PSG vs Liverpool: past match (2026-04-08)
+[2026-04-09 13:50:30]   ⏭️ SKIP Barcelona vs Atletico Madrid: past match (2026-04-08)
+[2026-04-09 13:50:30]   ⏭️ SKIP Liverpool vs PSG: no volume (TBD)
+[2026-04-09 13:50:30]   ⏭️ SKIP Arsenal vs Sporting: no volume (TBD)
+[2026-04-09 13:50:30]   ⏭️ SKIP Arsenal vs Bournemouth: no volume (TBD)
+[2026-04-09 13:50:30]   ⏭️ SKIP Chelsea vs Man City: no volume (TBD)
+[2026-04-09 13:50:30]   ⏭️ SKIP Man United vs Leeds: no volume (TBD)
+[2026-04-09 14:17:20] ==================================================
+[2026-04-09 14:17:20] SPORTS AUTO TRADER — FULL CYCLE
+[2026-04-09 14:17:20] ==================================================
+[2026-04-09 14:17:20] === AUTO CLOSE ===
+[2026-04-09 14:17:20] HOLD: bet_016 Chelsea ML @ 0¢ ($2.0)
+[2026-04-09 14:17:20] HOLD: bet_017 Draw @ 0¢ ($2.5)
+[2026-04-09 14:17:20] === SCAN (snapshot: 2026-04-08T11:45:00Z) ===
+[2026-04-09 14:17:20] Open bets: 2/5
+[2026-04-09 14:17:20]   ⏭️ SKIP PSG vs Liverpool: past match (2026-04-08)
+[2026-04-09 14:17:20]   ⏭️ SKIP Barcelona vs Atletico Madrid: past match (2026-04-08)
+[2026-04-09 14:17:20]   ⏭️ SKIP Liverpool vs PSG: no volume (TBD)
+[2026-04-09 14:17:20]   ⏭️ SKIP Arsenal vs Sporting: no volume (TBD)
+[2026-04-09 14:17:20]   ⏭️ SKIP Arsenal vs Bournemouth: no volume (TBD)
+[2026-04-09 14:17:20]   ⏭️ SKIP Chelsea vs Man City: no volume (TBD)
+[2026-04-09 14:17:20]   ⏭️ SKIP Man United vs Leeds: no volume (TBD)
