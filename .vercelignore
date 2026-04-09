@@ -1,0 +1,13 @@
+server.py
+scripts/
+data/auto_trader_state.json
+data/auto_trader.log
+data/sports_auto_trader.log
+data/waifu_daemon.log
+data/waifu_daemon.pid
+data/waifu_daemon_state.json
+data/.waifu_stop
+data/daily_pnl.json
+.access_key
+.env
+.agenthub/

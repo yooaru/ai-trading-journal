@@ -1,9 +1,18 @@
 {
   "version": 2,
+  "builds": [
+    { "src": "api/*.py", "use": "@vercel/python" },
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "css/**", "use": "@vercel/static" },
+    { "src": "js/**", "use": "@vercel/static" },
+    { "src": "data/*.json", "use": "@vercel/static" }
+  ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.+\\.json)$", "dest": "/data/$1" },
+    { "src": "/data/(.*\\.json)", "dest": "/data/$1", "headers": { "cache-control": "no-cache" } },
     { "src": "/dashboard", "dest": "/index.html" },
+    { "src": "/css/(.*)", "dest": "/css/$1" },
+    { "src": "/js/(.*)", "dest": "/js/$1" },
     { "src": "/", "dest": "/landing.html" }
   ]
 }
