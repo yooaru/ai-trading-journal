@@ -222,6 +222,112 @@ footer {
   border-top: 1px solid rgba(255,255,255,0.08);
 }
 
+/* ========== ANIMATIONS ========== */
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children */
+.reveal.visible .feature-card:nth-child(1) { transition-delay: 0.05s; }
+.reveal.visible .feature-card:nth-child(2) { transition-delay: 0.12s; }
+.reveal.visible .feature-card:nth-child(3) { transition-delay: 0.19s; }
+.reveal.visible .feature-card:nth-child(4) { transition-delay: 0.26s; }
+.reveal.visible .feature-card:nth-child(5) { transition-delay: 0.33s; }
+.reveal.visible .feature-card:nth-child(6) { transition-delay: 0.40s; }
+
+/* Feature card hover base */
+.feature-card {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.3s ease;
+  will-change: transform;
+}
+.feature-card:hover {
+  box-shadow: rgba(0,113,227,0.15) 0px 8px 40px 0px;
+}
+
+/* Position card stagger */
+.position-card {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.position-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mouse glow */
+.mouse-glow {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,113,227,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  transition: left 0.15s ease-out, top 0.15s ease-out;
+  will-change: left, top;
+}
+
+/* Stat counter */
+.stat-value {
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.stat-value.animate {
+  animation: statPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes statPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Hero entrance */
+.hero-title {
+  animation: heroIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+@keyframes heroIn {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.subtitle {
+  animation: heroIn 1s 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+.btn-primary, .btn-outline {
+  animation: heroIn 1s 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+/* Button hover */
+.btn-primary {
+  transition: all 0.2s ease;
+}
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: scale(1.04);
+  box-shadow: rgba(0,113,227,0.3) 0px 6px 24px 0px;
+}
+.btn-outline, .btn-outline-dark {
+  transition: all 0.25s ease;
+}
+
+/* Nav link hover */
+nav a:not(.btn-primary) {
+  transition: opacity 0.2s, color 0.2s;
+}
+nav a:not(.btn-primary):hover {
+  opacity: 1;
+  color: #0071e3;
+}
+
 /* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
   .hero-title { font-size: 36px; }
@@ -269,7 +375,7 @@ footer {
 </div>
 
 <!-- FEATURES -->
-<div class="section section-light" id="features">
+<div class="section section-light reveal" id="features">
   <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
   <p class="body-text" style="opacity:0.6">Two trading engines running 24/7. One dashboard to see it all.</p>
 
@@ -308,7 +414,7 @@ footer {
 </div>
 
 <!-- POSITIONS SHOWCASE -->
-<div class="section section-dark" id="positions">
+<div class="section section-dark reveal" id="positions">
   <h2 class="section-title">Live Positions</h2>
   <p class="body-text" style="color:var(--link-dark)">Real-time from the trading engine.</p>
 
@@ -350,7 +456,7 @@ footer {
 </div>
 
 <!-- STATS -->
-<div class="section section-light" id="stats">
+<div class="section section-light reveal" id="stats">
   <h2 class="section-title">The numbers speak.</h2>
 
   <div class="stats-row">
@@ -383,13 +489,100 @@ footer {
 </footer>
 
 <script>
-// Smooth scroll
+// ========== SCROLL REVEAL ==========
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ========== PARALLAX HERO ==========
+const hero = document.querySelector('.hero-title');
+const heroSection = document.querySelector('.section-dark');
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  if (hero && scrollY < window.innerHeight) {
+    const progress = scrollY / window.innerHeight;
+    hero.style.transform = `translateY(${scrollY * 0.3}px)`;
+    hero.style.opacity = 1 - progress * 1.2;
+  }
+}, { passive: true });
+
+// ========== MOUSE GLOW ==========
+const glow = document.createElement('div');
+glow.className = 'mouse-glow';
+document.body.appendChild(glow);
+
+document.addEventListener('mousemove', (e) => {
+  requestAnimationFrame(() => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  });
+});
+
+// ========== CARD TILT ==========
+document.querySelectorAll('.feature-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `perspective(800px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) scale(1.02)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(800px) rotateY(0) rotateX(0) scale(1)';
+  });
+});
+
+// ========== POSITION CARD STAGGER ==========
+const posObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.position-card').forEach((card, i) => {
+        setTimeout(() => card.classList.add('visible'), i * 120);
+      });
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.showcase-body').forEach(el => posObserver.observe(el));
+
+// ========== SMOOTH SCROLL ==========
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();
     document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});
   });
 });
+
+// ========== NAV FADE ON SCROLL ==========
+const nav = document.querySelector('nav');
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  if (scrollY > 100) {
+    nav.style.background = 'rgba(0,0,0,0.92)';
+  } else {
+    nav.style.background = 'rgba(0,0,0,0.8)';
+  }
+  lastScroll = scrollY;
+}, { passive: true });
+
+// ========== STAT COUNTER ANIMATION ==========
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.stat-value').forEach(el => {
+        el.classList.add('animate');
+      });
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.stats-row').forEach(el => statObserver.observe(el));
 </script>
 </body>
 </html>
