@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WaifuTrader — AI-Powered Trading</title>
+<style>
+/* ========== APPLE DESIGN SYSTEM ========== */
+:root {
+  --black: #000000;
+  --white: #ffffff;
+  --light-gray: #f5f5f7;
+  --near-black: #1d1d1f;
+  --blue: #0071e3;
+  --link-light: #0066cc;
+  --link-dark: #2997ff;
+  --text-secondary: rgba(0,0,0,0.8);
+  --text-tertiary: rgba(0,0,0,0.48);
+  --dark-surface-1: #272729;
+  --dark-surface-2: #2a2a2d;
+  --card-shadow: rgba(0,0,0,0.22) 3px 5px 30px 0px;
+  --nav-glass: rgba(0,0,0,0.8);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: system-ui, -apple-system, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--near-black);
+  background: var(--light-gray);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ========== NAVIGATION ========== */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  height: 48px;
+  background: var(--nav-glass);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  display: flex; align-items: center; justify-content: center;
+  gap: 28px;
+}
+nav a {
+  color: var(--white); text-decoration: none;
+  font-size: 12px; font-weight: 400; opacity: 0.9;
+  transition: opacity 0.2s;
+}
+nav a:hover { opacity: 1; text-decoration: underline; }
+nav .logo {
+  font-weight: 600; font-size: 14px; letter-spacing: -0.2px;
+  display: flex; align-items: center; gap: 6px;
+}
+nav .logo span { color: var(--blue); }
+
+/* ========== SECTIONS ========== */
+.section {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 100px 24px 80px;
+  text-align: center;
+}
+.section-dark { background: var(--black); color: var(--white); }
+.section-light { background: var(--light-gray); color: var(--near-black); }
+
+/* ========== TYPOGRAPHY ========== */
+.hero-title {
+  font-size: 56px; font-weight: 600;
+  line-height: 1.07; letter-spacing: -0.28px;
+  max-width: 800px;
+}
+.section-title {
+  font-size: 40px; font-weight: 600;
+  line-height: 1.10; letter-spacing: -0.2px;
+  max-width: 700px;
+}
+.tile-title {
+  font-size: 28px; font-weight: 400;
+  line-height: 1.14; letter-spacing: 0.196px;
+}
+.subtitle {
+  font-size: 21px; font-weight: 400;
+  line-height: 1.30; letter-spacing: 0.231px;
+  margin-top: 16px;
+  opacity: 0.85;
+}
+.body-text {
+  font-size: 17px; font-weight: 400;
+  line-height: 1.47; letter-spacing: -0.374px;
+  max-width: 600px; margin-top: 20px;
+  opacity: 0.8;
+}
+
+/* ========== BUTTONS ========== */
+.btn-primary {
+  display: inline-block;
+  background: var(--blue); color: var(--white);
+  padding: 12px 28px; border-radius: 980px;
+  font-size: 17px; font-weight: 400;
+  text-decoration: none; border: none;
+  cursor: pointer; transition: all 0.2s;
+  margin-top: 32px;
+}
+.btn-primary:hover { filter: brightness(1.1); }
+.btn-outline {
+  display: inline-block;
+  background: transparent; color: var(--white);
+  padding: 12px 28px; border-radius: 980px;
+  font-size: 17px; font-weight: 400;
+  text-decoration: none;
+  border: 1px solid var(--white);
+  cursor: pointer; transition: all 0.2s;
+  margin-top: 32px; margin-left: 12px;
+}
+.btn-outline:hover { background: var(--white); color: var(--black); }
+.btn-outline-dark {
+  display: inline-block;
+  background: transparent; color: var(--near-black);
+  padding: 12px 28px; border-radius: 980px;
+  font-size: 17px; font-weight: 400;
+  text-decoration: none;
+  border: 1px solid var(--near-black);
+  cursor: pointer; transition: all 0.2s;
+  margin-top: 32px;
+}
+.btn-outline-dark:hover { background: var(--near-black); color: var(--white); }
+
+/* ========== GRID ========== */
+.features-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px; max-width: 980px; width: 100%;
+  margin-top: 48px;
+}
+.feature-card {
+  background: var(--dark-surface-1);
+  border-radius: 12px; padding: 36px 28px;
+  text-align: left;
+  box-shadow: var(--card-shadow);
+}
+.feature-card h3 {
+  font-size: 21px; font-weight: 700;
+  line-height: 1.19; letter-spacing: 0.231px;
+  margin-bottom: 10px;
+}
+.feature-card p {
+  font-size: 14px; font-weight: 400;
+  line-height: 1.43; letter-spacing: -0.224px;
+  opacity: 0.7;
+}
+.feature-icon {
+  font-size: 36px; margin-bottom: 16px;
+  display: block;
+}
+
+/* ========== STATS ========== */
+.stats-row {
+  display: flex; gap: 60px; margin-top: 48px;
+  flex-wrap: wrap; justify-content: center;
+}
+.stat { text-align: center; }
+.stat-value {
+  font-size: 48px; font-weight: 600;
+  line-height: 1.07; letter-spacing: -0.28px;
+  color: var(--blue);
+}
+.stat-label {
+  font-size: 14px; font-weight: 400;
+  margin-top: 6px; opacity: 0.6;
+}
+
+/* ========== PRODUCT SHOWCASE ========== */
+.showcase {
+  max-width: 980px; width: 100%;
+  background: var(--dark-surface-2);
+  border-radius: 16px; overflow: hidden;
+  box-shadow: var(--card-shadow);
+  margin-top: 48px;
+}
+.showcase-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 20px;
+  background: rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.showcase-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.showcase-dot.r { background: #ff5f57; }
+.showcase-dot.y { background: #febc2e; }
+.showcase-dot.g { background: #28c840; }
+.showcase-body {
+  padding: 32px; display: flex; gap: 24px;
+  flex-wrap: wrap; justify-content: center;
+}
+.position-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px; padding: 20px;
+  min-width: 160px; flex: 1; max-width: 200px;
+  text-align: left;
+}
+.position-card .symbol {
+  font-size: 18px; font-weight: 600;
+  margin-bottom: 8px;
+}
+.position-card .pnl {
+  font-size: 14px; font-weight: 400;
+}
+.position-card .pnl.green { color: #28c840; }
+.position-card .pnl.red { color: #ff5f57; }
+.position-card .price {
+  font-size: 12px; opacity: 0.5; margin-top: 4px;
+}
+
+/* ========== FOOTER ========== */
+footer {
+  background: var(--black); color: var(--white);
+  padding: 40px 24px; text-align: center;
+  font-size: 12px; opacity: 0.5;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .hero-title { font-size: 36px; }
+  .section-title { font-size: 28px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .stats-row { gap: 32px; }
+  .stat-value { font-size: 36px; }
+  .btn-outline { margin-left: 0; margin-top: 12px; }
+  nav { gap: 16px; }
+  nav a { font-size: 11px; }
+}
+@media (max-width: 480px) {
+  .hero-title { font-size: 28px; }
+  .section-title { font-size: 24px; }
+  .subtitle { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo"><span>W</span>T</div>
+  <a href="#features">Features</a>
+  <a href="#positions">Positions</a>
+  <a href="#stats">Stats</a>
+  <a href="/dashboard" class="btn-primary" style="padding:6px 18px;font-size:12px;margin-top:0">Dashboard</a>
+</nav>
+
+<!-- HERO -->
+<div class="section section-dark">
+  <div style="font-size:64px;margin-bottom:20px">🌸</div>
+  <h1 class="hero-title">WaifuTrader</h1>
+  <p class="subtitle">AI-powered crypto & sports trading.<br>Autonomous. Precise. Always watching.</p>
+  <div>
+    <a href="/dashboard" class="btn-primary">Open Dashboard</a>
+    <a href="#features" class="btn-outline">Learn more</a>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="section section-light" id="features">
+  <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
+  <p class="body-text" style="opacity:0.6">Two trading engines running 24/7. One dashboard to see it all.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">💹</span>
+      <h3>Crypto Engine</h3>
+      <p>RSI, MACD, Bollinger, EMA across 3 timeframes. Auto-entry with TP/SL and trailing stops. 10 assets monitored.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">⚽</span>
+      <h3>Sports Engine</h3>
+      <p>Polymarket soccer betting. Value bet detection with EV analysis. Auto-place and auto-close on TP/SL.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔄</span>
+      <h3>Auto-Sync</h3>
+      <p>Data pushes to GitHub every 15 minutes. Dashboard rebuilds automatically. Always up to date.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🛡️</span>
+      <h3>Risk Controls</h3>
+      <p>2% max risk per trade. Daily loss limits with cooldown. Position sizing by volatility.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📊</span>
+      <h3>Live Dashboard</h3>
+      <p>Real-time P&L tracking. Open positions with trailing status. Complete trade history.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🤖</span>
+      <h3>24/7 Daemon</h3>
+      <p>Universal daemon runs both engines. Watchdog auto-restarts on failure. Never sleeps.</p>
+    </div>
+  </div>
+</div>
+
+<!-- POSITIONS SHOWCASE -->
+<div class="section section-dark" id="positions">
+  <h2 class="section-title">Live Positions</h2>
+  <p class="body-text" style="color:var(--link-dark)">Real-time from the trading engine.</p>
+
+  <div class="showcase">
+    <div class="showcase-bar">
+      <div class="showcase-dot r"></div>
+      <div class="showcase-dot y"></div>
+      <div class="showcase-dot g"></div>
+      <span style="font-size:12px;opacity:0.5;margin-left:8px">waifu-trader.local</span>
+    </div>
+    <div class="showcase-body">
+      <div class="position-card">
+        <div class="symbol">BTC</div>
+        <div class="pnl green">+0.14%</div>
+        <div class="price">$71,591 → $71,692</div>
+      </div>
+      <div class="position-card">
+        <div class="symbol">PAXG</div>
+        <div class="pnl green">+0.37%</div>
+        <div class="price">$4,718 → $4,735</div>
+      </div>
+      <div class="position-card">
+        <div class="symbol">XRP</div>
+        <div class="pnl red">-1.37%</div>
+        <div class="price">$1.35 → $1.33</div>
+      </div>
+      <div class="position-card">
+        <div class="symbol">SUI</div>
+        <div class="pnl red">-0.80%</div>
+        <div class="price">$0.92 → $0.91</div>
+      </div>
+      <div class="position-card">
+        <div class="symbol">ETH</div>
+        <div class="pnl red">-0.43%</div>
+        <div class="price">$2,191 → $2,182</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="section section-light" id="stats">
+  <h2 class="section-title">The numbers speak.</h2>
+
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-value">5</div>
+      <div class="stat-label">Open Positions</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">100%</div>
+      <div class="stat-label">Win Rate</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">+3.1%</div>
+      <div class="stat-label">Today's P&L</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">24/7</div>
+      <div class="stat-label">Uptime</div>
+    </div>
+  </div>
+
+  <div style="margin-top:48px">
+    <a href="/dashboard" class="btn-primary" style="background:var(--near-black)">View Dashboard</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  WaifuTrader &copy; 2026 &mdash; Built with 🌸 by Evanescia
+</footer>
+
+<script>
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});
+  });
+});
+</script>
+</body>
+</html>

@@ -131,7 +131,7 @@ def sync_data():
                 capture_output=True, text=True, timeout=15, cwd=BASE_DIR
             )
             r3 = subprocess.run(
-                ["git", "push", "origin", "master", "--quiet"],
+                ["git", "push", "origin", "main", "--quiet"],
                 capture_output=True, text=True, timeout=30, cwd=BASE_DIR
             )
             if r3.returncode == 0:
