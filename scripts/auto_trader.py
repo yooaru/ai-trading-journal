@@ -163,133 +163,49 @@ def save_state(s):
     with open(STATE_FILE, "w") as f:
         json.dump(s, f, indent=2, default=str)
 
-async def _fetch_price_async(session, symbol, headers):
-    """Fetch a single symbol price with async fallback chain: ai4trade -> Binance -> CoinGecko.
-    Tries ai4trade first; on failure, races Binance and CoinGecko concurrently."""
-    sym_upper = symbol.upper()
-
-    # Try ai4trade first
-    try:
-        async with session.get(
-            f"{BASE}/price?symbol={symbol}&market=crypto",
-            headers=headers, timeout=aiohttp.ClientTimeout(total=10)
-        ) as resp:
-            data = await resp.json()
-            price = data.get("price", 0)
-            if price and price > 0:
-                return price
-    except Exception:
-        pass
-
-    # Fallback: race Binance and CoinGecko concurrently
-    tasks = []
-    pair = SYMBOL_TO_BINANCE.get(sym_upper)
-    if pair:
-        tasks.append(_fetch_binance(session, symbol, pair))
-    cg_id = SYMBOL_TO_COINGECKO.get(sym_upper)
-    if cg_id:
-        tasks.append(_fetch_coingecko(session, symbol, cg_id))
-
-    if tasks:
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-        for r in results:
-            if isinstance(r, (int, float)) and r > 0:
-                return r
-
-    log(f"  ⚠️ {symbol}: all price sources failed")
-    return 0
-
-
-async def _fetch_binance(session, symbol, pair):
-    """Fetch price from Binance."""
-    try:
-        async with session.get(
-            f"https://api.binance.com/api/v3/ticker/price?symbol={pair}",
-            timeout=aiohttp.ClientTimeout(total=10)
-        ) as resp:
-            data = await resp.json()
-            price = float(data.get("price", 0))
-            if price > 0:
-                log(f"  📡 {symbol} price from Binance: ${price:,.2f}")
-                return price
-    except Exception:
-        pass
-    return 0
-
-
-async def _fetch_coingecko(session, symbol, cg_id):
-    """Fetch price from CoinGecko."""
-    try:
-        async with session.get(
-            f"https://api.coingecko.com/api/v3/simple/price?ids={cg_id}&vs_currencies=usd",
-            timeout=aiohttp.ClientTimeout(total=10)
-        ) as resp:
-            data = await resp.json()
-            price = data.get(cg_id, {}).get("usd", 0)
-            if price and price > 0:
-                log(f"  📡 {symbol} price from CoinGecko: ${price:,.2f}")
-                return price
-    except Exception:
-        pass
-    return 0
-
-
-async def get_all_prices_async(symbols):
-    """Fetch prices for multiple symbols concurrently using aiohttp.
-    Returns dict {symbol: price}."""
+def get_all_prices(symbols):
+    """Fetch prices for all symbols concurrently. Returns dict {symbol: price}.
+    Uses async aiohttp when available, falls back to sequential sync."""
     if aiohttp is None:
         return {s: get_price(s) for s in symbols}
-
-    headers = {}
-    try:
-        headers = get_headers()
-    except Exception:
-        pass
-
-    async with aiohttp.ClientSession() as session:
-        tasks = [_fetch_price_async(session, s, headers) for s in symbols]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-
-    prices = {}
-    for sym, result in zip(symbols, results):
-        if isinstance(result, Exception):
-            log(f"  ⚠️ {sym}: async fetch error: {result}")
-            prices[sym] = 0
-        else:
-            prices[sym] = result
-    return prices
-
-
-def get_all_prices(symbols):
-    """Sync wrapper: fetch all prices concurrently.
-    Returns dict {symbol: price}."""
     try:
         loop = asyncio.get_event_loop()
         if loop.is_running():
-            # Fallback to sequential if already in async context
             return {s: get_price(s) for s in symbols}
-        return loop.run_until_complete(get_all_prices_async(symbols))
+        return loop.run_until_complete(_async_prefetch_all_prices(symbols))
     except RuntimeError:
-        return asyncio.run(get_all_prices_async(symbols))
+        return asyncio.run(_async_prefetch_all_prices(symbols))
+    except Exception:
+        return {s: get_price(s) for s in symbols}
 
 
 def get_price(symbol):
     """Get price with fallback chain: ai4trade → Binance → CoinGecko.
-    Sync wrapper around async implementation."""
+    Uses cached value when available (via cached_get_price wrapper).
+    Async when possible, sync fallback otherwise."""
+    # Check if we're inside an async context, use sync fallback
     try:
         loop = asyncio.get_event_loop()
         if loop.is_running():
-            # Fallback to sync requests if already in async context
             return _get_price_sync(symbol)
-        return loop.run_until_complete(_fetch_price_async(
-            aiohttp.ClientSession(), symbol, get_headers()
-        ))
     except RuntimeError:
-        return asyncio.run(_fetch_price_async(
-            aiohttp.ClientSession(), symbol, get_headers()
-        ))
-    except Exception:
-        return _get_price_sync(symbol)
+        pass
+
+    # Try async first
+    if aiohttp is not None:
+        try:
+            loop = asyncio.get_event_loop()
+            if not loop.is_running():
+                result = loop.run_until_complete(
+                    _async_fetch_single_price(
+                        aiohttp.ClientSession(), symbol, get_headers()
+                    )
+                )
+                return result[1] if isinstance(result, tuple) else 0
+        except Exception:
+            pass
+
+    return _get_price_sync(symbol)
 
 
 def _get_price_sync(symbol):
