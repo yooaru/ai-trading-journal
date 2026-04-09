@@ -84,3 +84,252 @@
 [2026-04-08 15:36:13]   📡 AVAX price from Binance: $9.20
 [2026-04-08 15:36:14]   🔴 BTC: -0.56% ($71,591→$71,188)
 [2026-04-08 15:36:14]   📊 Avg: -0.56%
+[2026-04-08 17:00:02] 🤖 Auto Trader started
+[2026-04-08 17:00:22] 🔍 Scan | Cash: $99,000.00 | Pos: 1
+[2026-04-08 17:00:22]   ✅ Daily status: OK
+[2026-04-08 17:00:33]   📡 BTC price from Binance: $71,628.07
+[2026-04-08 17:00:44]   📡 ETH price from Binance: $2,222.02
+[2026-04-08 17:00:53]   📡 SOL price from Binance: $83.51
+[2026-04-08 17:00:55]   📡 PAXG price from Binance: $4,742.99
+[2026-04-08 17:00:58]   📡 WLD price from Binance: $0.27
+[2026-04-08 17:01:01]   📡 SUI price from Binance: $0.93
+[2026-04-08 17:01:03]   🟢 SUI: BUY (4 conds) — 4H trend OK | 15M up | Near BB lower (12%)
+[2026-04-08 17:01:04]   📐 SUI volatility: NORMAL (BB width: 5.3%) → risk: 2.0%
+[2026-04-08 17:01:04]   ❌ Failed: {'detail': 'Unable to fetch historical price for SUI at 2026-04-08T17:01:04Z'}
+[2026-04-08 17:01:05]   📡 DOGE price from Binance: $0.09
+[2026-04-08 17:01:09]   📡 XRP price from Binance: $1.36
+[2026-04-08 17:01:12]   📡 LINK price from Binance: $9.07
+[2026-04-08 17:01:15]   📡 AVAX price from Binance: $9.21
+[2026-04-08 17:01:17]   🟢 BTC: +0.05% ($71,591→$71,628)
+[2026-04-08 17:01:17]   📊 Avg: +0.05%
+[2026-04-08 18:00:02] 🤖 Auto Trader started
+[2026-04-08 18:00:10] 🔍 Scan | Cash: $98,926.56 | Pos: 1
+[2026-04-08 18:00:10]   ✅ Daily status: OK
+[2026-04-08 18:00:13]   📡 BTC price from Binance: $71,818.59
+[2026-04-08 18:00:14]   📡 ETH price from Binance: $2,228.65
+[2026-04-08 18:00:17]   📡 SOL price from Binance: $83.90
+[2026-04-08 18:00:20]   📡 PAXG price from Binance: $4,717.65
+[2026-04-08 18:00:27]   🟢 PAXG: BUY (5 conds) — 1H BUY (61%) | 4H trend OK | Near BB lower (4%)
+[2026-04-08 18:00:27]   📐 PAXG volatility: NORMAL (BB width: 2.3%) → risk: 2.0%
+[2026-04-08 18:00:28]   ✅ BUY PAXG — Signal #211665 (+10 pts)
+[2026-04-08 18:00:28]   📓 Journal: OPEN PAXG @ $4,717.65 (auto_004)
+[2026-04-08 18:00:28] 📈 NEW: LONG PAXG 0.419389 @ $4,717.65
+[2026-04-08 18:00:28]   🟢 BTC: +0.32% ($71,591→$71,819)
+[2026-04-08 18:00:28]   🔴 PAXG: +0.00% ($4,718→$4,718)
+[2026-04-08 18:00:28]   📊 Avg: +0.16%
+[2026-04-08 19:00:01] 🤖 Auto Trader started
+[2026-04-08 19:00:22] 🔍 Scan | Cash: $99,000.00 | Pos: 2
+[2026-04-08 19:00:22]   ✅ Daily status: OK
+[2026-04-08 19:00:32]   📡 BTC price from Binance: $71,069.54
+[2026-04-08 19:00:43]   📡 PAXG price from Binance: $4,688.46
+[2026-04-08 19:00:53]   📡 ETH price from Binance: $2,199.77
+[2026-04-08 19:00:56]   📐 ETH volatility: NORMAL (BB width: 3.2%) → risk: 2.0%
+[2026-04-08 19:00:56]   ❌ Failed: {'detail': 'Unable to fetch historical price for ETH at 2026-04-08T19:00:56Z'}
+[2026-04-08 19:00:56]   📡 SOL price from Binance: $82.83
+[2026-04-08 19:01:00]   📡 WLD price from Binance: $0.26
+[2026-04-08 19:01:03]   📡 SUI price from Binance: $0.92
+[2026-04-08 19:01:06]   📡 DOGE price from Binance: $0.09
+[2026-04-08 19:01:16]   🔴 BTC: -0.73% ($71,591→$71,070)
+[2026-04-08 19:01:16]   🔴 PAXG: -0.62% ($4,718→$4,688)
+[2026-04-08 19:01:16]   📊 Avg: -0.67%
+[2026-04-08 20:00:02] 🤖 Auto Trader started
+[2026-04-08 20:00:22] 🔍 Scan | Cash: $99,000.00 | Pos: 2
+[2026-04-08 20:00:22]   ✅ Daily status: OK
+[2026-04-08 20:00:33]   📡 BTC price from Binance: $71,417.41
+[2026-04-08 20:00:44]   📡 PAXG price from Binance: $4,715.28
+[2026-04-08 20:00:52]   📡 ETH price from Binance: $2,214.11
+[2026-04-08 20:00:56]   📡 SOL price from Binance: $83.27
+[2026-04-08 20:00:59]   📡 WLD price from Binance: $0.26
+[2026-04-08 20:01:01]   📡 SUI price from Binance: $0.92
+[2026-04-08 20:01:03]   🟢 SUI: BUY (5 conds) — 1H BUY (61%) | 4H trend OK | Near BB lower (15%)
+[2026-04-08 20:01:04]   📐 SUI volatility: HIGH (BB width: 6.5%) → risk: 1.0%
+[2026-04-08 20:01:04]   ❌ Failed: {'detail': 'Unable to fetch historical price for SUI at 2026-04-08T20:01:04Z'}
+[2026-04-08 20:01:05]   📡 DOGE price from Binance: $0.09
+[2026-04-08 20:01:15]   🔴 BTC: -0.24% ($71,591→$71,417)
+[2026-04-08 20:01:15]   🔴 PAXG: -0.05% ($4,718→$4,715)
+[2026-04-08 20:01:15]   📊 Avg: -0.15%
+[2026-04-08 21:00:01] 🤖 Auto Trader started
+[2026-04-08 21:00:11] 🔍 Scan | Cash: $96,946.87 | Pos: 2
+[2026-04-08 21:00:11]   ✅ Daily status: OK
+[2026-04-08 21:00:15]   📡 BTC price from Binance: $71,363.62
+[2026-04-08 21:00:17]   📡 PAXG price from Binance: $4,708.24
+[2026-04-08 21:00:18]   📡 ETH price from Binance: $2,209.33
+[2026-04-08 21:00:21]   📡 SOL price from Binance: $83.24
+[2026-04-08 21:00:24]   📡 WLD price from Binance: $0.26
+[2026-04-08 21:00:28]   📡 SUI price from Binance: $0.92
+[2026-04-08 21:00:30]   🟢 SUI: BUY (4 conds) — 4H trend OK | 15M up | Near BB lower (14%)
+[2026-04-08 21:00:30]   📐 SUI volatility: HIGH (BB width: 6.4%) → risk: 1.0%
+[2026-04-08 21:00:31]   ❌ Failed: {'detail': 'Unable to fetch historical price for SUI at 2026-04-08T21:00:30Z'}
+[2026-04-08 21:00:31]   📡 DOGE price from Binance: $0.09
+[2026-04-08 21:00:36]   🟢 XRP: BUY (4 conds) — 4H trend OK | 15M up | Near BB lower (13%)
+[2026-04-08 21:00:36]   📐 XRP volatility: NORMAL (BB width: 4.0%) → risk: 2.0%
+[2026-04-08 21:00:37]   ✅ BUY XRP — Signal #211841 (+10 pts)
+[2026-04-08 21:00:37]   📓 Journal: OPEN XRP @ $1.35 (auto_005)
+[2026-04-08 21:00:37] 📈 NEW: LONG XRP 1438.487567 @ $1.35
+[2026-04-08 21:00:37]   🔴 BTC: -0.32% ($71,591→$71,364)
+[2026-04-08 21:00:37]   🔴 PAXG: -0.20% ($4,718→$4,708)
+[2026-04-08 21:00:37]   🔴 XRP: +0.00% ($1→$1)
+[2026-04-08 21:00:37]   📊 Avg: -0.17%
+[2026-04-08 22:00:01] 🤖 Auto Trader started
+[2026-04-08 22:00:06] 🔍 Scan | Cash: $95,006.14 | Pos: 3
+[2026-04-08 22:00:06]   ✅ Daily status: OK
+[2026-04-08 22:00:08]   📡 BTC price from Binance: $71,516.01
+[2026-04-08 22:00:10]   📡 PAXG price from Binance: $4,713.25
+[2026-04-08 22:00:11]   📡 XRP price from Binance: $1.35
+[2026-04-08 22:00:12]   📡 ETH price from Binance: $2,213.39
+[2026-04-08 22:00:14]   📡 SOL price from Binance: $83.35
+[2026-04-08 22:00:17]   📡 WLD price from Binance: $0.26
+[2026-04-08 22:00:20]   📡 SUI price from Binance: $0.93
+[2026-04-08 22:00:23]   📡 DOGE price from Binance: $0.09
+[2026-04-08 22:00:30]   🔴 BTC: -0.10% ($71,591→$71,516)
+[2026-04-08 22:00:30]   🔴 PAXG: -0.09% ($4,718→$4,713)
+[2026-04-08 22:00:30]   🟢 XRP: +0.35% ($1→$1)
+[2026-04-08 22:00:30]   📊 Avg: +0.05%
+[2026-04-08 23:00:02] 🤖 Auto Trader started
+[2026-04-08 23:00:09] 🔍 Scan | Cash: $95,006.14 | Pos: 3
+[2026-04-08 23:00:09]   ✅ Daily status: OK
+[2026-04-08 23:00:12]   📡 BTC price from Binance: $71,050.01
+[2026-04-08 23:00:13]   📡 PAXG price from Binance: $4,703.83
+[2026-04-08 23:00:14]   📡 XRP price from Binance: $1.34
+[2026-04-08 23:00:15]   📡 ETH price from Binance: $2,188.62
+[2026-04-08 23:00:18]   📡 SOL price from Binance: $82.52
+[2026-04-08 23:00:21]   📡 WLD price from Binance: $0.26
+[2026-04-08 23:00:24]   📡 SUI price from Binance: $0.92
+[2026-04-08 23:00:26]   🟢 SUI: BUY (4 conds) — 4H trend OK | 15M up | Near BB lower (10%)
+[2026-04-08 23:00:26]   📐 SUI volatility: HIGH (BB width: 6.2%) → risk: 1.0%
+[2026-04-08 23:00:27]   ✅ BUY SUI — Signal #211898 (+10 pts)
+[2026-04-08 23:00:27]   📓 Journal: OPEN SUI @ $0.92 (auto_006)
+[2026-04-08 23:00:27] 📈 NEW: LONG SUI 1037.298146 @ $0.92
+[2026-04-08 23:00:27]   🔴 BTC: -0.76% ($71,591→$71,050)
+[2026-04-08 23:00:27]   🔴 PAXG: -0.29% ($4,718→$4,704)
+[2026-04-08 23:00:27]   🔴 XRP: -0.36% ($1→$1)
+[2026-04-08 23:00:27]   🔴 SUI: +0.00% ($1→$1)
+[2026-04-08 23:00:27]   📊 Avg: -0.35%
+[2026-04-09 00:00:02] 🤖 Auto Trader started
+[2026-04-09 00:00:19] 🔍 Scan | Cash: $94,055.85 | Pos: 4
+[2026-04-09 00:00:19]   ✅ Daily status: New day, fresh start
+[2026-04-09 00:00:27]   📡 BTC price from Binance: $71,050.01
+[2026-04-09 00:00:30]   📡 PAXG price from Binance: $4,696.86
+[2026-04-09 00:00:31]   📡 XRP price from Binance: $1.34
+[2026-04-09 00:00:32]   📡 SUI price from Binance: $0.91
+[2026-04-09 00:00:33]   📡 ETH price from Binance: $2,189.80
+[2026-04-09 00:00:36]   📐 ETH volatility: NORMAL (BB width: 4.2%) → risk: 2.0%
+[2026-04-09 00:00:36]   ❌ Failed: {'detail': 'Unable to fetch historical price for ETH at 2026-04-09T00:00:36Z'}
+[2026-04-09 00:00:37]   📡 SOL price from Binance: $82.52
+[2026-04-09 00:00:40]   📡 WLD price from Binance: $0.26
+[2026-04-09 00:00:43]   📡 DOGE price from Binance: $0.09
+[2026-04-09 00:00:51]   🔴 BTC: -0.76% ($71,591→$71,050)
+[2026-04-09 00:00:51]   🔴 PAXG: -0.44% ($4,718→$4,697)
+[2026-04-09 00:00:51]   🔴 XRP: -0.43% ($1→$1)
+[2026-04-09 00:00:51]   🔴 SUI: -0.26% ($1→$1)
+[2026-04-09 00:00:51]   📊 Avg: -0.47%
+[2026-04-09 01:00:02] 🤖 Auto Trader started
+[2026-04-09 01:00:22] 🔍 Scan | Cash: $99,000.00 | Pos: 4
+[2026-04-09 01:00:22]   ✅ Daily status: OK
+[2026-04-09 01:00:33]   📡 BTC price from Binance: $70,841.68
+[2026-04-09 01:00:41]   📡 PAXG price from Binance: $4,699.62
+[2026-04-09 01:00:43]   📡 XRP price from Binance: $1.34
+[2026-04-09 01:00:44]   📡 SUI price from Binance: $0.91
+[2026-04-09 01:00:46]   📡 ETH price from Binance: $2,184.45
+[2026-04-09 01:00:49]   📡 SOL price from Binance: $82.22
+[2026-04-09 01:00:53]   📡 WLD price from Binance: $0.26
+[2026-04-09 01:01:04]   🔴 BTC: -1.05% ($71,591→$70,842)
+[2026-04-09 01:01:04]   🔴 PAXG: -0.38% ($4,718→$4,700)
+[2026-04-09 01:01:04]   🔴 XRP: -0.58% ($1→$1)
+[2026-04-09 01:01:04]   🔴 SUI: -0.81% ($1→$1)
+[2026-04-09 01:01:04]   📊 Avg: -0.70%
+[2026-04-09 02:00:03] 🤖 Auto Trader started
+[2026-04-09 02:00:03] 🔍 Scan | Cash: $94,055.85 | Pos: 4
+[2026-04-09 02:00:03]   ✅ Daily status: OK
+[2026-04-09 02:00:18]   📡 SUI price from Binance: $0.91
+[2026-04-09 02:00:29]   📡 ETH price from Binance: $2,179.23
+[2026-04-09 02:00:42]   📡 SOL price from Binance: $82.23
+[2026-04-09 02:00:55]   📡 WLD price from Binance: $0.25
+[2026-04-09 02:01:09]   📡 DOGE price from Binance: $0.09
+[2026-04-09 02:01:18]   📡 LINK price from Binance: $8.76
+[2026-04-09 02:01:21]   📡 AVAX price from Binance: $9.00
+[2026-04-09 02:01:23]   🔴 BTC: -0.95% ($71,591→$70,914)
+[2026-04-09 02:01:23]   🔴 PAXG: -0.06% ($4,718→$4,715)
+[2026-04-09 02:01:23]   🔴 XRP: -1.01% ($1→$1)
+[2026-04-09 02:01:23]   🔴 SUI: -1.10% ($1→$1)
+[2026-04-09 02:01:23]   📊 Avg: -0.78%
+[2026-04-09 03:00:02] 🤖 Auto Trader started
+[2026-04-09 03:00:22] 🔍 Scan | Cash: $99,000.00 | Pos: 4
+[2026-04-09 03:00:22]   ✅ Daily status: OK
+[2026-04-09 03:00:32]   📡 BTC price from Binance: $71,046.01
+[2026-04-09 03:00:41]   📡 PAXG price from Binance: $4,706.94
+[2026-04-09 03:00:43]   📡 XRP price from Binance: $1.33
+[2026-04-09 03:00:43]   📡 SUI price from Binance: $0.91
+[2026-04-09 03:00:44]   📡 ETH price from Binance: $2,181.15
+[2026-04-09 03:00:47]   📡 SOL price from Binance: $82.15
+[2026-04-09 03:00:49]   🟢 SOL: BUY (4 conds) — 4H trend OK | 15M up | RSI low (40)
+[2026-04-09 03:00:50]   📐 SOL volatility: NORMAL (BB width: 4.4%) → risk: 2.0%
+[2026-04-09 03:00:50]   ❌ Failed: {'detail': 'Unable to fetch historical price for SOL at 2026-04-09T03:00:50Z'}
+[2026-04-09 03:00:50]   📡 WLD price from Binance: $0.26
+[2026-04-09 03:01:00]   🔴 BTC: -0.76% ($71,591→$71,046)
+[2026-04-09 03:01:00]   🔴 PAXG: -0.23% ($4,718→$4,707)
+[2026-04-09 03:01:00]   🔴 XRP: -1.02% ($1→$1)
+[2026-04-09 03:01:00]   🔴 SUI: -0.76% ($1→$1)
+[2026-04-09 03:01:00]   📊 Avg: -0.69%
+[2026-04-09 04:00:02] 🤖 Auto Trader started
+[2026-04-09 04:00:22] 🔍 Scan | Cash: $99,000.00 | Pos: 4
+[2026-04-09 04:00:22]   ✅ Daily status: OK
+[2026-04-09 04:00:33]   📡 BTC price from Binance: $70,999.99
+[2026-04-09 04:00:40]   📡 PAXG price from Binance: $4,699.40
+[2026-04-09 04:00:41]   📡 XRP price from Binance: $1.33
+[2026-04-09 04:00:42]   📡 SUI price from Binance: $0.91
+[2026-04-09 04:00:43]   📡 ETH price from Binance: $2,181.69
+[2026-04-09 04:00:46]   📡 SOL price from Binance: $81.99
+[2026-04-09 04:00:48]   🟢 SOL: BUY (5 conds) — 1H BUY (64%) | 15M up | RSI low (39)
+[2026-04-09 04:00:49]   📐 SOL volatility: NORMAL (BB width: 4.3%) → risk: 2.0%
+[2026-04-09 04:00:49]   ❌ Failed: {'detail': 'Unable to fetch historical price for SOL at 2026-04-09T04:00:49Z'}
+[2026-04-09 04:00:50]   📡 WLD price from Binance: $0.25
+[2026-04-09 04:00:52]   🟢 WLD: BUY (4 conds) — 4H trend OK | 15M up | Near BB lower (11%)
+[2026-04-09 04:00:52]   📐 WLD volatility: NORMAL (BB width: 5.7%) → risk: 2.0%
+[2026-04-09 04:00:53]   ✅ BUY WLD — Signal #212011 (+10 pts)
+[2026-04-09 04:00:53]   📓 Journal: OPEN WLD @ $0.25 (auto_007)
+[2026-04-09 04:00:53] 📈 NEW: LONG WLD 7801.41844 @ $0.25
+[2026-04-09 04:00:53]   🔴 BTC: -0.83% ($71,591→$71,000)
+[2026-04-09 04:00:53]   🔴 PAXG: -0.39% ($4,718→$4,699)
+[2026-04-09 04:00:53]   🔴 XRP: -1.30% ($1→$1)
+[2026-04-09 04:00:53]   🔴 SUI: -0.84% ($1→$1)
+[2026-04-09 04:00:53]   🔴 WLD: +0.00% ($0→$0)
+[2026-04-09 04:00:53]   📊 Avg: -0.67%
+[2026-04-09 05:00:02] 🤖 Auto Trader started
+[2026-04-09 05:00:22] 🔍 Scan | Cash: $99,000.00 | Pos: 5
+[2026-04-09 05:00:22]   ✅ Daily status: OK
+[2026-04-09 05:00:33]   📡 BTC price from Binance: $70,757.92
+[2026-04-09 05:00:44]   📡 PAXG price from Binance: $4,707.28
+[2026-04-09 05:00:55]   📡 XRP price from Binance: $1.33
+[2026-04-09 05:01:06]   📡 SUI price from Binance: $0.91
+[2026-04-09 05:01:17]   📡 WLD price from Binance: $0.26
+[2026-04-09 05:01:17]   🔴 BTC: -1.16% ($71,591→$70,758)
+[2026-04-09 05:01:17]   🔴 PAXG: -0.22% ($4,718→$4,707)
+[2026-04-09 05:01:17]   🔴 XRP: -1.23% ($1→$1)
+[2026-04-09 05:01:17]   🔴 SUI: -0.78% ($1→$1)
+[2026-04-09 05:01:17]   🟢 WLD: +0.63% ($0→$0)
+[2026-04-09 05:01:17]   📊 Avg: -0.55%
+[2026-04-09 06:00:02] 🤖 Auto Trader started
+[2026-04-09 06:00:22] 🔍 Scan | Cash: $99,000.00 | Pos: 5
+[2026-04-09 06:00:22]   ✅ Daily status: OK
+[2026-04-09 06:00:29]   📡 BTC price from Binance: $71,016.10
+[2026-04-09 06:00:32]   📡 PAXG price from Binance: $4,702.77
+[2026-04-09 06:00:33]   📡 XRP price from Binance: $1.33
+[2026-04-09 06:00:33]   📡 SUI price from Binance: $0.91
+[2026-04-09 06:00:35]   📡 WLD price from Binance: $0.26
+[2026-04-09 06:00:35]   🔴 BTC: -0.80% ($71,591→$71,016)
+[2026-04-09 06:00:35]   🔴 PAXG: -0.32% ($4,718→$4,703)
+[2026-04-09 06:00:35]   🔴 XRP: -1.02% ($1→$1)
+[2026-04-09 06:00:35]   🔴 SUI: -0.62% ($1→$1)
+[2026-04-09 06:00:35]   🟢 WLD: +0.79% ($0→$0)
+[2026-04-09 06:00:35]   📊 Avg: -0.40%
+[2026-04-09 07:00:03] 🤖 Auto Trader started
+[2026-04-09 07:00:04]   📡 Async batch price prefetch: 10/10 symbols cached
+[2026-04-09 07:00:04] 🔍 Scan | Cash: $92,074.58 | Pos: 5
+[2026-04-09 07:00:04]   ✅ Daily status: OK
+[2026-04-09 07:00:07]   🔴 BTC: -0.76% ($71,591→$71,050)
+[2026-04-09 07:00:07]   🔴 PAXG: -0.33% ($4,718→$4,702)
+[2026-04-09 07:00:07]   🔴 XRP: -1.07% ($1→$1)
+[2026-04-09 07:00:07]   🔴 SUI: -0.60% ($1→$1)
+[2026-04-09 07:00:07]   🟢 WLD: +1.26% ($0→$0)
+[2026-04-09 07:00:07]   📊 Avg: -0.30%

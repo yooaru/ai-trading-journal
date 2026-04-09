@@ -17,9 +17,69 @@
         71525.0,
         71554.0
       ],
-      "current_price": 71187.63
+      "current_price": 71049.81
+    },
+    "PAXG": {
+      "entry_price": 4717.65,
+      "quantity": 0.419389,
+      "side": "long",
+      "entry_time": "2026-04-08T18:00:28.342496+00:00",
+      "tp_levels": [
+        4812.003,
+        4882.767749999999,
+        4953.5325
+      ],
+      "sl_price": 4623.297,
+      "current_price": 4701.96,
+      "highest_price": 4717.65,
+      "trailing_active": false
+    },
+    "XRP": {
+      "entry_price": 1.3479,
+      "quantity": 1438.487567,
+      "side": "long",
+      "entry_time": "2026-04-08T21:00:37.180641+00:00",
+      "tp_levels": [
+        1.3748580000000001,
+        1.3950765,
+        1.4152950000000002
+      ],
+      "sl_price": 1.320942,
+      "current_price": 1.3335,
+      "highest_price": 1.3479,
+      "trailing_active": false
+    },
+    "SUI": {
+      "entry_price": 0.9159,
+      "quantity": 1037.298146,
+      "side": "long",
+      "entry_time": "2026-04-08T23:00:27.940562+00:00",
+      "tp_levels": [
+        0.9342180000000001,
+        0.9479565,
+        0.9616950000000001
+      ],
+      "sl_price": 0.897582,
+      "current_price": 0.9104,
+      "highest_price": 0.9159,
+      "trailing_active": false
+    },
+    "WLD": {
+      "entry_price": 0.2538,
+      "quantity": 7801.41844,
+      "side": "long",
+      "entry_time": "2026-04-09T04:00:53.335366+00:00",
+      "tp_levels": [
+        0.25887600000000005,
+        0.262683,
+        0.26649000000000006
+      ],
+      "sl_price": 0.24872400000000003,
+      "current_price": 0.257,
+      "highest_price": 0.2538,
+      "trailing_active": false
     }
   },
   "closed_trades": [],
-  "last_scan": "2026-04-08T15:36:14.938601+00:00"
+  "last_scan": "2026-04-09T07:00:07.345885+00:00"
 }
