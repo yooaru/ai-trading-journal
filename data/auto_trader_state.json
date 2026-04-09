@@ -17,7 +17,7 @@
         71525.0,
         71554.0
       ],
-      "current_price": 72322.28
+      "current_price": 71996.7
     },
     "PAXG": {
       "entry_price": 4717.65,
@@ -30,7 +30,7 @@
         4953.5325
       ],
       "sl_price": 4623.297,
-      "current_price": 4783.15,
+      "current_price": 4771.44,
       "highest_price": 4717.65,
       "trailing_active": false
     },
@@ -45,25 +45,9 @@
         1.4152950000000002
       ],
       "sl_price": 1.320942,
-      "current_price": 1.3581,
+      "current_price": 1.3535,
       "highest_price": 1.3479,
       "trailing_active": false
-    },
-    "SUI": {
-      "entry_price": 0.9159,
-      "quantity": 1037.298146,
-      "side": "long",
-      "entry_time": "2026-04-08T23:00:27.940562+00:00",
-      "tp_levels": [
-        0.9342180000000001,
-        0.9479565,
-        0.9616950000000001
-      ],
-      "sl_price": 0.9159,
-      "current_price": 0.9333,
-      "highest_price": 0.9159,
-      "trailing_active": false,
-      "sl_moved": "breakeven"
     },
     "ETH": {
       "entry_price": 2191.4,
@@ -76,8 +60,23 @@
         2300.9700000000003
       ],
       "sl_price": 2147.572,
-      "current_price": 2220.19,
+      "current_price": 2209.16,
       "highest_price": 2191.4,
+      "trailing_active": false
+    },
+    "SOL": {
+      "entry_price": 84.6,
+      "quantity": 22.042422,
+      "side": "long",
+      "entry_time": "2026-04-09T18:00:54.329466+00:00",
+      "tp_levels": [
+        86.292,
+        87.56099999999999,
+        88.83
+      ],
+      "sl_price": 82.90799999999999,
+      "current_price": 84.22,
+      "highest_price": 84.6,
       "trailing_active": false
     }
   },
@@ -88,7 +87,14 @@
       "exit": 0.2617,
       "pnl_pct": 3.11,
       "closed_at": "2026-04-09T10:43:42.379709+00:00"
+    },
+    {
+      "symbol": "SUI",
+      "entry": 0.9159,
+      "exit": 0.9397,
+      "pnl_pct": 2.6,
+      "closed_at": "2026-04-09T18:00:51.909734+00:00"
     }
   ],
-  "last_scan": "2026-04-09T17:56:46.248633+00:00"
+  "last_scan": "2026-04-09T18:11:52.521782+00:00"
 }
