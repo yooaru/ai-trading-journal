@@ -567,11 +567,30 @@
         "uel",
         "auto-sync"
       ]
+    },
+    {
+      "id": "bet_027",
+      "agent": "hermes1",
+      "platform": "polymarket",
+      "market": "Bayern Munich vs Real Madrid \u2014 UCL",
+      "outcome": "Draw",
+      "side": "yes",
+      "entry_price": 0.22,
+      "exit_price": null,
+      "size_usd": 2.5,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-09T23:56:20Z",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Auto: EV +10%, UCL",
+      "tags": []
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-09T14:17:22Z",
-    "total_bets": 22,
+    "last_updated": "2026-04-09T23:56:20Z",
+    "total_bets": 27,
     "version": "1.0"
   }
 }
