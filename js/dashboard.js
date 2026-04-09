@@ -15,8 +15,8 @@ function setTheme(name) {
   const btn = document.getElementById('theme-' + name);
   if (btn) btn.classList.add('active');
   // Update CT logo colors for each theme
-  document.querySelectorAll('.ct-c').forEach(el => el.style.color = name === 'warm' ? '#d4a853' : '#a1a1aa');
-  document.querySelectorAll('.ct-t').forEach(el => el.style.color = name === 'warm' ? '#8a7a50' : '#52525b');
+  document.querySelectorAll('.ct-c').forEach(el => el.style.color = name === 'warm' ? '#0071e3' : '#0071e3');
+  document.querySelectorAll('.ct-t').forEach(el => el.style.color = name === 'warm' ? '#1d1d1f' : 'rgba(245,245,247,0.35)');
 }
 
 function loadTheme() {
