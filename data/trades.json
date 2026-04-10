@@ -213,17 +213,17 @@
       "asset": "WLD",
       "side": "long",
       "entry_price": 0.26857,
-      "exit_price": null,
+      "exit_price": 0.2778,
       "size_usd": 990.0,
       "leverage": 1,
       "tp_price": 0.28,
       "sl_price": 0.26,
-      "status": "open",
-      "pnl_usd": null,
-      "pnl_pct": null,
+      "status": "closed",
+      "pnl_usd": 34.02,
+      "pnl_pct": 3.44,
       "opened_at": "2026-04-09T23:17:10.685453+00:00",
-      "closed_at": null,
-      "close_reason": null,
+      "closed_at": "2026-04-10T15:08:33.649552+00:00",
+      "close_reason": "tp_hit",
       "notes": "Indicator signal",
       "tags": [
         "spot",
@@ -252,11 +252,34 @@
         "spot",
         "auto-trader"
       ]
+    },
+    {
+      "id": "auto_012",
+      "agent": "hermes2",
+      "asset": "SUI",
+      "side": "long",
+      "entry_price": 0.9507,
+      "exit_price": null,
+      "size_usd": 1371.16,
+      "leverage": 1,
+      "tp_price": 0.98,
+      "sl_price": 0.93,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-10T15:08:39.059163+00:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Indicator signal",
+      "tags": [
+        "spot",
+        "auto-trader"
+      ]
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-10T10:35:47.430930+00:00",
-    "total_trades": 11,
+    "last_updated": "2026-04-10T15:08:39.059288+00:00",
+    "total_trades": 12,
     "version": "1.0"
   }
 }
