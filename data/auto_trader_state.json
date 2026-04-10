@@ -11,7 +11,7 @@
         4953.5325
       ],
       "sl_price": 4623.297,
-      "current_price": 4736.8,
+      "current_price": 4735.1,
       "highest_price": 4717.65,
       "trailing_active": false
     },
@@ -26,7 +26,7 @@
         1.4152950000000002
       ],
       "sl_price": 1.320942,
-      "current_price": 1.358,
+      "current_price": 1.3565,
       "highest_price": 1.3479,
       "trailing_active": false
     },
@@ -41,7 +41,7 @@
         88.83
       ],
       "sl_price": 82.90799999999999,
-      "current_price": 84.99,
+      "current_price": 84.72,
       "highest_price": 84.6,
       "trailing_active": false
     },
@@ -56,7 +56,7 @@
         0.998235
       ],
       "sl_price": 0.931686,
-      "current_price": 0.948,
+      "current_price": 0.9444,
       "highest_price": 0.9507,
       "trailing_active": false
     },
@@ -71,7 +71,7 @@
         0.099834
       ],
       "sl_price": 0.0931784,
-      "current_price": 0.09409,
+      "current_price": 0.094235,
       "highest_price": 0.09508,
       "trailing_active": false
     }
@@ -120,5 +120,5 @@
       "closed_at": "2026-04-10T19:13:15.384192+00:00"
     }
   ],
-  "last_scan": "2026-04-10T22:27:14.942940+00:00"
+  "last_scan": "2026-04-10T22:42:31.699938+00:00"
 }
