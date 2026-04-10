@@ -722,6 +722,30 @@
         "totals",
         "high-risk"
       ]
+    },
+    {
+      "id": "bet_034",
+      "agent": "hermes2",
+      "platform": "polymarket",
+      "market": "West Ham vs Wolves - EPL R32",
+      "outcome": "West Ham ML",
+      "side": "yes",
+      "entry_price": 0.53,
+      "exit_price": 0.0,
+      "size_usd": 0.99,
+      "status": "open",
+      "pnl_usd": 0.0,
+      "pnl_pct": 0.0,
+      "opened_at": "2026-04-10T13:00:40.472862+00:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "WOL 0 away win all season (D5 L10). WHU desperate, 1 poin dari safety. Bowen score di 3 kandang H2H vs WOL. WOL belum score away sebelum menit 30. EV +9%",
+      "tags": [
+        "soccer",
+        "epl",
+        "relegation",
+        "ml"
+      ]
     }
   ],
   "metadata": {
