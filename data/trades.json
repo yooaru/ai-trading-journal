@@ -52,17 +52,17 @@
       "asset": "BTC",
       "side": "long",
       "entry_price": 71591.0,
-      "exit_price": null,
+      "exit_price": 71461.14,
       "size_usd": 71.59,
       "leverage": 1,
       "tp_price": 74096.68,
       "sl_price": 70159.18,
-      "status": "open",
-      "pnl_usd": null,
-      "pnl_pct": null,
+      "status": "closed",
+      "pnl_usd": -0.13,
+      "pnl_pct": -0.18,
       "opened_at": "2026-04-08T11:30:00Z",
-      "closed_at": null,
-      "close_reason": null,
+      "closed_at": "2026-04-10T08:00:04.956154+00:00",
+      "close_reason": "sl_hit",
       "notes": "Auto trader position",
       "tags": [
         "spot",
@@ -232,7 +232,7 @@
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-09T23:17:10.685664+00:00",
+    "last_updated": "2026-04-10T08:00:04.956237+00:00",
     "total_trades": 10,
     "version": "1.0"
   }
