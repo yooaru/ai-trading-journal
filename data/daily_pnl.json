@@ -1,25 +1,6 @@
 {
-  "date": "2026-04-09",
-  "trades": [
-    {
-      "symbol": "WLD",
-      "pnl_pct": 3.11,
-      "type": "tp_hit",
-      "time": "2026-04-09T10:43:42.381016+00:00"
-    },
-    {
-      "symbol": "SUI",
-      "pnl_pct": 2.6,
-      "type": "tp_hit",
-      "time": "2026-04-09T18:00:51.911164+00:00"
-    },
-    {
-      "symbol": "ETH",
-      "pnl_pct": -0.31,
-      "type": "sl_hit",
-      "time": "2026-04-09T23:17:05.988037+00:00"
-    }
-  ],
-  "total_pnl_pct": 5.4,
+  "date": "2026-04-10",
+  "trades": [],
+  "total_pnl_pct": 0,
   "cooldown_until": null
 }
