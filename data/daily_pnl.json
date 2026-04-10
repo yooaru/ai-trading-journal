@@ -12,8 +12,14 @@
       "pnl_pct": 3.44,
       "type": "tp_hit",
       "time": "2026-04-10T15:08:33.647800+00:00"
+    },
+    {
+      "symbol": "BTC",
+      "pnl_pct": 2.06,
+      "type": "tp_hit",
+      "time": "2026-04-10T19:13:15.384844+00:00"
     }
   ],
-  "total_pnl_pct": 3.26,
+  "total_pnl_pct": 5.32,
   "cooldown_until": null
 }

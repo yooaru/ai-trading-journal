@@ -236,17 +236,17 @@
       "asset": "BTC",
       "side": "long",
       "entry_price": 71757.01,
-      "exit_price": null,
+      "exit_price": 73236.54,
       "size_usd": 1757.9,
       "leverage": 1,
       "tp_price": 74268.51,
       "sl_price": 70321.87,
-      "status": "open",
-      "pnl_usd": null,
-      "pnl_pct": null,
+      "status": "closed",
+      "pnl_usd": 36.25,
+      "pnl_pct": 2.06,
       "opened_at": "2026-04-10T10:35:47.430775+00:00",
-      "closed_at": null,
-      "close_reason": null,
+      "closed_at": "2026-04-10T19:13:15.386490+00:00",
+      "close_reason": "tp_hit",
       "notes": "Support level",
       "tags": [
         "spot",
@@ -275,11 +275,34 @@
         "spot",
         "auto-trader"
       ]
+    },
+    {
+      "id": "auto_013",
+      "agent": "hermes2",
+      "asset": "DOGE",
+      "side": "long",
+      "entry_price": 0.09508,
+      "exit_price": null,
+      "size_usd": 1364.35,
+      "leverage": 1,
+      "tp_price": 0.1,
+      "sl_price": 0.09,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-10T19:13:22.490640+00:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Indicator signal",
+      "tags": [
+        "spot",
+        "auto-trader"
+      ]
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-10T15:08:39.059288+00:00",
-    "total_trades": 12,
+    "last_updated": "2026-04-10T19:13:22.490702+00:00",
+    "total_trades": 13,
     "version": "1.0"
   }
 }
