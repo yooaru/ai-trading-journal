@@ -229,11 +229,34 @@
         "spot",
         "auto-trader"
       ]
+    },
+    {
+      "id": "auto_011",
+      "agent": "hermes2",
+      "asset": "BTC",
+      "side": "long",
+      "entry_price": 71757.01,
+      "exit_price": null,
+      "size_usd": 1757.9,
+      "leverage": 1,
+      "tp_price": 74268.51,
+      "sl_price": 70321.87,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-10T10:35:47.430775+00:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Support level",
+      "tags": [
+        "spot",
+        "auto-trader"
+      ]
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-10T08:00:04.956237+00:00",
-    "total_trades": 10,
+    "last_updated": "2026-04-10T10:35:47.430930+00:00",
+    "total_trades": 11,
     "version": "1.0"
   }
 }
