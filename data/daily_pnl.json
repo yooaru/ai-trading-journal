@@ -1,6 +1,13 @@
 {
   "date": "2026-04-11",
-  "trades": [],
-  "total_pnl_pct": 0,
+  "trades": [
+    {
+      "symbol": "DOGE",
+      "pnl_pct": -2.02,
+      "type": "sl_hit",
+      "time": "2026-04-11T05:18:57.233038+00:00"
+    }
+  ],
+  "total_pnl_pct": -2.02,
   "cooldown_until": null
 }
