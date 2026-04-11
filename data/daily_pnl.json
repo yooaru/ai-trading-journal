@@ -6,8 +6,14 @@
       "pnl_pct": -2.02,
       "type": "sl_hit",
       "time": "2026-04-11T05:18:57.233038+00:00"
+    },
+    {
+      "symbol": "SUI",
+      "pnl_pct": -2.1,
+      "type": "sl_hit",
+      "time": "2026-04-11T06:10:15.259623+00:00"
     }
   ],
-  "total_pnl_pct": -2.02,
+  "total_pnl_pct": -4.12,
   "cooldown_until": null
 }
