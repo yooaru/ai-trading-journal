@@ -12,8 +12,14 @@
       "pnl_pct": -2.1,
       "type": "sl_hit",
       "time": "2026-04-11T06:10:15.259623+00:00"
+    },
+    {
+      "symbol": "WLD",
+      "pnl_pct": -2.37,
+      "type": "sl_hit",
+      "time": "2026-04-11T13:12:03.517141+00:00"
     }
   ],
-  "total_pnl_pct": -4.12,
-  "cooldown_until": null
+  "total_pnl_pct": -6.49,
+  "cooldown_until": "2026-04-11T17:17:39.365080+00:00"
 }

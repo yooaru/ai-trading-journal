@@ -328,17 +328,17 @@
       "asset": "WLD",
       "side": "long",
       "entry_price": 0.2825,
-      "exit_price": null,
+      "exit_price": 0.2758,
       "size_usd": 698.31,
       "leverage": 1,
       "tp_price": 0.29,
       "sl_price": 0.28,
-      "status": "open",
-      "pnl_usd": null,
-      "pnl_pct": null,
+      "status": "closed",
+      "pnl_usd": -16.56,
+      "pnl_pct": -2.37,
       "opened_at": "2026-04-11T06:41:42.185194+00:00",
-      "closed_at": null,
-      "close_reason": null,
+      "closed_at": "2026-04-11T13:12:03.519675+00:00",
+      "close_reason": "sl_hit",
       "notes": "Indicator signal",
       "tags": [
         "spot",
@@ -347,7 +347,7 @@
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-11T06:41:42.185396+00:00",
+    "last_updated": "2026-04-11T13:12:03.519789+00:00",
     "total_trades": 15,
     "version": "1.0"
   }
