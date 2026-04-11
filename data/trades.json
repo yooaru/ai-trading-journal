@@ -321,11 +321,34 @@
         "spot",
         "auto-trader"
       ]
+    },
+    {
+      "id": "auto_015",
+      "agent": "hermes2",
+      "asset": "WLD",
+      "side": "long",
+      "entry_price": 0.2825,
+      "exit_price": null,
+      "size_usd": 698.31,
+      "leverage": 1,
+      "tp_price": 0.29,
+      "sl_price": 0.28,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-11T06:41:42.185194+00:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Indicator signal",
+      "tags": [
+        "spot",
+        "auto-trader"
+      ]
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-11T06:10:15.262217+00:00",
-    "total_trades": 14,
+    "last_updated": "2026-04-11T06:41:42.185396+00:00",
+    "total_trades": 15,
     "version": "1.0"
   }
 }
