@@ -569,44 +569,6 @@
       ]
     },
     {
-      "id": "bet_027",
-      "agent": "hermes1",
-      "platform": "polymarket",
-      "market": "Bayern Munich vs Real Madrid \u2014 UCL",
-      "outcome": "Draw",
-      "side": "yes",
-      "entry_price": 0.22,
-      "exit_price": null,
-      "size_usd": 2.5,
-      "status": "open",
-      "pnl_usd": null,
-      "pnl_pct": null,
-      "opened_at": "2026-04-09T23:56:20Z",
-      "closed_at": null,
-      "close_reason": null,
-      "notes": "Auto: EV +10%, UCL",
-      "tags": []
-    },
-    {
-      "id": "bet_028",
-      "agent": "hermes1",
-      "platform": "polymarket",
-      "market": "Bayern Munich vs Real Madrid \u2014 UCL",
-      "outcome": "Real Madrid ML",
-      "side": "yes",
-      "entry_price": 0.22,
-      "exit_price": null,
-      "size_usd": 2.5,
-      "status": "open",
-      "pnl_usd": null,
-      "pnl_pct": null,
-      "opened_at": "2026-04-09T23:56:22Z",
-      "closed_at": null,
-      "close_reason": null,
-      "notes": "Auto: EV +10%, UCL",
-      "tags": []
-    },
-    {
       "id": "bet_029",
       "agent": "hermes2",
       "platform": "polymarket",
@@ -746,11 +708,30 @@
         "relegation",
         "ml"
       ]
+    },
+    {
+      "id": "bet_035",
+      "agent": "hermes1",
+      "platform": "polymarket",
+      "market": "Bayern Munich vs Real Madrid \u2014 UCL",
+      "outcome": "Draw",
+      "side": "yes",
+      "entry_price": 0.22,
+      "exit_price": null,
+      "size_usd": 2.5,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-11T23:18:09Z",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Auto: EV +10%, UCL",
+      "tags": []
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-12T00:15:00Z",
-    "total_bets": 34,
+    "last_updated": "2026-04-11T23:18:09Z",
+    "total_bets": 33,
     "version": "1.0"
   }
 }
