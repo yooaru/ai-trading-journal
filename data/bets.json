@@ -21,7 +21,8 @@
         "soccer",
         "ucl",
         "underdog"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_002",
@@ -44,7 +45,8 @@
         "soccer",
         "ucl",
         "draw"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_003",
@@ -67,7 +69,8 @@
         "soccer",
         "ucl",
         "ml"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_004",
@@ -91,7 +94,8 @@
         "ucl",
         "ml",
         "expensive"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_005",
@@ -115,7 +119,8 @@
         "ucl",
         "goals",
         "early-sell"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_006",
@@ -138,7 +143,8 @@
         "soccer",
         "ucl",
         "ml"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_007",
@@ -161,7 +167,8 @@
         "soccer",
         "pl",
         "goals"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_008",
@@ -184,7 +191,8 @@
         "soccer",
         "pl",
         "draw"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_009",
@@ -207,7 +215,8 @@
         "soccer",
         "ucl",
         "goals"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_010",
@@ -230,7 +239,8 @@
         "soccer",
         "ucl",
         "ml"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_011",
@@ -253,7 +263,8 @@
         "soccer",
         "pl",
         "ml"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_012",
@@ -276,7 +287,8 @@
         "soccer",
         "copa",
         "draw"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_013",
@@ -299,7 +311,8 @@
         "soccer",
         "ucl",
         "ml"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_014",
@@ -322,7 +335,8 @@
         "soccer",
         "ucl",
         "double-chance"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_015",
@@ -345,7 +359,8 @@
         "soccer",
         "pl",
         "ml"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "id": "bet_016",
@@ -364,7 +379,8 @@
       "closed_at": "2026-04-10T06:30:56.606236+07:00",
       "close_reason": "cancelled - too early, match not yet played",
       "notes": "Auto: EV +5%, EPL",
-      "tags": []
+      "tags": [],
+      "type": "paper"
     },
     {
       "id": "bet_017",
@@ -383,7 +399,8 @@
       "closed_at": "2026-04-10T06:30:56.606236+07:00",
       "close_reason": "cancelled - too early, match not yet played",
       "notes": "Auto: EV +5%, EPL",
-      "tags": []
+      "tags": [],
+      "type": "paper"
     },
     {
       "id": "bet_018",
@@ -402,7 +419,8 @@
       "closed_at": "2026-04-09T20:50:59.538344+07:00",
       "close_reason": "lost - PSG 2-0 Liverpool, Draw lost",
       "notes": "Auto: EV +10%, UCL",
-      "tags": []
+      "tags": [],
+      "type": "paper"
     },
     {
       "id": "bet_019",
@@ -421,7 +439,8 @@
       "closed_at": "2026-04-09T20:50:59.538344+07:00",
       "close_reason": "lost - PSG 2-0 Liverpool, Liverpool ML lost",
       "notes": "Auto: EV +10%, UCL",
-      "tags": []
+      "tags": [],
+      "type": "paper"
     },
     {
       "id": "bet_020",
@@ -440,7 +459,8 @@
       "closed_at": "2026-04-09T20:50:59.538344+07:00",
       "close_reason": "lost - ATM 2-0 Barcelona, Draw lost",
       "notes": "Auto: EV +10%, UCL",
-      "tags": []
+      "tags": [],
+      "type": "paper"
     },
     {
       "id": "bet_021",
@@ -459,7 +479,8 @@
       "closed_at": "2026-04-10T06:30:56.606236+07:00",
       "close_reason": "cancelled - too early, match not yet played",
       "notes": "Auto: EV +10%, UCL",
-      "tags": []
+      "tags": [],
+      "type": "paper"
     },
     {
       "id": "bet_022",
@@ -478,7 +499,8 @@
       "closed_at": "2026-04-10T06:30:56.606236+07:00",
       "close_reason": "cancelled - too early, match not yet played",
       "notes": "Auto: EV +10%, UCL",
-      "tags": []
+      "tags": [],
+      "type": "paper"
     },
     {
       "id": "bet_023",
@@ -500,7 +522,8 @@
       "tags": [
         "uel",
         "auto-sync"
-      ]
+      ],
+      "type": "personal"
     },
     {
       "id": "bet_024",
@@ -522,7 +545,8 @@
       "tags": [
         "uel",
         "auto-sync"
-      ]
+      ],
+      "type": "personal"
     },
     {
       "id": "bet_025",
@@ -544,7 +568,8 @@
       "tags": [
         "uecl",
         "auto-sync"
-      ]
+      ],
+      "type": "personal"
     },
     {
       "id": "bet_026",
@@ -566,7 +591,8 @@
       "tags": [
         "uel",
         "auto-sync"
-      ]
+      ],
+      "type": "personal"
     },
     {
       "id": "bet_029",
@@ -589,7 +615,8 @@
         "soccer",
         "epl",
         "form-bet"
-      ]
+      ],
+      "type": "personal"
     },
     {
       "id": "bet_030",
@@ -612,7 +639,8 @@
         "soccer",
         "bundesliga",
         "btts"
-      ]
+      ],
+      "type": "personal"
     },
     {
       "id": "bet_031",
@@ -635,7 +663,8 @@
         "soccer",
         "epl",
         "totals"
-      ]
+      ],
+      "type": "personal"
     },
     {
       "id": "bet_032",
@@ -659,7 +688,8 @@
         "bundesliga",
         "totals",
         "best-pick"
-      ]
+      ],
+      "type": "personal"
     },
     {
       "id": "bet_033",
@@ -683,7 +713,8 @@
         "bundesliga",
         "totals",
         "high-risk"
-      ]
+      ],
+      "type": "personal"
     },
     {
       "id": "bet_034",
@@ -707,7 +738,8 @@
         "epl",
         "relegation",
         "ml"
-      ]
+      ],
+      "type": "personal"
     },
     {
       "id": "bet_035",
@@ -726,7 +758,8 @@
       "closed_at": null,
       "close_reason": null,
       "notes": "Auto: EV +10%, UCL",
-      "tags": []
+      "tags": [],
+      "type": "paper"
     },
     {
       "id": "bet_036",
@@ -745,11 +778,12 @@
       "closed_at": null,
       "close_reason": null,
       "notes": "Auto: EV +10%, UCL",
-      "tags": []
+      "tags": [],
+      "type": "paper"
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-11T23:18:11Z",
+    "last_updated": "2026-04-12T00:45:00Z",
     "total_bets": 34,
     "version": "1.0"
   }
