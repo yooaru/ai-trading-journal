@@ -10528,3 +10528,59 @@ json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
     raise JSONDecodeError("Extra data", s, end)
 json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
 
+[2026-04-13 10:48:08 WIB] 💹 Crypto scan starting...
+[2026-04-13 10:48:08 WIB] 💹 Crypto scan starting...
+[2026-04-13 10:48:10 WIB]   ❌ Crypto error: n-3.11.15-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
+
+[2026-04-13 10:48:10 WIB]   ❌ Crypto error: n-3.11.15-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
+
+[2026-04-13 10:51:10 WIB] 🔄 Syncing data to GitHub...
+[2026-04-13 10:51:10 WIB] 🔄 Syncing data to GitHub...
+[2026-04-13 10:51:10 WIB]   ℹ️ No data changes to sync
+[2026-04-13 10:51:10 WIB]   ℹ️ No data changes to sync
+[2026-04-13 10:53:10 WIB] 💹 Crypto scan starting...
+[2026-04-13 10:53:10 WIB] 💹 Crypto scan starting...
+[2026-04-13 10:53:12 WIB]   ❌ Crypto error: n-3.11.15-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
+
+[2026-04-13 10:53:12 WIB]   ❌ Crypto error: n-3.11.15-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
+
+[2026-04-13 10:56:12 WIB] ⚽ Sports scan starting...
+[2026-04-13 10:56:13 WIB]   ❌ Sports error: trading-journal/scripts/sports_auto_trader.py", line 195, in auto_close
+    log(f"HOLD: {b['id']} {b['outcome']} @ {b['entry_price']:.0f}¢ (${b['size_usd']})")
+                 ~^^^^^^
+KeyError: 'id'
+
+[2026-04-13 10:57:12 WIB] ⚽ Sports scan starting...
+[2026-04-13 10:57:13 WIB]   ❌ Sports error: trading-journal/scripts/sports_auto_trader.py", line 195, in auto_close
+    log(f"HOLD: {b['id']} {b['outcome']} @ {b['entry_price']:.0f}¢ (${b['size_usd']})")
+                 ~^^^^^^
+KeyError: 'id'
+
+[2026-04-13 10:58:13 WIB] 💹 Crypto scan starting...
+[2026-04-13 10:58:13 WIB] 💹 Crypto scan starting...
+[2026-04-13 10:58:16 WIB]   ❌ Crypto error: n-3.11.15-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
+
+[2026-04-13 10:58:17 WIB]   ❌ Crypto error: n-3.11.15-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
+
+[2026-04-13 11:03:17 WIB] 💹 Crypto scan starting...
+[2026-04-13 11:03:17 WIB] 💹 Crypto scan starting...
+[2026-04-13 11:03:18 WIB]   ❌ Crypto error: n-3.11.15-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
+
+[2026-04-13 11:03:18 WIB]   ❌ Crypto error: n-3.11.15-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
+

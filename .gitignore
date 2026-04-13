@@ -8,3 +8,4 @@ data/auto_trader.log
 data/sports_auto_trader.log
 data/market_snapshot.json
 scripts/__pycache__/
+.vercel
