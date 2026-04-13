@@ -305,17 +305,17 @@
       "asset": "BTC",
       "side": "long",
       "entry_price": 72740.01,
-      "exit_price": null,
+      "exit_price": 70906.68,
       "size_usd": 1371.44,
       "leverage": 1,
       "tp_price": 75285.91,
       "sl_price": 71285.21,
-      "status": "open",
-      "pnl_usd": null,
-      "pnl_pct": null,
+      "status": "closed",
+      "pnl_usd": -34.57,
+      "pnl_pct": -2.52,
       "opened_at": "2026-04-11T05:18:59.488667+00:00",
-      "closed_at": null,
-      "close_reason": null,
+      "closed_at": "2026-04-13T04:54:16.442220+00:00",
+      "close_reason": "sl_hit",
       "notes": "Support level",
       "tags": [
         "spot",
@@ -344,11 +344,57 @@
         "spot",
         "auto-trader"
       ]
+    },
+    {
+      "id": "auto_016",
+      "agent": "hermes2",
+      "asset": "BTC",
+      "side": "long",
+      "entry_price": 70906.68,
+      "exit_price": null,
+      "size_usd": 1745.72,
+      "leverage": 1,
+      "tp_price": 73388.41,
+      "sl_price": 69488.55,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-13T04:54:18.035054+00:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Indicator signal",
+      "tags": [
+        "spot",
+        "auto-trader"
+      ]
+    },
+    {
+      "id": "auto_017",
+      "agent": "hermes2",
+      "asset": "ETH",
+      "side": "long",
+      "entry_price": 2189.8,
+      "exit_price": null,
+      "size_usd": 1735.44,
+      "leverage": 1,
+      "tp_price": 2266.44,
+      "sl_price": 2146.0,
+      "status": "open",
+      "pnl_usd": null,
+      "pnl_pct": null,
+      "opened_at": "2026-04-13T04:59:25.555765+00:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "Support level",
+      "tags": [
+        "spot",
+        "auto-trader"
+      ]
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-11T13:12:03.519789+00:00",
-    "total_trades": 15,
+    "last_updated": "2026-04-13T04:59:25.556177+00:00",
+    "total_trades": 17,
     "version": "1.0"
   }
 }
