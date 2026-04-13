@@ -947,11 +947,34 @@
         "paper",
         "cs2"
       ]
+    },
+    {
+      "sim_id": "sim_Counter-Strike:_ex-RUBY_vs_Metizport_(BO3)_-_E",
+      "agent": "sim",
+      "platform": "polymarket",
+      "market": "Counter-Strike: ex-RUBY vs Metizport (BO3) - European Pro League Series 6 Playoffs",
+      "outcome": "Metizport (ML)",
+      "side": "yes",
+      "entry_price": 0.41,
+      "exit_price": null,
+      "size_usd": 1.0,
+      "status": "open",
+      "pnl_usd": 0,
+      "pnl_pct": null,
+      "opened_at": "2026-04-13T14:31:16.063224+07:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "CS2 | moneyline | major",
+      "tags": [
+        "sim",
+        "paper",
+        "cs2"
+      ]
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-13T13:31:07.616569+07:00",
-    "total_bets": 41,
+    "last_updated": "2026-04-13T14:31:33.373758+07:00",
+    "total_bets": 42,
     "version": "1.0"
   }
 }
