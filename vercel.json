@@ -1,5 +1,14 @@
 {
   "version": 2,
+  "builds": [
+    { "src": "api/health.py", "use": "@vercel/python", "config": { "runtime": "python3.11" } },
+    { "src": "api/verify.py", "use": "@vercel/python", "config": { "runtime": "python3.11" } },
+    { "src": "api/indicators.py", "use": "@vercel/python", "config": { "runtime": "python3.11" } },
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "css/**", "use": "@vercel/static" },
+    { "src": "js/**", "use": "@vercel/static" },
+    { "src": "data/*.json", "use": "@vercel/static" }
+  ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/data/(.*\\.json)", "dest": "/data/$1", "headers": { "cache-control": "no-cache" } },
