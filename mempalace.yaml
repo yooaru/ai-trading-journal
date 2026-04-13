@@ -1,0 +1,25 @@
+wing: ai_trading_journal
+rooms:
+- name: backend
+  description: Files from api/
+  keywords:
+  - backend
+  - api
+- name: scripts
+  description: Files from scripts/
+  keywords:
+  - scripts
+  - scripts
+- name: data
+  description: Files from data/
+  keywords:
+  - data
+  - data
+- name: css
+  description: Files from css/
+  keywords:
+  - css
+  - css
+- name: general
+  description: Files that don't fit other rooms
+  keywords: []
