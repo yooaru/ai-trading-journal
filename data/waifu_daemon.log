@@ -10654,3 +10654,27 @@ json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
     raise JSONDecodeError("Extra data", s, end)
 json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
 
+[2026-04-13 11:33:27 WIB] 💹 Crypto scan starting...
+[2026-04-13 11:33:28 WIB] 💹 Crypto scan starting...
+[2026-04-13 11:33:29 WIB]   ❌ Crypto error: n-3.11.15-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
+
+[2026-04-13 11:33:29 WIB]   ❌ Crypto error: n-3.11.15-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
+
+[2026-04-13 11:36:29 WIB] 🔄 Syncing data to GitHub...
+[2026-04-13 11:36:29 WIB]   ℹ️ No data changes to sync
+[2026-04-13 11:36:29 WIB] 🔄 Syncing data to GitHub...
+[2026-04-13 11:36:29 WIB]   ℹ️ No data changes to sync
+[2026-04-13 11:38:29 WIB] 💹 Crypto scan starting...
+[2026-04-13 11:38:29 WIB] 💹 Crypto scan starting...
+[2026-04-13 11:38:30 WIB]   ❌ Crypto error: n-3.11.15-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
+
+[2026-04-13 11:38:31 WIB]   ❌ Crypto error: n-3.11.15-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 130 column 2 (char 3046)
+

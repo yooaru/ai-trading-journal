@@ -120,7 +120,7 @@ async function authenticate() {
   const input = document.getElementById('access-key').value;
   if (!input || input.length < 4) return;
   try {
-    const res = await fetch(API_BASE + '/verify?key=' + encodeURIComponent(input));
+    const res = await fetch(API_BASE + '/api/verify?key=' + encodeURIComponent(input));
     const data = await res.json();
     if (data.valid) {
       localStorage.setItem('journal_session', '1');
