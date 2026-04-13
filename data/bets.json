@@ -802,7 +802,8 @@
         "sim",
         "paper",
         "nba"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "sim_id": "sim_Pelicans_vs._Timberwolves_Pelicans_(ML)",
@@ -825,7 +826,8 @@
         "sim",
         "paper",
         "nba"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "sim_id": "sim_Magic_vs._Celtics_Celtics_(ML)",
@@ -848,7 +850,8 @@
         "sim",
         "paper",
         "nba"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "sim_id": "sim_Bulls_vs._Mavericks_Bulls_(ML)",
@@ -871,7 +874,8 @@
         "sim",
         "paper",
         "nba"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "sim_id": "sim_Nuggets_vs._Spurs_Nuggets_(ML)",
@@ -894,7 +898,8 @@
         "sim",
         "paper",
         "nba"
-      ]
+      ],
+      "type": "paper"
     },
     {
       "sim_id": "sim_LoL:_Team_WE_vs_Oh_My_God_(BO3)_-_Esports_Worl",
@@ -917,7 +922,8 @@
         "sim",
         "paper",
         "lol"
-      ]
+      ],
+      "type": "paper"
     }
   ],
   "metadata": {
