@@ -11,7 +11,7 @@
         4953.5325
       ],
       "sl_price": 4623.297,
-      "current_price": 4715.4,
+      "current_price": 4711.93,
       "highest_price": 4717.65,
       "trailing_active": false
     },
@@ -56,7 +56,7 @@
         74452.014
       ],
       "sl_price": 69488.54639999999,
-      "current_price": 70973.42,
+      "current_price": 70757.51,
       "highest_price": 70906.68,
       "trailing_active": false
     },
@@ -71,7 +71,7 @@
         2299.2900000000004
       ],
       "sl_price": 2146.0040000000004,
-      "current_price": 2195.92,
+      "current_price": 2185.86,
       "highest_price": 2189.8,
       "trailing_active": false
     }
@@ -148,5 +148,5 @@
       "closed_at": "2026-04-13T04:54:16.437659+00:00"
     }
   ],
-  "last_scan": "2026-04-13T07:06:21.909854+00:00"
+  "last_scan": "2026-04-13T07:21:37.945100+00:00"
 }
