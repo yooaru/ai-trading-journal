@@ -11,3 +11,5 @@ data/daily_pnl.json
 .access_key
 .env
 .agenthub/
+mempalace.yaml
+entities.json
