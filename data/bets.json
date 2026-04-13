@@ -872,11 +872,34 @@
         "paper",
         "nba"
       ]
+    },
+    {
+      "sim_id": "sim_Nuggets_vs._Spurs_Nuggets_(ML)",
+      "agent": "sim",
+      "platform": "polymarket",
+      "market": "Nuggets vs. Spurs",
+      "outcome": "Nuggets (ML)",
+      "side": "yes",
+      "entry_price": 0.405,
+      "exit_price": null,
+      "size_usd": 0.5,
+      "status": "open",
+      "pnl_usd": 0,
+      "pnl_pct": null,
+      "opened_at": "2026-04-13T08:01:12.224313+07:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "NBA | moneyline | minor",
+      "tags": [
+        "sim",
+        "paper",
+        "nba"
+      ]
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-13T07:33:16.960880+07:00",
-    "total_bets": 38,
+    "last_updated": "2026-04-13T08:01:25.054404+07:00",
+    "total_bets": 39,
     "version": "1.0"
   }
 }
