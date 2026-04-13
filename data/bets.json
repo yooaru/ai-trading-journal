@@ -780,11 +780,80 @@
       "notes": "Auto: EV +10%, UCL",
       "tags": [],
       "type": "paper"
+    },
+    {
+      "sim_id": "sim_Warriors_vs._Clippers_Warriors_(ML)",
+      "agent": "sim",
+      "platform": "polymarket",
+      "market": "Warriors vs. Clippers",
+      "outcome": "Warriors (ML)",
+      "side": "yes",
+      "entry_price": 0.365,
+      "exit_price": null,
+      "size_usd": 0.5,
+      "status": "open",
+      "pnl_usd": 0,
+      "pnl_pct": null,
+      "opened_at": "2026-04-13T06:28:49.741261+07:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "NBA | moneyline | minor",
+      "tags": [
+        "sim",
+        "paper",
+        "nba"
+      ]
+    },
+    {
+      "sim_id": "sim_Pelicans_vs._Timberwolves_Pelicans_(ML)",
+      "agent": "sim",
+      "platform": "polymarket",
+      "market": "Pelicans vs. Timberwolves",
+      "outcome": "Pelicans (ML)",
+      "side": "yes",
+      "entry_price": 0.365,
+      "exit_price": null,
+      "size_usd": 0.5,
+      "status": "open",
+      "pnl_usd": 0,
+      "pnl_pct": null,
+      "opened_at": "2026-04-13T06:52:44.007906+07:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "NBA | moneyline | minor",
+      "tags": [
+        "sim",
+        "paper",
+        "nba"
+      ]
+    },
+    {
+      "sim_id": "sim_Magic_vs._Celtics_Celtics_(ML)",
+      "agent": "sim",
+      "platform": "polymarket",
+      "market": "Magic vs. Celtics",
+      "outcome": "Celtics (ML)",
+      "side": "yes",
+      "entry_price": 0.355,
+      "exit_price": null,
+      "size_usd": 0.5,
+      "status": "open",
+      "pnl_usd": 0,
+      "pnl_pct": null,
+      "opened_at": "2026-04-13T06:52:44.007906+07:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "NBA | moneyline | minor",
+      "tags": [
+        "sim",
+        "paper",
+        "nba"
+      ]
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-12T00:45:00Z",
-    "total_bets": 34,
+    "last_updated": "2026-04-13T06:52:57.979941+07:00",
+    "total_bets": 37,
     "version": "1.0"
   }
 }
