@@ -895,11 +895,34 @@
         "paper",
         "nba"
       ]
+    },
+    {
+      "sim_id": "sim_LoL:_Team_WE_vs_Oh_My_God_(BO3)_-_Esports_Worl",
+      "agent": "sim",
+      "platform": "polymarket",
+      "market": "LoL: Team WE vs Oh My God (BO3) - Esports World Cup China Qualifier Phase 2",
+      "outcome": "Oh My God (ML)",
+      "side": "yes",
+      "entry_price": 0.365,
+      "exit_price": null,
+      "size_usd": 0.5,
+      "status": "open",
+      "pnl_usd": 0,
+      "pnl_pct": null,
+      "opened_at": "2026-04-13T08:30:31.811626+07:00",
+      "closed_at": null,
+      "close_reason": null,
+      "notes": "LoL | moneyline | minor",
+      "tags": [
+        "sim",
+        "paper",
+        "lol"
+      ]
     }
   ],
   "metadata": {
-    "last_updated": "2026-04-13T08:01:25.054404+07:00",
-    "total_bets": 39,
+    "last_updated": "2026-04-13T08:30:48.734650+07:00",
+    "total_bets": 40,
     "version": "1.0"
   }
 }
